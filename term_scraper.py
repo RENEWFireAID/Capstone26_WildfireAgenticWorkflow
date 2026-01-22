@@ -18,11 +18,11 @@ if res.status_code == 200:
         term_csv = ""
         for item in terms_iter:
             # Throw away chunks that dont include a definition
-            if re.match("\n.+<p><strong>", item) == None:
+            if re.match("\n.+<p><strong>", item) is None:
                 continue
 
             tmatch = re.search("<p><strong>.+</strong>", item)
-            if tmatch == None:
+            if tmatch is None:
                 print(f"FAILED TO GET TERM FROM {item}")
                 continue
             term = item[tmatch.start() + 11 : tmatch.end() - 9]
@@ -35,11 +35,11 @@ if res.status_code == 200:
             # Apparently some terms also have an <a> tag inside the <strong> block
             # so this is removing those
             a_tag = re.search("<a.+></a>", term)
-            if a_tag != None:
+            if a_tag is not None:
                 term = term[: a_tag.start()] + term[a_tag.end() :]
 
             dmatch = re.search("</strong>.+", item)
-            if dmatch == None:
+            if dmatch is None:
                 print(f"FAILED TO GET DEF FROM {item}")
                 continue
             definition = (
