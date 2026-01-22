@@ -1,6 +1,8 @@
 services:
   fireaid_web:
-    image: ghcr.io/erlewa/fireaid_web:latest
+    build:
+      context: ./fireaid_web/
+      dockerfile: Dockerfile
     container_name: fireaid_web
     restart: always
     ports:
