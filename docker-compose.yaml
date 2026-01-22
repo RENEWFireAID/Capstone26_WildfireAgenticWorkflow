@@ -1,6 +1,6 @@
 services:
   fireaid_web:
-    image: fireaid_web:latest
+    image: ghcr.io/erlewa/fireaid_web:latest
     container_name: fireaid_web
     restart: always
     ports:
