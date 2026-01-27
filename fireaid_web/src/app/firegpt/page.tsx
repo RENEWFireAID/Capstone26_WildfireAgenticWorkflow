@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
-import Popup from "@/components/ui/TermEntry";
 import dynamic from "next/dynamic";
 
 const FireMap = dynamic(() => import("@/components/map/FireMap"), {
@@ -15,7 +14,6 @@ type Tab = (typeof TABS)[number];
 
 export default function FireGPTPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Map");
-  const [showPopUp, setShowPopUp] = useState(false)
 
   return (
     <div className="flex gap-5">
@@ -32,10 +30,6 @@ export default function FireGPTPage() {
               <span className="text-sm text-slate-500">(MCP-resource)</span>
             </h2>
             <div className="flex gap-2">
-              <button className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50"
-              onClick={()=>setShowPopUp(true)}>
-                Add terminology
-              </button>
               <button className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50">
                 Query a term
               </button>
@@ -78,12 +72,6 @@ export default function FireGPTPage() {
                 />
               </tbody>
             </table>
-
-            <Popup showPopUp={showPopUp} closePopUp={()=>setShowPopUp(false)}>
-              <h2 className="text-xl font-bold text-slate-900">
-                Terminology Entry
-              </h2>
-            </Popup>
           </div>
         </section>
 

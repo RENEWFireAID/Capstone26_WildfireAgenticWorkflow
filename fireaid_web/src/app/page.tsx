@@ -1,5 +1,5 @@
-import FireGPTPage from "./firegpt/page";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <FireGPTPage />;
+  redirect("/firegpt");
 }

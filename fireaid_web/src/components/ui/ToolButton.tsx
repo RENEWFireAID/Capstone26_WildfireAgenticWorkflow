@@ -1,6 +1,15 @@
-export default function ToolButton({ label }: { label: string }) {
+export default function ToolButton({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick?: () => void;
+}) {
   return (
-    <button className="w-full rounded-lg bg-emerald-500 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-600 transition">
+    <button
+      onClick={onClick}
+      className="w-full rounded-lg bg-emerald-500 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-600"
+    >
       {label}
     </button>
   );
