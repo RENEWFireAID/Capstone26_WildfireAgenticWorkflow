@@ -2,7 +2,7 @@ services:
   fireaid_web:
     build:
       context: ./fireaid_web/
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     environment:
       MONGODB_URI: "mongodb://root:password@mongo:27017/fireaid?authSource=admin"
     container_name: fireaid_web

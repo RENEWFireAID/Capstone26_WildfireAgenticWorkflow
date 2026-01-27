@@ -1,3 +1,4 @@
+# Create base image with dependencies installed
 FROM alpine:3.23
 
 RUN apk add nodejs npm
@@ -6,8 +7,8 @@ RUN mkdir /var/web
 WORKDIR /var/web
 
 RUN adduser -HD node
-COPY --chown=root:node public/ /var/web/public/
-COPY --chown=root:node src/ /var/web/src
+#COPY --chown=root:node public/ /var/web/public/
+#COPY --chown=root:node src/ /var/web/src
 COPY --chown=root:node next.config.ts /var/web/
 COPY --chown=root:node package-lock.json /var/web/
 COPY --chown=root:node package.json /var/web/
