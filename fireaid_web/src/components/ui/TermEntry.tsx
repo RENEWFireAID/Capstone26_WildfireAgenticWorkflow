@@ -18,7 +18,7 @@ function PopUp({showPopUp, closePopUp, children}: {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/mongo_api", {
+            const res = await fetch("/api/send_term", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ term, def }),
@@ -47,7 +47,7 @@ function PopUp({showPopUp, closePopUp, children}: {
         <div className="PopUp" >
             {children}
 
-            <h3>Term</h3>
+            <h3>Enter Terminology</h3>
 
             <form
                 className="mt-2 flex items-center gap-2"
@@ -59,13 +59,13 @@ function PopUp({showPopUp, closePopUp, children}: {
                     onChange={(e) => setTerm(e.target.value)}
                     placeholder="Term"
                 />
-
+                
                 <input
                     className="h-9 flex-1 rounded-full border border-slate-300 bg-white px-3 text-xs outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
                     onChange={(e) => setDef(e.target.value)}
                     placeholder="Definition"
                 />
-
+                
                 <button
                     type="submit"
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-[#003366] text-xs font-semibold text-white hover:bg-slate-900"

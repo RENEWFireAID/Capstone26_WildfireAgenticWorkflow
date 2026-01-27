@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
 import Popup from "@/components/ui/TermEntry";
 import dynamic from "next/dynamic";
@@ -15,7 +15,50 @@ type Tab = (typeof TABS)[number];
 
 export default function FireGPTPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Map");
-  const [showPopUp, setShowPopUp] = useState(false)
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [termList, setTermList] = useState<Term[]>([]);
+
+
+  const getTerms = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/get_terms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+          console.error(json.message);
+      } else {
+          console.log("Success:", json);
+
+          let list: Term[] = [];
+
+          json.forEach((i: Object) => {
+            console.log(i);
+            let t = i as Term;
+            list.push(t);
+          })
+
+          setTermList(list);
+          console.log(termList);
+      }
+    } catch (err) {
+        console.error("Failed to get terms:", err);
+    } finally {
+        setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    let ignore = false;
+    if (!ignore) getTerms()
+    return () => { ignore = true; }
+  }, []);
 
   return (
     <div className="flex gap-5">
@@ -32,10 +75,6 @@ export default function FireGPTPage() {
               <span className="text-sm text-slate-500">(MCP-resource)</span>
             </h2>
             <div className="flex gap-2">
-              <button className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50"
-              onClick={()=>setShowPopUp(true)}>
-                Add terminology
-              </button>
               <button className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50">
                 Query a term
               </button>
@@ -64,25 +103,18 @@ export default function FireGPTPage() {
                 </tr>
               </thead>
               <tbody>
-                <TerminologyRow
-                  term="Fire-related term-0"
-                  desc="Definition, Significance, Calculation, Other influencing factors"
-                  proposer="Name & role"
-                  summary="An LLM generated summary of the term."
-                />
-                <TerminologyRow
-                  term="Fire-related term-1"
-                  desc="Definition, Significance, Calculation, Other influencing factors"
-                  proposer="Name & role"
-                  summary="Another LLM generated summary of the term."
-                />
+                {termList.map(i => 
+                  <TerminologyRow
+                    key={i._id}
+                    term={i.term}
+                    desc={i.def}
+                    proposer="Name & role"
+                    summary="An LLM generated summary of the term."
+                  />)}
               </tbody>
             </table>
-
             <Popup showPopUp={showPopUp} closePopUp={()=>setShowPopUp(false)}>
-              <h2 className="text-xl font-bold text-slate-900">
-                Terminology Entry
-              </h2>
+              <h2 className="text-xl font-bold text-slate-900"></h2>
             </Popup>
           </div>
         </section>
@@ -97,6 +129,10 @@ export default function FireGPTPage() {
                 <span className="text-[11px] text-slate-500">
                   (MCP-resource)
                 </span>
+                <button className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                  onClick={()=>setShowPopUp(true)}>
+                  Add terms
+                </button>
               </h3>
               <DataItem
                 title="Lidar tile (63.53° N, 147.3° W)"
@@ -355,4 +391,11 @@ function ChatBubble({
       <pre className="whitespace-pre-wrap font-sans text-slate-800">{text}</pre>
     </div>
   );
+}
+
+
+interface Term {
+  _id: string;
+  term: string;
+  def: string;
 }
