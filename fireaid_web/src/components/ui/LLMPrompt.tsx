@@ -1,13 +1,6 @@
 import { send } from "process";
 import React, { useState } from "react";
-
-enum Role { user, ai }
-
-interface Message {
-    src: Role
-    msg: string
-    key: number
-}
+import { Role, Message, AIResponse } from "../../types/LLMPrompt.d"
 
 function ChatBubble({
   role,
@@ -35,8 +28,6 @@ function ChatBubble({
   );
 }
 
-
-
 export default function LLMPrompt() {
 
     const [chats, setChats] = useState<Message[]>([]);
@@ -46,10 +37,26 @@ export default function LLMPrompt() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         console.log(inputValue)
-
-        setChats([...chats, {src: Role.user, msg: inputValue, key: chats.length > 0 ? chats[chats.length-1].key + 1 : 0}])
-        // Clear user input
+        let user_input = inputValue
         setInputValue("")
+
+        const response: AIResponse = await fetch("/api/ai/query").then((res) => {
+          if (res.status == 200) {
+            return res.json()
+          }
+          return null
+        })
+
+        if (response == null) {
+          console.log("ERROR: Got bad status code from /api/ai/query")
+          return
+        }
+
+        setChats([...chats, {src: Role.user, msg: user_input, key: chats.length > 0 ? chats[chats.length-1].key + 1 : 0}, 
+          {src: Role.ai, msg: response.msg, key: chats.length > 0 ? chats[chats.length-1].key + 2 : 1}])
+        
+
+        console.log(response)
     }
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
