@@ -1,0 +1,32 @@
+name: Format and Lint Python Files
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+        # Install Ruff
+#      - name: Install the latest version of ruff
+#        uses: astral-sh/ruff-action@v3
+#        with:
+#            version: "latest"
+
+      - uses: astral-sh/ruff-action@v3
+        with:
+            src: "./scripts"
+
+      - uses: astral-sh/ruff-action@v3
+        with:
+            args: "format --check --diff"
