@@ -36,19 +36,18 @@ export default function LLMPrompt() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(inputValue)
+        
         let user_input = inputValue
         setInputValue("")
 
         let user_chat = {src: Role.user, msg: user_input, key: chats.length > 0 ? chats[chats.length-1].key + 1 : 0}
-
         setChats([...chats, user_chat, {src: Role.ai, msg: "...", key: chats.length > 0 ? chats[chats.length-1].key + 2 : 1}])
         
         const response: AIResponse = await fetch("/api/ai/query", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ msg: user_input }),}).then((res) => 
-        {
+          body: JSON.stringify({ msg: user_input }),})
+        .then((res) => {
           if (res.status == 200) {
             return res.json()
           }
@@ -59,8 +58,6 @@ export default function LLMPrompt() {
           console.log("ERROR: Got bad status code from /api/ai/query")
           return
         }
-
-        console.log("Recieved response: updating children")
 
         setChats([...chats, user_chat, { src: Role.ai, msg: response.msg, key: chats.length > 0 ? chats[chats.length-1].key + 3 : 2 }])
     }
@@ -78,7 +75,7 @@ export default function LLMPrompt() {
 
             <div 
                 id="LLMPromptConversation"
-                className="mb-3 max-h-64 space-y-3 overflow-y-auto text-xs"
+                className="mb-3 max-h-94 space-y-3 overflow-y-auto text-xs"
             >{chats.map(chat => <ChatBubble
                 role={chat.src == Role.user ? "User" : "AI Model"}
                 tone={chat.src}
