@@ -1,17 +1,38 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
 
 function PopUp({showPopUp, closePopUp, children}: {
     showPopUp: boolean,
     closePopUp: React.MouseEventHandler<HTMLButtonElement>,
     children: React.ReactNode,
 }){
-
     const [term, setTerm] = useState('');
     const [def, setDef] = useState('');
+    const [file, setFile] = useState<File>();
     const [loading, setLoading] = useState(false);
 
-    const sendTerm = async (e: React.FormEvent) => {
+    const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files === null) {
+            return
+        }
+        setFile(e.target.files[0]);
+    };
+
+    const handleFileSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        console.log(`Submitting file ${file?.name}`);
+
+        const fileReader = new FileReader();
+        fileReader.onload = (event) => {
+            const contents = event?.target?.result;
+            console.log(contents);
+        }
+
+        if (file) {
+            fileReader.readAsText(file);
+        }
+    }
+
+    const sendTerm = async (e: FormEvent) => {
         e.preventDefault();
 
         console.log(`Adding to MongoDB term: ${term}, def: ${def}`);
@@ -69,10 +90,30 @@ function PopUp({showPopUp, closePopUp, children}: {
                 <button
                     type="submit"
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-[#003366] text-xs font-semibold text-white hover:bg-slate-900"
+                    disabled={loading}
                 >
                     SAVE
                 </button>
 
+            </form>
+
+            <form
+                onSubmit={handleFileSubmit}>
+                <input
+                    className="h-9 flex-1 border border-slate-300 bg-white px-3 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
+                    type={"file"}
+                    id={"csvFileSelect"}
+                    accept={".csv"}
+                    onChange={handleFileUpload}
+                />
+
+                <button
+                    className="font-bold text-slate-800"
+                    type="submit"
+                    disabled={loading}
+                >
+                    UPLOAD
+                </button>
             </form>
 
             <button 
