@@ -1,10 +1,15 @@
-# Create base image with dependencies installed
 FROM fireaid_web_base:latest
+WORKDIR /var/web
 
-COPY --chown=root:node public/ /var/web/public/
-COPY --chown=root:node src/ /var/web/src
-COPY --chown=root:node .env .env
+# 先复制依赖文件，利用缓存
+COPY package.json pnpm-lock.yaml ./
 
-# TO-DO: User should be set to node but we need to modify file permissions first
-CMD [ "pnpm", "dev" ]
-EXPOSE 3000
+# 安装依赖
+RUN pnpm install --frozen-lockfile
+
+# 再复制源码
+COPY public/ /var/web/public/
+COPY src/ /var/web/src
+COPY .env .env
+
+CMD ["pnpm", "dev"]

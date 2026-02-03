@@ -1,20 +1,29 @@
-import time
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from tools.mongo_fire_tools import search_fire_points, count_by_year
 
-def main():
-    print("🔥 FireMCP container starting...")
-    print("Smoke test query:")
+app = FastAPI(title="FireMCP")
 
-    results = search_fire_points(year=2024, prescribed="Y", limit=3)
-    for r in results:
-        print(r)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    print("Count:", count_by_year(2024))
+@app.get("/mcp/tools")
+def tools():
+    return {
+        "tools": [
+            {"name": "search_fire_points", "desc": "Search fire points"},
+            {"name": "count_by_year", "desc": "Count by year"},
+        ]
+    }
 
-    # Keep container alive (so other services can call it later)
-    print("✅ FireMCP is running (idle)...")
-    while True:
-        time.sleep(3600)
+@app.get("/mcp/search")
+def search(year: int = 2024, prescribed: str = "Y", limit: int = 10):
+    return {"results": search_fire_points(year=year, prescribed=prescribed, limit=limit)}
 
-if __name__ == "__main__":
-    main()
+@app.get("/mcp/count")
+def count(year: int = 2024):
+    return {"year": year, "count": count_by_year(year)}

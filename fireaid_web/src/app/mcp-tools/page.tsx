@@ -1,10 +1,34 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
 import ToolButton from "@/components/ui/ToolButton";
 
+type Tool = { name: string; desc: string };
+
 export default function McpToolsPage() {
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch("/api/mcp/tools", { cache: "no-store" });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const data = await r.json();
+        setTools(data.tools ?? []);
+      } catch (e: any) {
+        setErr(e?.message || "Failed to load tools");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
   return (
     <div className="flex gap-5">
-      {/* 左侧导航：当前在 Explore / MCP tools 页面 */}
+      {/* 左侧导航 */}
       <FireGPTSidebar active="explore" />
 
       <div className="flex-1 space-y-6">
@@ -15,37 +39,51 @@ export default function McpToolsPage() {
                 MCP Tools & Apps
               </h1>
               <p className="mt-1 text-xs text-slate-500">
-                Browse system tools and user apps that FireGPT can call inside
-                a prompt.
+                Browse system tools and user apps that FireGPT can call inside a
+                prompt.
               </p>
             </div>
           </div>
 
+          {err && (
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+              Failed to load tools: {err}
+            </div>
+          )}
+
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            {/* System tools */}
+            {/* System tools：来自后端 */}
             <section className="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <h2 className="mb-2 text-sm font-semibold text-slate-900">
-                System tools <span className="text-[11px] text-emerald-600">(MCP-tool)</span>
+                System tools{" "}
+                <span className="text-[11px] text-emerald-600">(live)</span>
               </h2>
 
-              <ToolCard
-                name="Tool-0"
-                tag="Lidar + VIIRS"
-                description="Query and process co-registered Lidar and VIIRS data for a given AOI."
-                rating="Used by fire scientists"
-              />
-              <ToolCard
-                name="Tool-1"
-                tag="Weather + CHM"
-                description="Combine canopy height model with station weather time series."
-                rating="Prototype"
-              />
+              {loading && (
+                <div className="text-xs text-slate-500">Loading…</div>
+              )}
+
+              {!loading && !err && tools.length === 0 && (
+                <div className="text-xs text-slate-500">No tools found.</div>
+              )}
+
+              {!loading &&
+                tools.map((t) => (
+                  <ToolCard
+                    key={t.name}
+                    name={t.name}
+                    tag="FireMCP"
+                    description={t.desc}
+                    rating="from backend"
+                  />
+                ))}
             </section>
 
-            {/* User apps */}
+            {/* User apps：demo */}
             <section className="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <h2 className="mb-2 text-sm font-semibold text-slate-900">
-                User-apps <span className="text-[11px] text-emerald-600">(MCP-prompt)</span>
+                User-apps{" "}
+                <span className="text-[11px] text-emerald-600">(MCP-prompt)</span>
               </h2>
 
               <ToolCard
@@ -68,6 +106,8 @@ export default function McpToolsPage() {
   );
 }
 
+/* ---------------- Tool Card ---------------- */
+
 function ToolCard({
   name,
   tag,
@@ -87,10 +127,38 @@ function ToolCard({
           {tag}
         </span>
       </div>
+
       <p className="mt-1 text-slate-600">{description}</p>
       <div className="mt-1 text-[11px] text-slate-400">{rating}</div>
+
       <div className="mt-3">
-        <ToolButton label="Import to prompt" />
+      <ToolButton
+        label="Import to prompt"
+        onClick={() => {
+    // 根据工具名决定调用哪个 MCP 接口
+          const suggestedCall =
+            name === "search_fire_points"
+              ? "/mcp/search?year=2024&prescribed=Y&limit=10"
+              : name === "count_by_year"
+              ? "/mcp/count?year=2024"
+              : "";
+
+    // ① 记住“刚刚选中的工具”和调用
+    localStorage.setItem("mcp:last_tool", name);
+    localStorage.setItem("mcp:last_call", suggestedCall);
+
+    // ② 仍然复制到剪贴板（方便你 demo / debug）
+    const snippet =
+      `Tool: ${name}\n` +
+      `Description: ${description}\n\n` +
+      `Suggested call:\n${suggestedCall}\n`;
+
+    navigator.clipboard.writeText(snippet).catch(() => {});
+
+    // ③ 跳转到 FireGPT 页面，看结果
+    window.location.href = "/firegpt";
+  }}
+/>
       </div>
     </div>
   );

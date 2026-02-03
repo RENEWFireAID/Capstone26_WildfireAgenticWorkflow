@@ -1,28 +1,29 @@
 import { NextResponse } from "next/server";
 
-const MCP_HTTP_BASE = process.env.MCP_HTTP_BASE || "http://mcp-api:8000";
+const MCP_HTTP_BASE = process.env.MCP_HTTP_BASE || "http://firemcp:8081";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const body = await req.json(); // { toolId, args }
-
-    const r = await fetch(`${MCP_HTTP_BASE}/run`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    if (!r.ok) {
-      const text = await r.text();
-      return NextResponse.json({ error: text }, { status: r.status });
+    const url = new URL(req.url);
+    const path = url.searchParams.get("path"); // e.g. "/mcp/search?year=2024..."
+    if (!path) {
+      return NextResponse.json({ error: "Missing path" }, { status: 400 });
     }
 
-    const data = await r.json();
-    return NextResponse.json(data);
+    const target = `${MCP_HTTP_BASE}${path}`;
+    const r = await fetch(target, { cache: "no-store" });
+
+    const text = await r.text();
+    if (!r.ok) return NextResponse.json({ error: text }, { status: r.status });
+
+    // FireMCP 返回 json 字符串
+    return new NextResponse(text, {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
   } catch (e: any) {
-    console.error("MCP /run fetch failed:", e);
     return NextResponse.json(
-      { error: e?.message || "Failed to run tool" },
+      { error: e?.message || "fetch failed" },
       { status: 500 }
     );
   }
