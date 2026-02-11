@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FireAID Web",
-  description: "FireGPT – UAF Wildfire Lab interface",
+  description: "FireAID – UAF Wildfire Lab interface",
 };
 
 export default function RootLayout({
