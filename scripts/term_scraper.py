@@ -42,9 +42,7 @@ if res.status_code == 200:
             if dmatch is None:
                 print(f"FAILED TO GET DEF FROM {item}")
                 continue
-            definition = (
-                item[dmatch.start() + 10 :].replace("\n", "").replace(",", "\,")
-            )
+            definition = item[dmatch.start() + 10 :].replace("\n", "")
 
             # Remove excess spaces
             for i in range(len(definition) - 2):
@@ -62,7 +60,7 @@ if res.status_code == 200:
             if definition[0] == " ":
                 definition = definition[1:]
 
-            term_csv += f"{term},{definition}\n"
+            term_csv += f'{term},"{definition}"\n'
 
         f.write(term_csv)
 

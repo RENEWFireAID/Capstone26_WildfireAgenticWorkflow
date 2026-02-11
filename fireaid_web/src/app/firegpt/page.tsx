@@ -81,7 +81,7 @@ export default function FireGPTPage() {
             </div>
           </div>
 
-          <div className="mt-4 overflow-x-auto text-xs">
+          <div className="mt-4 h-55 overflow-x-auto text-xs">
             <table className="min-w-full border-separate border-spacing-y-1">
               <thead className="text-[11px] uppercase text-slate-500">
                 <tr>
