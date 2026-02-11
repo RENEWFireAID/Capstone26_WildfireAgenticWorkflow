@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-type SidebarActive = "firegpt" | "explore";
+type SidebarActive = "fireaid" | "explore";
 
-export default function FireGPTSidebar({ active }: { active: SidebarActive }) {
+export default function FireAIDSidebar({ active }: { active: SidebarActive }) {
   return (
     <aside className="flex w-60 flex-col rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
       {/* 顶部 logo + New analysis */}
@@ -16,7 +16,7 @@ export default function FireGPTSidebar({ active }: { active: SidebarActive }) {
               UAF Wildfire Lab
             </span>
             <span className="text-xs font-semibold text-slate-900">
-              FireGPT
+              FireAID
             </span>
           </div>
         </div>
@@ -43,9 +43,9 @@ export default function FireGPTSidebar({ active }: { active: SidebarActive }) {
       <nav className="space-y-1 text-xs">
         <SidebarItem
           icon="🤖"
-          label="FireGPT"
-          href="/firegpt"
-          active={active === "firegpt"}
+          label="FireAID"
+          href="/"
+          active={active === "fireaid"}
         />
         <SidebarItem
           icon="🧩"

@@ -14,7 +14,7 @@ export default function Topbar() {
               UAF Wildfire Lab
             </span>
             <span className="text-lg font-semibold tracking-tight text-white">
-              FireGPT
+              FireAID
             </span>
           </div>
         </div>

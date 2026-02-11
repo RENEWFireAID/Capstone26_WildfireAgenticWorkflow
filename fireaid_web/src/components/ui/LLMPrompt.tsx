@@ -89,7 +89,7 @@ export default function LLMPrompt() {
             >
               <input
                 className="h-9 flex-1 rounded-full border border-slate-300 bg-white px-3 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
-                placeholder="Ask FireGPT about this area..."
+                placeholder="Ask FireAID about this area..."
                 value={inputValue}
                 onChange={handleChange}
               />
