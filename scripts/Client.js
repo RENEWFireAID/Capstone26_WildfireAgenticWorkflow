@@ -1,3 +1,6 @@
+// NOTE: CURRENTLY NOT FUNCTIONAL
+
+/*
 require('dotenv').config();
 const WebSocket = require('ws');
 const fetch = require('node-fetch')
@@ -98,3 +101,4 @@ async function handleUserPrompt(prompt) {
 
 // E.g.
 // handleUserPrompt('What is fire?');
+*/
