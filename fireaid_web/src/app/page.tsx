@@ -1,5 +1,6 @@
-import FireGPTPage from "./firegpt/page";
+
+import FireAIDPage from "./fireaid/page";
 
 export default function Home() {
-  return <FireGPTPage />;
+  return <FireAIDPage />;
 }

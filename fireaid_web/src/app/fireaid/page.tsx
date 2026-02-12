@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-
-import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import Popup from "@/components/ui/TermEntry";
 import LLMPrompt from "@/components/ui/LLMPrompt";
 import McpResultPanel from "@/components/mcp/McpResultPanel";
@@ -15,7 +14,7 @@ const FireMap = dynamic(() => import("@/components/map/FireMap"), {
 const TABS = ["Map", "Charts", "Code", "JSON"] as const;
 type Tab = (typeof TABS)[number];
 
-export default function FireGPTPage() {
+export default function FireAIDPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Map");
   const [showPopUp, setShowPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,8 +51,8 @@ export default function FireGPTPage() {
 
   return (
     <div className="flex gap-5">
-      {/* 左侧导航 */}
-      <FireGPTSidebar active="firegpt" />
+      {/* 左侧导航：当前在 FireAID 主分析页 */}
+      <FireAIDSidebar active="fireaid" />
 
       {/* 右侧主内容 */}
       <div className="flex-1 space-y-6">
@@ -156,12 +155,12 @@ export default function FireGPTPage() {
               />
             </section>
           </aside>
-
+          
           {/* 中：Visualization */}
           <main className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-slate-900">
-                FireGPT — Data Visualization
+                FireAID — Data Visualization
               </h2>
 
               <div className="hidden rounded-full bg-slate-100 p-1 text-xs md:flex">

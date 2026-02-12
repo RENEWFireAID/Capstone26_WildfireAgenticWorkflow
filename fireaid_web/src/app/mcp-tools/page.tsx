@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
+
+import FireGPTSidebar from "@/components/layout/FireAIDSidebar";
 import ToolButton from "@/components/ui/ToolButton";
 
 type Tool = { name: string; desc: string };
@@ -39,8 +40,8 @@ export default function McpToolsPage() {
                 MCP Tools & Apps
               </h1>
               <p className="mt-1 text-xs text-slate-500">
-                Browse system tools and user apps that FireGPT can call inside a
-                prompt.
+                Browse system tools and user apps that FireAID can call inside
+                a prompt.
               </p>
             </div>
           </div>
