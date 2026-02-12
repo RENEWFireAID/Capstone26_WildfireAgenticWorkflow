@@ -156,8 +156,8 @@ function ToolCard({
 
     navigator.clipboard.writeText(snippet).catch(() => {});
 
-    // ③ 跳转到 FireGPT 页面，看结果
-    window.location.href = "/firegpt";
+    // ③ 跳转到 FireAID 页面，看结果
+    window.location.href = "/fireaid";
   }}
 />
       </div>
