@@ -50,7 +50,7 @@ Any merge into main must be performed via Pull Request (PR). The GitHub repostio
 
 ## Contributors
 Ivy Swenson \
-Jenae Mattson \
+Jenae Matson \
 Andrew Winford \
 Daniel Kim \
 Elliott Lewandowski
