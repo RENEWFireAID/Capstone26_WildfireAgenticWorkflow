@@ -5,7 +5,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if(!process.env.REACT_APP_API_KEY) {
+    if(!process.env.GEMINI_API_KEY) {
         res.status(500).json({error: "Missing API key"})
     }
 
