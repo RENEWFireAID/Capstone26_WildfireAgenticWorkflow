@@ -16,6 +16,13 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+
+            - name: Create .env file
+              run: |
+                # echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+                echo "ALLOW_INSERT=false" >> .env
+                echo "MONGODB_URI=mongodb://root:password@mongo:27017/?authSource=admin"
+
             
             - name: Update fireaid_web Dependancies
               run: |
