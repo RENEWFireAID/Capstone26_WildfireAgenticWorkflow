@@ -11,7 +11,7 @@ export default function Topbar() {
           </div>
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
-              UAF Wildfire Lab
+              UAF Data/AI Lab
             </span>
             <span className="text-lg font-semibold tracking-tight text-white">
               FireAID

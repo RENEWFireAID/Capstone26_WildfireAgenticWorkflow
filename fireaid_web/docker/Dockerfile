@@ -3,7 +3,6 @@ FROM fireaid_web_base:latest
 
 COPY --chown=root:node public/ /var/web/public/
 COPY --chown=root:node src/ /var/web/src
-COPY --chown=root:node .env .env
 
 # TO-DO: User should be set to node but we need to modify file permissions first
 CMD [ "pnpm", "dev" ]
