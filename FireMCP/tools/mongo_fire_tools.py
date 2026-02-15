@@ -13,10 +13,9 @@ db = client[db_name]
 collection = db["ak_points"]
 
 
-
 def search_fire_points(
     year: Optional[int] = None,
-    prescribed: Optional[str] = None,   # "Y" / "N"
+    prescribed: Optional[str] = None,  # "Y" / "N"
     org: Optional[str] = None,
     limit: int = 20,
 ) -> List[Dict[str, Any]]:
