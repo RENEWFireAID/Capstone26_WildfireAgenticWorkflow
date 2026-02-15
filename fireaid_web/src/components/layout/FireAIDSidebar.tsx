@@ -1,131 +1,137 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Search, BarChart3, Book, Bot, Puzzle } from "lucide-react";
 
-type SidebarActive = "fireaid" | "explore";
+export default function FireGPTSidebar({ active }: { active: string }) {
+  const pathname = usePathname();
 
-export default function FireAIDSidebar({ active }: { active: SidebarActive }) {
   return (
-    <aside className="flex w-60 flex-col rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
-      {/* 顶部 logo + New analysis */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#003366] text-lg">
-            <span className="text-[#FFCC33]">🔥</span>
+    <aside className="w-72 shrink-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      {/* 顶部品牌 */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white text-lg">
+            🔥
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-semibold text-[#FFCC33]">
-              UAF Wildfire Lab
-            </span>
-            <span className="text-xs font-semibold text-slate-900">
-              FireAID
-            </span>
+          <div>
+            <div className="text-xs text-slate-500">UAF Wildfire Lab</div>
+            <div className="text-lg font-bold text-slate-900">FireAID</div>
           </div>
         </div>
+
+        <Link
+          href="/firegpt"
+          className="mt-4 block w-full rounded-xl border border-blue-500 px-3 py-2 text-center text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
+        >
+          + New analysis
+        </Link>
       </div>
 
-      <button className="mb-4 w-full rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm hover:bg-slate-50">
-        + New analysis
-      </button>
-
-      {/* Workspace */}
-      <div className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-        Workspace
-      </div>
-      <nav className="space-y-1 text-xs">
-        <SidebarItem icon="🔍" label="Search" />
-        <SidebarItem icon="📊" label="Charts" />
-        <SidebarItem icon="📚" label="Library" />
-      </nav>
-
-      {/* Agents & MCP Explore */}
-      <div className="mt-5 mb-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-        Agents & Apps
-      </div>
-      <nav className="space-y-1 text-xs">
-        <SidebarItem
-          icon="🤖"
-          label="FireAID"
-          href="/fireaid"
-          active={active === "fireaid"}
+      {/* WORKSPACE */}
+      <Section title="WORKSPACE">
+        <NavItem
+          icon={Search}
+          label="Search"
+          href="/firegpt"
+          active={pathname === "/firegpt"}
         />
-        <SidebarItem
-          icon="🧩"
+        <NavItem
+          icon={BarChart3}
+          label="Charts"
+          href="/firegpt"
+          active={false}
+        />
+        <NavItem
+          icon={Book}
+          label="Library"
+          href="/firegpt"
+          active={false}
+        />
+      </Section>
+
+      {/* AI & MCP */}
+      <Section title="AI & TOOLS">
+        <NavItem
+          icon={Bot}
+          label="FireAID Assistant"
+          href="/firegpt"
+          active={pathname === "/firegpt"}
+        />
+        <NavItem
+          icon={Puzzle}
           label="Explore (MCP tools)"
           href="/mcp-tools"
-          active={active === "explore"}
+          active={pathname === "/mcp-tools"}
         />
-      </nav>
+      </Section>
 
-      {/* Projects */}
-      <div className="mt-5 mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-        <span>Projects</span>
-        <button className="text-[10px] text-slate-400 hover:text-slate-600">
-          + New
-        </button>
-      </div>
-      <div className="space-y-1 text-xs">
-        <SidebarProject label="Interior Alaska 2024 fire season" />
-        <SidebarProject label="Tundra NDVI trend explorer" />
-        <SidebarProject label="Custom analysis workspace" muted />
-      </div>
-
-      <div className="mt-auto pt-4 text-[10px] text-slate-400">
-        Signed in as <span className="font-semibold">ivy@uaf.edu</span>
-      </div>
+      {/* PROJECTS */}
+      <Section title="PROJECTS">
+        <div className="space-y-2 text-xs">
+          <ProjectItem name="Interior Alaska 2024 fire season" />
+          <ProjectItem name="Tundra NDVI trend explorer" />
+          <Link
+            href="/firegpt"
+            className="mt-1 block text-blue-600 hover:underline"
+          >
+            Custom analysis workspace
+          </Link>
+        </div>
+      </Section>
     </aside>
   );
 }
 
-function SidebarItem({
-  icon,
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-6">
+      <div className="mb-3 text-[11px] uppercase tracking-widest text-slate-400">
+        {title}
+      </div>
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+function NavItem({
+  icon: Icon,
   label,
   href,
   active,
 }: {
-  icon: string;
+  icon: any;
   label: string;
-  href?: string;
-  active?: boolean;
-}) {
-  const inner = (
-    <div
-      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition ${
-        active
-          ? "bg-white text-slate-900 shadow-sm"
-          : "text-slate-600 hover:bg-slate-100"
-      }`}
-    >
-      <span className="text-base leading-none">{icon}</span>
-      <span>{label}</span>
-    </div>
-  );
-
-  if (href) {
-    return (
-      <Link href={href} className="block">
-        {inner}
-      </Link>
-    );
-  }
-
-  return <button className="w-full text-left">{inner}</button>;
-}
-
-function SidebarProject({
-  label,
-  muted,
-}: {
-  label: string;
-  muted?: boolean;
+  href: string;
+  active: boolean;
 }) {
   return (
-    <button
-      className={`w-full rounded-lg px-2 py-1.5 text-left text-[11px] ${
-        muted
-          ? "text-slate-400 hover:bg-slate-100"
-          : "bg-white text-slate-700 shadow-sm hover:bg-slate-50"
-      }`}
+    <Link
+      href={href}
+      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition
+        ${
+          active
+            ? "bg-blue-50 text-blue-600 font-semibold"
+            : "text-slate-700 hover:bg-slate-100"
+        }`}
     >
+      <Icon size={18} className={active ? "text-blue-600" : "text-slate-500"} />
       {label}
-    </button>
+    </Link>
+  );
+}
+
+function ProjectItem({ name }: { name: string }) {
+  return (
+    <div className="rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-100 cursor-pointer transition">
+      {name}
+    </div>
   );
 }
