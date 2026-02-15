@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, BarChart3, Book, Bot, Puzzle } from "lucide-react";
 
-export default function FireGPTSidebar({ active }: { active: string }) {
+export default function FireAIDSidebar({ active }: { active: string }) {
   const pathname = usePathname();
 
   return (
@@ -22,7 +22,7 @@ export default function FireGPTSidebar({ active }: { active: string }) {
         </div>
 
         <Link
-          href="/firegpt"
+          href="/fireaid"
           className="mt-4 block w-full rounded-xl border border-blue-500 px-3 py-2 text-center text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
         >
           + New analysis
@@ -34,21 +34,11 @@ export default function FireGPTSidebar({ active }: { active: string }) {
         <NavItem
           icon={Search}
           label="Search"
-          href="/firegpt"
-          active={pathname === "/firegpt"}
+          href="/fireaid"
+          active={pathname === "/fireaid"}
         />
-        <NavItem
-          icon={BarChart3}
-          label="Charts"
-          href="/firegpt"
-          active={false}
-        />
-        <NavItem
-          icon={Book}
-          label="Library"
-          href="/firegpt"
-          active={false}
-        />
+        <NavItem icon={BarChart3} label="Charts" href="/fireaid" active={false} />
+        <NavItem icon={Book} label="Library" href="/fireaid" active={false} />
       </Section>
 
       {/* AI & MCP */}
@@ -56,8 +46,8 @@ export default function FireGPTSidebar({ active }: { active: string }) {
         <NavItem
           icon={Bot}
           label="FireAID Assistant"
-          href="/firegpt"
-          active={pathname === "/firegpt"}
+          href="/fireaid"
+          active={pathname === "/fireaid"}
         />
         <NavItem
           icon={Puzzle}
@@ -72,10 +62,7 @@ export default function FireGPTSidebar({ active }: { active: string }) {
         <div className="space-y-2 text-xs">
           <ProjectItem name="Interior Alaska 2024 fire season" />
           <ProjectItem name="Tundra NDVI trend explorer" />
-          <Link
-            href="/firegpt"
-            className="mt-1 block text-blue-600 hover:underline"
-          >
+          <Link href="/fireaid" className="mt-1 block text-blue-600 hover:underline">
             Custom analysis workspace
           </Link>
         </div>

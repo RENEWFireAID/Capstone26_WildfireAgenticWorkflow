@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
-import FireGPTSidebar from "@/components/layout/FireGPTSidebar";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import ToolButton from "@/components/ui/ToolButton";
 import McpResultPanel from "@/components/mcp/McpResultPanel";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
@@ -149,7 +149,7 @@ export default function McpToolsPage() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[260px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
       {/* Left */}
-      <FireGPTSidebar active="explore" />
+      <FireAIDSidebar active="explore" />
 
       {/* Center */}
       <div className="min-w-0 space-y-4">
@@ -873,7 +873,7 @@ function ToolCard({
               `Suggested call:\n${suggestedCall}\n`;
 
             navigator.clipboard.writeText(snippet).catch(() => {});
-            window.location.href = "/firegpt";
+            window.location.href = "/fireaid";
           }}
         />
       </div>
