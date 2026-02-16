@@ -66,7 +66,30 @@ export default function LLMPrompt() {
         setInputValue(e.target.value)
     }
 
-    
+    const handleSave = async () => {
+      try {
+        const response = await fetch("/api/save_chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ chats }), // Sending the chat logs to the backend
+        });
+
+        if (!response.ok) {
+          console.log(response.status)
+          throw new Error("Failed to save chat");
+        }
+
+        const result = await response.json();
+        console.log("Chat saved successfully:", result);
+        alert("Chat saved successfully!");
+      } catch (error) {
+        console.error("Failed to save chat:", error);
+        alert("Failed to save chat. Please try again.");
+      }
+    };
+
     return (
           <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <h2 className="mb-3 text-sm font-semibold text-slate-900">
@@ -93,6 +116,14 @@ export default function LLMPrompt() {
                 value={inputValue}
                 onChange={handleChange}
               />
+              <button
+                type="button"         
+                onClick={handleSave}   
+                className="flex h-9 px-3 items-center justify-center rounded-full bg-green-600 text-xs font-semibold text-white hover:bg-green-800"
+              >
+                Save chat
+              </button>
+
               <button
                 type="submit"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-[#003366] text-xs font-semibold text-white hover:bg-slate-900"

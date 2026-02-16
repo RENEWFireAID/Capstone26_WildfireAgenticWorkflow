@@ -22,3 +22,5 @@ export default async function handler(
     
     res.status(200).json({msg: response.text})
 }
+
+// Comment out above code to test prompts; make a literal string
