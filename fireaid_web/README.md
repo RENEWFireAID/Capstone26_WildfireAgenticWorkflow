@@ -3,13 +3,6 @@
 ## Description
 Source code for the FireAID website. This is a Next.js project bootstrapped with `create-next-app`.
 
-## Setup
-
-You will need to create a `.env` file in this directory with the following template:
-```
-REACT_APP_API_KEY=<your_api_key>
-```
-
 ## Getting Started
 
 First, run the development server. The preffered way to do this is with `docker compose` using the `docker-compose.yaml` in the root of the repository. Instructions on how to do this can be found in the root `README.md`
