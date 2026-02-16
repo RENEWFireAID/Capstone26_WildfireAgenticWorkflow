@@ -1,24 +1,33 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { GoogleGenAI } from "@google/genai";
+import { OpenAI } from 'openai';
+
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if(!process.env.REACT_APP_API_KEY) {
+
+    if(!process.env.OPENROUTER_API_KEY) {
         res.status(500).json({error: "Missing API key"})
     }
 
     const {msg: text} = req.body
 
-    const ai = new GoogleGenAI({
-        apiKey: process.env.REACT_APP_API_KEY
+    const openai = new OpenAI({
+    baseURL: 'https://openrouter.ai/api/v1',
+    apiKey: process.env.OPENROUTER_API_KEY,
     });
 
-    const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: text,
+    const completion = await openai.chat.completions.create({
+    model: 'google/gemini-3-flash-preview',
+    messages: [
+        {
+        role: 'user',
+        content: text,
+        },
+    ],
     });
-    
-    res.status(200).json({msg: response.text})
+
+    res.status(200).json({msg: completion.choices[0].message.content})
 }
+
