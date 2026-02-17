@@ -3,6 +3,8 @@ services:
     build:
       context: ./fireaid_web/
       dockerfile: docker/Dockerfile
+    depends_on:
+      - mongo
     env_file:
       - .env
       
@@ -13,10 +15,9 @@ services:
 
   mongo:
     image: mongo:8.0
-    container_name: mongodb
     restart: always
     ports:
-      - "27017:27017" 
+      - "27018:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password

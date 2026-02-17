@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Topbar from "@/components/topbar/Topbar";
+import "leaflet/dist/leaflet.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,13 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className + " bg-slate-50"}>
-        {/* 顶部 UAF 蓝金风格 Topbar */}
         <Topbar />
 
-        {/* 主内容区域：居中 + 最大宽度 */}
-        <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-7xl px-4 py-4 md:px-6">
-          {children}
-        </div>
+        {/* 主内容区域：不再在这里做 max-w 居中！ */}
+        <div className="flex min-h-[calc(100vh-3.5rem)]">{children}</div>
       </body>
     </html>
   );
