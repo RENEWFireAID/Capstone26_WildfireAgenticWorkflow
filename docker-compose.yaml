@@ -11,6 +11,17 @@ services:
     ports:
       - "3000:3000"
 
+  term_mcp:
+    build:
+      context: ./mcp_server/
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    container_name: term_mcp
+    restart: always
+    ports:
+      - "3001:3001"
+
   mongo:
     image: mongo:8.0
     container_name: mongodb
