@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY term_mcp.py .
 
-CMD [ "python3", "term_mcp.py" ]
+CMD [ "fastmcp", "run", "term_mcp.py" ]
