@@ -66,3 +66,4 @@ if res.status_code == 200:
 
 else:
     print("Failed to get html, status: ", res.status_code)
+    print(res)

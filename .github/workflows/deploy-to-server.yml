@@ -36,5 +36,9 @@ jobs:
             - name: Populate MongoDB with Test Data
               run: |
                 mongosh --port 27018 -u root -p password --eval 'db.terms.insertOne({term: "Fire", def: "Block of Ice"})'
+            
+            - name: Scrape Terminology csv
+              run: |
+                
 
 
