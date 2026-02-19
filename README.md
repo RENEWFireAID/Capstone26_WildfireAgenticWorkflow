@@ -8,12 +8,7 @@ This is a monorepo for the FireAID project at the University of Alaska Fairbanks
 **scripts**: Helper scripts for other projects
 
 ## Running the Project
-You will need to create a `.env` file in this directory with the following template:
-```
-OPENROUTER_API_KEY=<openrouter-api-key>
-ALLOW_INSERT=<false-to-disable-insert>
-MONGODB_URI=mongodb://root:password@mongo:27018/?authSource=admin
-```
+You will need to create a `.env` file in this directory following the template layed out in `.env.example`.
 
 The project can be run with `docker compose`. The docker setup for `fireaid_web` is multi-step, more details and the motivation behind this can be found in `fireaid_web/docker/README.md`.
 
