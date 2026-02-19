@@ -43,7 +43,7 @@ export default function LLMPrompt() {
         let user_chat = {src: Role.user, msg: user_input, key: chats.length > 0 ? chats[chats.length-1].key + 1 : 0}
         setChats([...chats, user_chat, {src: Role.ai, msg: "...", key: chats.length > 0 ? chats[chats.length-1].key + 2 : 1}])
         
-        const response: AIResponse = await fetch("/api/ai/query", {
+        const response: AIResponse = await fetch("/api/ai/term_query", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ msg: user_input }),})
@@ -55,7 +55,7 @@ export default function LLMPrompt() {
         })
 
         if (response == null) {
-          console.log("ERROR: Got bad status code from /api/ai/query")
+          console.log("ERROR: Got bad status code from /api/ai/term_query")
           return
         }
 
