@@ -9,6 +9,12 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  const debug = process.env.ALLOW_INSERT?.toLowerCase() === "false" ? false : true
+  if (!debug) {
+    res.status(403).json({message: "Inserting new terms not allowed"})
+    return
+  }
+
   try {
     const terms = req.body;
 
