@@ -118,10 +118,10 @@ export default function FireAIDPage() {
                   />)}
               </tbody>
             </table>
-            <Popup showPopUp={showPopUp} closePopUp={()=>setShowPopUp(false)}>
-              <h2 className="text-xl font-bold text-slate-900"></h2>
-            </Popup>
           </div>
+          <Popup showPopUp={showPopUp} closePopUp={()=>setShowPopUp(false)}>
+              <h2 className="text-xl font-bold text-slate-900"></h2>
+          </Popup>
         </section>
 
         {/* 2. 下方三列：左 Data Library / 中 Visualization / 右 Prompt App */}
