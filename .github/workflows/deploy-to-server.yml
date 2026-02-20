@@ -37,6 +37,9 @@ jobs:
 
             - name: Populate MongoDB with terms.csv
               run: |
+                mongosh --port 27018 -u root -p password \
+                  --eval "use fireaid" \
+                  --eval "db.terms.deleteMany({})"
                 query=""
                 while read line;
                 do
