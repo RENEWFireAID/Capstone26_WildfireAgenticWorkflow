@@ -37,9 +37,14 @@ jobs:
 
             - name: Populate MongoDB with terms.csv
               run: |
+                query=""
                 while read line;
                 do
                     IFS=',' read -r term def <<< $line
-                    mongosh --port 27018 -u root -p password --eval "db.terms.insertOne({term: \"$term\", def: $def})"
-                done < ./scripts/term_scraper/terms.csv
+                    query+="{term: \"$term\", def: $def},"
+                done < terms.csv
+
+                mongosh --port 27018 -u root -p password \
+                  --eval "use fireaid" \
+                  --eval "db.terms.insertMany([$query])"
 
