@@ -42,7 +42,7 @@ jobs:
                 do
                     IFS=',' read -r term def <<< $line
                     query+="{term: \"$term\", def: $def},"
-                done < terms.csv
+                done < ./scripts/term_scraper/terms.csv
 
                 mongosh --port 27018 -u root -p password \
                   --eval "use fireaid" \
