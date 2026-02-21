@@ -1,12 +1,8 @@
-from typing import Any
-import os
-import httpx
-import logging
 from mcp.server.fastmcp import FastMCP
-from pymongo import MongoClient
 
 # Initialize FastMCP server
 mcp = FastMCP("terms")
+
 
 @mcp.tool()
 async def get_definition(term: str) -> str:
