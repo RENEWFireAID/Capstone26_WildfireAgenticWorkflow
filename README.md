@@ -59,3 +59,16 @@ Jenae Matson \
 Andrew Winford \
 Daniel Kim \
 Elliott Lewandowski
+
+## First Time Setup
+
+After cloning, run the following to build the base image before starting:
+```bash
+cd fireaid_web
+docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
+cd ..
+docker compose build
+docker compose up
+```
+
+> **Note:** If `package.json` dependencies change, you must rebuild the base image using the command above.
