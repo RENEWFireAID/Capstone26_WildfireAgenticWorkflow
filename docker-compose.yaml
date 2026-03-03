@@ -6,9 +6,6 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - ./fireaid_web/src:/var/web/src
-    environment:
-      MONGODB_URI: "${MONGODB_URI}"
-      MCP_HTTP_BASE: "http://firemcp:8081"
     depends_on:
       - mongo
       - firemcp
@@ -21,11 +18,10 @@ services:
   firemcp:
     build:
       context: ./FireMCP
-    environment:
-      MONGODB_URI: "${MONGODB_URI}"
-      MCP_ALLOWED_HOSTS: "firemcp,localhost,0.0.0.0"
     depends_on:
       - mongo
+    env_file:
+      - .env
     container_name: firemcp
     restart: always
     ports:
@@ -49,9 +45,8 @@ services:
     command: --port 27018
     ports:
       - "27018:27018" 
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USER}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD}"
+    env_file:
+      - .env
     volumes:
       - mongo-data:/data/db
 
