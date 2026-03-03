@@ -1,7 +1,6 @@
 import os
 from typing import Any, Dict, List, Optional
 from pymongo import MongoClient
-from bson import UuidRepresentation
 import uuid
 
 mongo_uri = os.getenv("MONGODB_URI")
@@ -11,6 +10,7 @@ client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
 db_name = os.getenv("MONGODB_DB", "fireaid")
 db = client[db_name]
 col = db["fire_points"]
+
 
 def _sanitize(doc: Dict) -> Dict:
     """Convert non-JSON-serializable types to strings."""
@@ -23,11 +23,16 @@ def _sanitize(doc: Dict) -> Dict:
                 result[k] = v.hex()
         elif isinstance(v, uuid.UUID):
             result[k] = str(v)
-        elif hasattr(v, '__str__') and type(v).__name__ in ('UUID', 'Decimal128', 'ObjectId'):
+        elif hasattr(v, "__str__") and type(v).__name__ in (
+            "UUID",
+            "Decimal128",
+            "ObjectId",
+        ):
             result[k] = str(v)
         else:
             result[k] = v
     return result
+
 
 def _build_query(
     year_start: Optional[int] = None,
@@ -46,6 +51,7 @@ def _build_query(
         q["prescribed"] = prescribed
     return q
 
+
 def search_fire_points(
     year_start: Optional[int] = None,
     year_end: Optional[int] = None,
@@ -56,6 +62,7 @@ def search_fire_points(
     limit = max(1, min(int(limit), 5000))
     proj = {"_id": 0}
     return [_sanitize(doc) for doc in col.find(q, proj).limit(limit)]
+
 
 def count_fire_points(
     year_start: Optional[int] = None,
