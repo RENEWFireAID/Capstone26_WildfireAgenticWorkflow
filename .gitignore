@@ -1,7 +1,4 @@
 .env
-
 .DS_Store
 **/.DS_Store
-.env
 *.zip
-.env
