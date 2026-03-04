@@ -20,7 +20,8 @@ export default function Topbar() {
         </div>
 
         {/* 中间导航 */}
-        <nav className="hidden items-center gap-5 text-xs font-medium text-slate-100 md:flex">
+        <nav className="hidden items-center gap-10 text-sm font-semibold text-slate-200 md:flex">
+
           {["Terminology", "Data", "Tools", "Apps", "Visualization", "Chat"].map(
             (item) => (
               <button
@@ -37,7 +38,7 @@ export default function Topbar() {
         <div className="flex items-center gap-3">
           <button className="hidden items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] text-slate-100 backdrop-blur hover:bg-white/15 md:flex">
             <span className="material-symbols-rounded text-base">search</span>
-            <span>Search</span>
+            <span></span>
           </button>
           <button className="rounded-full bg-[#FFCC33] px-3 py-1 text-[11px] font-semibold text-[#003366] shadow hover:bg-amber-300">
             Upload data
@@ -48,7 +49,7 @@ export default function Topbar() {
         </div>
       </div>
 
-      {/* 底部金线 */}
+      {/* bottom line */}
       <div className="h-1 w-full bg-[#FFCC33]" />
     </header>
   );

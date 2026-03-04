@@ -125,7 +125,7 @@ export default function FireAIDPage() {
         </section>
 
         {/* 2. 下方三列：左 Data Library / 中 Visualization / 右 Prompt App */}
-        <div className="grid grid-cols-[280px_1fr_320px] gap-6">
+        <div className="grid grid-cols-[280px_2fr_420px] gap-6">
           {/* 左：Data Library */}
           <aside className="space-y-4">
             <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -248,7 +248,7 @@ export default function FireAIDPage() {
               </div>
             )}
           </main>
-          <LLMPrompt></LLMPrompt>
+          <div><LLMPrompt /></div>
         </div>
       </div>
     </div>

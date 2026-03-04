@@ -1,105 +1,83 @@
-import { send } from "process";
 import React, { useState } from "react";
 import { Role, Message, AIResponse } from "../../types/LLMPrompt.d"
 
-function ChatBubble({
-  role,
-  text,
-  tone,
-}: {
-  role: string;
-  text: string;
-  tone: Role;
-}) {
+function ChatBubble({ role, text, tone }: { role: string; text: string; tone: Role }) {
   const baseClasses =
     tone === Role.user
-      ? "bg-amber-100"
-      : tone === Role.ai
-      ? "bg-emerald-100 border border-emerald-200"
-      : "bg-slate-100";
-
+      ? "bg-amber-50 border border-amber-200"
+      : "bg-emerald-50 border border-emerald-200";
   return (
-    <div className={`rounded-2xl px-3 py-2 text-xs shadow-sm ${baseClasses}`}>
-      <div className="mb-1 text-[10px] font-semibold text-slate-500">
-        {role}
-      </div>
-      <pre className="whitespace-pre-wrap font-sans text-slate-800">{text}</pre>
+    <div className={`rounded-2xl px-4 py-3 text-xs shadow-sm ${baseClasses}`}>
+      <div className="mb-1 text-[10px] font-semibold text-slate-500">{role}</div>
+      <pre className="whitespace-pre-wrap font-sans text-slate-800 leading-relaxed">{text}</pre>
     </div>
   );
 }
 
 export default function LLMPrompt() {
+  const [chats, setChats] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState("");
 
-    const [chats, setChats] = useState<Message[]>([]);
-    const [inputValue, setInputValue] = useState("")
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const user_input = inputValue.trim();
+    if (!user_input) return;
+    setInputValue("");
 
+    const userChat: Message = { src: Role.user, msg: user_input, key: Date.now() };
+    const loadingChat: Message = { src: Role.ai, msg: "...", key: Date.now() + 1 };
+    const next = [...chats, userChat, loadingChat];
+    setChats(next);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        
-        let user_input = inputValue
-        setInputValue("")
+    const response: AIResponse = await fetch("/api/ai/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ msg: user_input }),
+    }).then(res => res.ok ? res.json() : null);
 
-        let user_chat = {src: Role.user, msg: user_input, key: chats.length > 0 ? chats[chats.length-1].key + 1 : 0}
-        setChats([...chats, user_chat, {src: Role.ai, msg: "...", key: chats.length > 0 ? chats[chats.length-1].key + 2 : 1}])
-        
-        const response: AIResponse = await fetch("/api/ai/query", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ msg: user_input }),})
-        .then((res) => {
-          if (res.status == 200) {
-            return res.json()
-          }
-          return null
-        })
-
-        if (response == null) {
-          console.log("ERROR: Got bad status code from /api/ai/query")
-          return
-        }
-
-        setChats([...chats, user_chat, { src: Role.ai, msg: response.msg, key: chats.length > 0 ? chats[chats.length-1].key + 3 : 2 }])
+    if (!response) {
+      setChats([...chats, userChat, { src: Role.ai, msg: "Error: failed to get response.", key: Date.now() + 2 }]);
+      return;
     }
+    setChats([...chats, userChat, { src: Role.ai, msg: response.msg, key: Date.now() + 2 }]);
+  };
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value)
-    }
+  return (
+    <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <h2 className="mb-4 text-sm font-semibold text-slate-900">Prompt-Based App</h2>
 
-    
-    return (
-          <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <h2 className="mb-3 text-sm font-semibold text-slate-900">
-              Prompt-Based App
-            </h2>
-
-            <div 
-                id="LLMPromptConversation"
-                className="mb-3 max-h-94 space-y-3 overflow-y-auto text-xs"
-            >{chats.map(chat => <ChatBubble
-                role={chat.src == Role.user ? "User" : "AI Model"}
-                tone={chat.src}
-                text={chat.msg}
-                key={chat.key}
-              />)}</div>
-
-            <form
-              className="absolute inset-x-0 bottom-0 h-16 mt-2 mr-2 ml-2 flex items-center gap-2"
-              onSubmit={handleSubmit}
-            >
-              <input
-                className="h-9 flex-1 rounded-full border border-slate-300 bg-white px-3 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
-                placeholder="Ask FireAID about this area..."
-                value={inputValue}
-                onChange={handleChange}
-              />
-              <button
-                type="submit"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#003366] text-xs font-semibold text-white hover:bg-slate-900"
-              >
-                ➤
-              </button>
-            </form>
+      {/* 对话区 */}
+      <div className="flex-1 min-h-[200px] max-h-[480px] overflow-y-auto space-y-3 pr-1">
+        {chats.length === 0 && (
+          <div className="text-xs text-slate-400 text-center mt-8">
+            Ask FireAID anything about wildfire data...
           </div>
-    )
+        )}
+        {chats.map(chat => (
+          <ChatBubble
+            key={chat.key}
+            role={chat.src === Role.user ? "User" : "AI Model"}
+            tone={chat.src}
+            text={chat.msg}
+          />
+        ))}
+      </div>
+
+      {/* 输入区 */}
+      <form className="mt-4 flex items-center gap-2" onSubmit={handleSubmit}>
+        <input
+          className="h-10 flex-1 rounded-full border border-slate-300 bg-white px-4 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
+          placeholder="Ask FireAID about this area..."
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#003366] text-white hover:bg-slate-900"
+        >
+          ➤
+        </button>
+      </form>
+    </div>
+  );
 }

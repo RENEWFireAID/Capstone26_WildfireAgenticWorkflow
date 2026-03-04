@@ -1,16 +1,32 @@
 services:
   fireaid_web:
+    container_name: fireaid_web
     build:
       context: ./fireaid_web/
       dockerfile: docker/Dockerfile
+    volumes:
+      - ./fireaid_web/src:/var/web/src
+    depends_on:
+      - mongo
+      - firemcp
     env_file:
       - .env
-      
-    container_name: fireaid_web
     restart: always
     ports:
       - "3000:3000"
 
+  firemcp:
+    build:
+      context: ./FireMCP
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    container_name: firemcp
+    restart: always
+    ports:
+      - "8081:8081"
+     
   term_mcp:
     build:
       context: ./mcp_server/
@@ -24,14 +40,13 @@ services:
 
   mongo:
     image: mongo:8.0
-    container_name: mongodb
+    container_name: mongo
     restart: always
     command: --port 27018
     ports:
       - "27018:27018" 
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+    env_file:
+      - .env
     volumes:
       - mongo-data:/data/db
 
