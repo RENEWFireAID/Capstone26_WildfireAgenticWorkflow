@@ -4,6 +4,8 @@ permissions:
     contents: read
 
 on:
+  pull_request:
+    branches: [ "main" ]
   push:
     branches: [ "main" ]
   workflow_dispatch:
@@ -17,7 +19,7 @@ jobs:
 
             - name: Create .env file
               run: |
-                echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" > .env
+                echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" >> .env
                 echo "ALLOW_INSERT=false" >> .env
                 echo "MONGODB_URI=mongodb://root:password@mongo:27018/?authSource=admin" >> .env
                 echo "MONGO_INITDB_ROOT_USERNAME=root >> .env
