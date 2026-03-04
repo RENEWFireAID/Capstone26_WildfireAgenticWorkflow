@@ -19,10 +19,10 @@ jobs:
 
             - name: Create .env file
               run: |
-                echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" >> .env
+                echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" > .env
                 echo "ALLOW_INSERT=false" >> .env
                 echo "MONGODB_URI=mongodb://root:password@mongo:27018/?authSource=admin" >> .env
-                echo "MONGO_INITDB_ROOT_USERNAME=root >> .env
+                echo "MONGO_INITDB_ROOT_USERNAME=root" >> .env
                 echo "MONGO_INITDB_ROOT_PASSWORD=9FCBC1FA148CFCFDE320557B5CB73DBB" >> .env
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
                 echo "MCP_ALLOWED_HOSTS=137.229.25.190,localhost,0.0.0.0" >> .env
