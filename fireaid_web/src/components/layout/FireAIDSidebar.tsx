@@ -38,8 +38,8 @@ export default function FireAIDSidebar({ active }: { active: string }) {
         <NavItem
           icon={Search}
           label="Search"
-          href="/fireaid"
-          active={pathname === "/fireaid"}
+          href="/search"
+          active={pathname === "/search"}
         />
         <NavItem icon={BarChart3} label="Charts" href="/fireaid" active={false} />
         <NavItem icon={Book} label="Library" href="/fireaid" active={false} />

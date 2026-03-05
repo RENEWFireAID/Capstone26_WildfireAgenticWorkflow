@@ -148,7 +148,7 @@ export default function McpToolsPage() {
       <div className="min-w-0 space-y-4">
         <WorkbenchHeader
           title="Wildfire Analytics Dashboard"
-          subtitle="WFIGS / NIFC (MongoDB)"
+          subtitle="Local MongoDB"
           running={running}
           onRefresh={() => window.dispatchEvent(new Event("mcp:updated"))}
         />
@@ -273,7 +273,7 @@ function WorkbenchHeader({
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
               {subtitle}
             </span>
-            <span className="text-[11px] text-slate-500">Local MongoDB</span>
+            <span className="text-[11px] text-slate-500"></span>
           </div>
         </div>
 
@@ -465,7 +465,7 @@ function QueryBuilderPanel({
           </div>
         </Field>
 
-        <Field label="State (UI only for now)">
+        <Field label="State">
           <input
             className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
             value={spec.state ?? ""}
@@ -474,7 +474,7 @@ function QueryBuilderPanel({
           />
         </Field>
 
-        <Field label="Acres (UI only for now)">
+        <Field label="Acres">
           <div className="grid grid-cols-2 gap-2">
             <input
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
