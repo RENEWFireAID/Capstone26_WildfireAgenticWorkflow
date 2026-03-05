@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, BarChart3, Book, Bot, Puzzle } from "lucide-react";
+import { Search, BarChart3, Book, Bot, Puzzle, FileText } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 export default function FireAIDSidebar({ active }: { active: string }) {
   const pathname = usePathname();
@@ -41,8 +42,10 @@ export default function FireAIDSidebar({ active }: { active: string }) {
           href="/search"
           active={pathname === "/search"}
         />
-        <NavItem icon={BarChart3} label="Charts" href="/fireaid" active={false} />
+        <NavItem icon={BarChart3} label="Charts" href="/charts" active={pathname === "/charts"} />
+        <NavItem icon={TrendingUp} label="Prediction" href="/prediction" active={pathname === "/prediction"} />
         <NavItem icon={Book} label="Library" href="/fireaid" active={false} />
+        <NavItem icon={FileText} label="Reports" href="/reports" active={pathname === "/reports"} />
       </Section>
 
       {/* AI & MCP */}

@@ -46,6 +46,7 @@ export default function McpToolsPage() {
   });
 
   const [running, setRunning] = useState(false);
+  const [qbOpen, setQbOpen] = useState(false);
   const [runErr, setRunErr] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("points");
 
@@ -137,7 +138,6 @@ export default function McpToolsPage() {
       setRunning(false);
     }
   }
-  
         
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[260px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
@@ -232,6 +232,8 @@ export default function McpToolsPage() {
           onRun={() => runQuery()}
           runErr={runErr}
           templateQuery={templateQuery}
+          qbOpen={qbOpen}
+          setQbOpen={setQbOpen}
         />
 
         <InsightsPanel />
@@ -371,19 +373,104 @@ function QueryBuilderPanel({
   onRun: () => void;
   runErr: string | null;
   templateQuery: string;
+  qbOpen: boolean;
+  setQbOpen: (v: boolean | ((o: boolean) => boolean)) => void;
 }) {
   const set = (patch: Partial<QuerySpec>) => setSpec({ ...spec, ...patch });
+  const [nlInput, setNlInput] = useState("");
+  const [nlLoading, setNlLoading] = useState(false);
+  const [nlSummary, setNlSummary] = useState<string | null>(null);
+  const [nlError, setNlError] = useState<string | null>(null);
+  const [nlResults, setNlResults] = useState<any[]>([]);
+
+  async function runNlQuery() {
+    if (!nlInput.trim() || nlLoading) return;
+    setNlLoading(true); setNlSummary(null); setNlError(null); setNlResults([]);
+    try {
+      const res = await fetch("/api/mcp/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: nlInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed");
+      setNlSummary(data.summary);
+      setNlResults(data.results ?? []);
+      if (data.spec) {
+        setSpec({ ...spec,
+          yearStart: data.spec.year_start ?? spec.yearStart,
+          yearEnd: data.spec.year_end ?? spec.yearEnd,
+          prescribed: data.spec.prescribed === "Y" ? "yes" : data.spec.prescribed === "N" ? "no" : "all",
+          limit: data.spec.limit ?? spec.limit,
+        });
+      }
+      localStorage.setItem("mcp:last_result", JSON.stringify({ results: data.results }));
+      window.dispatchEvent(new Event("mcp:updated"));
+    } catch (e) {
+      setNlError((e as any)?.message ?? "Error");
+    } finally {
+      setNlLoading(false);
+    }
+  }
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-sm font-semibold text-slate-900">Query Builder</div>
-          <div className="mt-1 text-xs text-slate-500">
-            Build a structured query (no natural-language topbar).
-          </div>
+
+      {/* AI Query */}
+      <div className="mb-4 pb-4 border-b border-slate-100">
+        <div className="text-sm font-semibold text-slate-900">AI Query</div>
+        <div className="mt-1 text-xs text-slate-500">Ask in plain English — AI queries the database and summarizes results.</div>
+        <div className="mt-2 flex gap-2">
+          <input
+            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:border-blue-400 placeholder:text-slate-400"
+            placeholder="e.g. Lightning fires in 2022"
+            value={nlInput}
+            onChange={(e) => setNlInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && runNlQuery()}
+            disabled={nlLoading}
+          />
+          <button
+            className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+            onClick={runNlQuery}
+            disabled={nlLoading || !nlInput.trim()}
+          >
+            {nlLoading ? "..." : "Ask"}
+          </button>
         </div>
+        {!nlSummary && !nlLoading && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {["Lightning fires 2022", "Largest fires 2024", "Prescribed burns 2020-2023"].map(q => (
+              <button key={q} className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-600 hover:bg-slate-50" onClick={() => setNlInput(q)}>{q}</button>
+            ))}
+          </div>
+        )}
+        {nlLoading && (
+          <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs text-blue-600 animate-pulse">
+            AI is querying the database...
+          </div>
+        )}
+        {nlError && (
+          <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">{nlError}</div>
+        )}
+        {nlSummary && (
+          <div className="mt-3 space-y-2">
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-3">
+              <div className="text-[11px] font-semibold text-blue-700 mb-1">AI Analysis</div>
+              <div className="text-xs text-blue-800 leading-relaxed">{nlSummary}</div>
+            </div>
+            <div className="rounded-xl border border-slate-100 bg-slate-50 p-2 text-center text-[11px] text-slate-500">
+              {nlResults.length} records loaded — map and charts updated
+            </div>
+          </div>
+        )}
       </div>
+
+      <div>
+        <button className="flex w-full items-center justify-between py-1" onClick={() => setQbOpen(o => !o)}>
+          <div className="text-sm font-semibold text-slate-900">Query Builder</div>
+          <span className="text-xs text-slate-400">{qbOpen ? "▲ collapse" : "▼ expand"}</span>
+        </button>
+        {qbOpen && <div>
 
       {/* Presets */}
       <div className="mt-4 space-y-2">
@@ -548,6 +635,8 @@ function QueryBuilderPanel({
       <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-3">
         <div className="text-[11px] font-semibold text-slate-700">Query preview</div>
         <div className="mt-1 text-[11px] text-slate-600">{templateQuery}</div>
+      </div>
+        </div>}
       </div>
     </div>
   );
