@@ -22,8 +22,8 @@ jobs:
                 echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" > .env
                 echo "ALLOW_INSERT=false" >> .env
                 echo "MONGODB_URI=mongodb://root:password@mongo:27018/?authSource=admin" >> .env
-                echo "MONGO_INITDB_ROOT_USERNAME=root" >> .env
-                echo "MONGO_INITDB_ROOT_PASSWORD=9FCBC1FA148CFCFDE320557B5CB73DBB" >> .env
+                echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_USERNAME }}" >> .env
+                echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
                 echo "MCP_ALLOWED_HOSTS=137.229.25.190,localhost,0.0.0.0" >> .env
                 
@@ -40,9 +40,8 @@ jobs:
 
             - name: Populate MongoDB with terms.csv
               run: |
-                source .env
-                mongosh --port 27018 -u $MONGO_INITDB_ROOT_USERNAME \
-                  -p $MONGO_INITDB_ROOT_PASSWORD \
+                mongosh --port 27018 -u ${{ secrets.MONGO_PASSWORD}} \
+                  -p ${{ secrets.MONGO_USERNAME}} \
                   --eval "use fireaid" \
                   --eval "db.terms.deleteMany({})"
 
@@ -53,8 +52,8 @@ jobs:
                     query+="{term: \"$term\", def: $def},"
                 done < ./scripts/term_scraper/terms.csv
 
-                mongosh --port 27018 -u $MONGO_INITDB_ROOT_USERNAME \
-                  -p $MONGO_INITDB_ROOT_PASSWORD \
+                mongosh --port 27018 -u ${{ secrets.MONGO_PASSWORD}} \
+                  -p ${{ secrets.MONGO_USERNAME}} \
                   --eval "use fireaid" \
                   --eval "db.terms.insertMany([$query])"
 
