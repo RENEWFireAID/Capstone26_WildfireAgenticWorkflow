@@ -21,7 +21,7 @@ jobs:
               run: |
                 echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" > .env
                 echo "ALLOW_INSERT=false" >> .env
-                echo "MONGODB_URI=mongodb://root:password@mongo:27018/?authSource=admin" >> .env
+                echo "MONGODB_URI=mongodb://${{ secrets.MONGO_USERNAME }}:${{ secrets.MONGO_PASSWORD }}@mongo:27018/?authSource=admin" >> .env
                 echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_USERNAME }}" >> .env
                 echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
