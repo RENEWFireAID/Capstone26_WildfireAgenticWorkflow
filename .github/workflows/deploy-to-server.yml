@@ -40,6 +40,8 @@ jobs:
 
             - name: Populate MongoDB with terms.csv
               run: |
+                echo ${{ secrets.MONGO_PASSWORD}}
+                echo ${{ secrets.MONGO_USERNAME}}
                 mongosh --port 27018 -u ${{ secrets.MONGO_PASSWORD}} \
                   -p ${{ secrets.MONGO_USERNAME}} \
                   --eval "use fireaid" \
