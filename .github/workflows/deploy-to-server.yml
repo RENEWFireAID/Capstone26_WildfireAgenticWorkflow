@@ -53,7 +53,8 @@ jobs:
                     query+="{term: \"$term\", def: $def},"
                 done < ./scripts/term_scraper/terms.csv
 
-                mongosh --port 27018 -u root -p password \
+                mongosh --port 27018 -u $MONGO_INITDB_ROOT_USERNAME \
+                  -p $MONGO_INITDB_ROOT_PASSWORD \
                   --eval "use fireaid" \
                   --eval "db.terms.insertMany([$query])"
 
