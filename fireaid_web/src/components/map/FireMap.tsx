@@ -32,6 +32,15 @@ function toNum(v: any): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+function getFireColor(row: AnyObj): { fill: string; stroke: string } {
+  const acres = toNum(row.ESTIMATEDTOTALACRES ?? row.acres ?? row.TOTALACRES ?? null) ?? 0;
+  if (acres >= 10000) return { fill: "#dc2626", stroke: "#7f1d1d" };   // red    > 10,000
+  if (acres >= 1000)  return { fill: "#ea580c", stroke: "#9a3412" };   // orange 1,000-10,000
+  if (acres >= 100)   return { fill: "#eab308", stroke: "#854d0e" };   // yellow 100-1,000
+  if (acres >= 10)    return { fill: "#22c55e", stroke: "#14532d" };   // green  10-100
+  return                     { fill: "#3b82f6", stroke: "#1e3a8a" };   // blue   < 10
+}
+
 function pickLatLng(row: AnyObj): { lat: number; lng: number } | null {
   const lat =
     toNum(row.LATITUDE) ??
@@ -177,11 +186,12 @@ function PointsLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
       const ll = pickLatLng(r);
       if (!ll) continue;
 
+      const { fill, stroke } = getFireColor(r);
       const m = L.circleMarker([ll.lat, ll.lng], {
-        radius: 4,
-        color: "#7f1d1d",
-        fillColor: "#ff3b30",
-        fillOpacity: 0.95,
+        radius: 5,
+        color: stroke,
+        fillColor: fill,
+        fillOpacity: 0.9,
         weight: 1,
       });
 
@@ -246,7 +256,18 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
       const ll = pickLatLng(r);
       if (!ll) continue;
 
-      const m = L.marker([ll.lat, ll.lng], { icon });
+      const { fill, stroke } = getFireColor(r);
+      const coloredIcon = L.divIcon({
+        className: "",
+        html: `<div style="
+          width:10px;height:10px;border-radius:9999px;
+          background:${fill};border:2px solid ${stroke};
+          box-shadow:0 0 6px ${fill}88;
+        "></div>`,
+        iconSize: [10, 10],
+        iconAnchor: [5, 5],
+      });
+      const m = L.marker([ll.lat, ll.lng], { icon: coloredIcon });
 
       const name = r.INCIDENT_NAME ?? r.IncidentName ?? r.name ?? "";
       if (name) m.bindPopup(String(name));
@@ -256,6 +277,108 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
   }, [enabled, rows, icon]);
 
   return null;
+}
+
+function MapLegend({ viewMode }: { viewMode: ViewMode }) {
+  return (
+    <div style={{
+      position: "absolute", bottom: 24, right: 8, zIndex: 1000,
+      background: "rgba(255,255,255,0.97)", borderRadius: 12,
+      border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+      padding: "10px 14px", minWidth: 160, fontSize: 11
+    }}>
+      <div style={{ fontWeight: 700, color: "#334155", marginBottom: 6 }}>Legend</div>
+
+      {viewMode === "points" && (<>
+        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+          Fire Size (Estimated Acres)
+        </div>
+        {[
+          { fill: "#dc2626", label: "≥ 10,000 acres", sub: "Major fire" },
+          { fill: "#ea580c", label: "1,000 – 9,999 acres", sub: "Large fire" },
+          { fill: "#eab308", label: "100 – 999 acres", sub: "Medium fire" },
+          { fill: "#22c55e", label: "10 – 99 acres", sub: "Small fire" },
+          { fill: "#3b82f6", label: "< 10 acres", sub: "Minor fire" },
+        ].map(({ fill, label, sub }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: fill, flexShrink: 0 }} />
+            <div>
+              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
+              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
+            </div>
+          </div>
+        ))}
+        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
+          Each dot = 1 fire incident<br />
+          Color by ESTIMATEDTOTALACRES<br />
+          Query limit: 500 records<br />
+          Total in DB: 33,596 records<br />
+          Source: WFIGS via local MongoDB
+        </div>
+      </>)}
+
+      {viewMode === "cluster" && (<>
+        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+          Cluster — Fire Count
+        </div>
+        <div style={{ color: "#1e293b", marginBottom: 8, lineHeight: 1.6 }}>
+          Each number = total fire incidents in that area.
+          Individual dots are colored by fire size (acres).
+        </div>
+        {[
+          { fill: "#dc2626", label: "≥ 10,000 acres", sub: "Major fire" },
+          { fill: "#ea580c", label: "1,000 – 9,999 acres", sub: "Large fire" },
+          { fill: "#eab308", label: "100 – 999 acres", sub: "Medium fire" },
+          { fill: "#22c55e", label: "10 – 99 acres", sub: "Small fire" },
+          { fill: "#3b82f6", label: "< 10 acres", sub: "Minor fire" },
+        ].map(({ fill, label, sub }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: fill, flexShrink: 0 }} />
+            <div>
+              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
+              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
+            </div>
+          </div>
+        ))}
+        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
+          Cluster radius: 50px<br />
+          Expands at zoom level 11<br />
+          Query limit: 500 records<br />
+          Total in DB: 33,596 records<br />
+          Source: WFIGS via local MongoDB
+        </div>
+      </>)}
+
+      {viewMode === "heat" && (<>
+        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+          Fire Incident Density
+        </div>
+        <div style={{ color: "#64748b", fontSize: 10, marginBottom: 8, lineHeight: 1.6 }}>
+          Color reflects the number of recorded fire incidents per geographic area — not fire intensity or temperature.
+        </div>
+        {[
+          { fill: "#ff0000", label: "Highest concentration", sub: "Most fire incidents recorded" },
+          { fill: "#ffff00", label: "High concentration", sub: "Frequent fire incidents" },
+          { fill: "#00ff00", label: "Moderate concentration", sub: "Occasional fire incidents" },
+          { fill: "#0000ff", label: "Low concentration", sub: "Few fire incidents recorded" },
+        ].map(({ fill, label, sub }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
+            <div style={{ width: 12, height: 8, borderRadius: 2, background: fill, flexShrink: 0 }} />
+            <div>
+              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
+              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
+            </div>
+          </div>
+        ))}
+        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
+          Kernel radius: 18px · Blur: 16px<br />
+          Query limit: 500 records<br />
+          Total in DB: 33,596 records<br />
+          Source: WFIGS via local MongoDB
+        </div>
+      </>)}
+    </div>
+  );
 }
 
 export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }) {
@@ -274,30 +397,31 @@ export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }
   }, []);
 
   return (
-    <MapContainer
-  className="h-full w-full"
-  style={{ width: "100%", height: "100%" }}
-  center={[64.8, -147.7]}
-  zoom={4}
-  scrollWheelZoom
->
+    <div className="relative h-full w-full">
+      <MapContainer
+        className="h-full w-full"
+        style={{ width: "100%", height: "100%" }}
+        center={[64.8, -147.7]}
+        zoom={4}
+        scrollWheelZoom
+      >
+        <TileLayer
+          attribution="&copy; OpenStreetMap contributors"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
-      <TileLayer
-        attribution="&copy; OpenStreetMap contributors"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+        <InvalidateSizeOnChange viewMode={viewMode} />
+        <ExposeMapForDebug />
 
-      <InvalidateSizeOnChange viewMode={viewMode} />
-      <ExposeMapForDebug />
+        <PointsLayer enabled={viewMode === "points"} rows={rows} />
+        <ClusterLayer enabled={viewMode === "cluster"} rows={rows} />
+        <HeatLayer enabled={viewMode === "heat"} rows={rows} />
+      </MapContainer>
 
-      {/* Points */}
-      <PointsLayer enabled={viewMode === "points"} rows={rows} />
-
-      {/* Cluster */}
-      <ClusterLayer enabled={viewMode === "cluster"} rows={rows} />
-
-      {/* Heat */}
-      <HeatLayer enabled={viewMode === "heat"} rows={rows} />
-    </MapContainer>
+      {/* Legend overlay — outside MapContainer so React renders it normally */}
+      <div className="absolute bottom-6 right-2 z-[1000] pointer-events-none">
+        <MapLegend viewMode={viewMode} />
+      </div>
+    </div>
   );
 }
