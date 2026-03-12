@@ -6,7 +6,7 @@ import L from "leaflet";
 import "leaflet.heat";
 import "leaflet.markercluster";
 
-type ViewMode = "points" | "cluster" | "heat";
+type ViewMode = "points" | "cluster" | "heat" | "smoke";
 type AnyObj = Record<string, any>;
 
 function safeParseJSON(raw: string | null): any | null {
@@ -279,106 +279,221 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
   return null;
 }
 
+function DrawBoxLayer() {
+  const map = useMap();
+  const rectRef = useRef<L.Rectangle | null>(null);
+  const startRef = useRef<L.LatLng | null>(null);
+  const drawingRef = useRef(false);
+
+  useEffect(() => {
+    function startDraw() {
+      // Change cursor
+      map.getContainer().style.cursor = "crosshair";
+      map.dragging.disable();
+      drawingRef.current = true;
+
+      // Clean up previous rectangle
+      if (rectRef.current) { map.removeLayer(rectRef.current); rectRef.current = null; }
+
+      function onMouseDown(e: L.LeafletMouseEvent) {
+        if (!drawingRef.current) return;
+        startRef.current = e.latlng;
+
+        if (rectRef.current) map.removeLayer(rectRef.current);
+        rectRef.current = L.rectangle([e.latlng, e.latlng], {
+          color: "#f97316", weight: 2, fillColor: "#f97316", fillOpacity: 0.1, dashArray: "6,4"
+        }).addTo(map);
+      }
+
+      function onMouseMove(e: L.LeafletMouseEvent) {
+        if (!startRef.current || !rectRef.current) return;
+        rectRef.current.setBounds(L.latLngBounds(startRef.current, e.latlng));
+      }
+
+      function onMouseUp(e: L.LeafletMouseEvent) {
+        if (!startRef.current || !rectRef.current) return;
+        drawingRef.current = false;
+        map.getContainer().style.cursor = "";
+        map.dragging.enable();
+
+        const bounds = L.latLngBounds(startRef.current, e.latlng);
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        // Dispatch result so mcp-tools page can use it
+        window.dispatchEvent(new CustomEvent("mcp:boxselected", {
+          detail: {
+            lat_min: sw.lat, lat_max: ne.lat,
+            lng_min: sw.lng, lng_max: ne.lng,
+          }
+        }));
+
+        map.off("mousedown", onMouseDown);
+        map.off("mousemove", onMouseMove);
+        map.off("mouseup", onMouseUp);
+        startRef.current = null;
+      }
+
+      map.on("mousedown", onMouseDown);
+      map.on("mousemove", onMouseMove);
+      map.on("mouseup", onMouseUp);
+    }
+
+    function clearSelection() {
+      if (rectRef.current) { map.removeLayer(rectRef.current); rectRef.current = null; }
+      map.getContainer().style.cursor = "";
+      map.dragging.enable();
+      drawingRef.current = false;
+      startRef.current = null;
+      window.dispatchEvent(new CustomEvent("mcp:boxselected", { detail: null }));
+    }
+
+    window.addEventListener("mcp:drawbox", startDraw);
+    window.addEventListener("mcp:clearselection", clearSelection);
+    return () => {
+      window.removeEventListener("mcp:drawbox", startDraw);
+      window.removeEventListener("mcp:clearselection", clearSelection);
+    };
+  }, [map]);
+
+  return null;
+}
+
 function MapLegend({ viewMode }: { viewMode: ViewMode }) {
   return (
     <div style={{
-      position: "absolute", bottom: 24, right: 8, zIndex: 1000,
-      background: "rgba(255,255,255,0.97)", borderRadius: 12,
+      position: "absolute", bottom: 32, left: 12, zIndex: 1000,
+      background: "rgba(255,255,255,0.95)", borderRadius: 10,
       border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-      padding: "10px 14px", minWidth: 160, fontSize: 11
+      padding: "8px 12px", fontSize: 10, minWidth: 180,
     }}>
-      <div style={{ fontWeight: 700, color: "#334155", marginBottom: 6 }}>Legend</div>
-
-      {viewMode === "points" && (<>
-        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
-          Fire Size (Estimated Acres)
-        </div>
-        {[
-          { fill: "#dc2626", label: "≥ 10,000 acres", sub: "Major fire" },
-          { fill: "#ea580c", label: "1,000 – 9,999 acres", sub: "Large fire" },
-          { fill: "#eab308", label: "100 – 999 acres", sub: "Medium fire" },
-          { fill: "#22c55e", label: "10 – 99 acres", sub: "Small fire" },
-          { fill: "#3b82f6", label: "< 10 acres", sub: "Minor fire" },
-        ].map(({ fill, label, sub }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
-            <div style={{ width: 12, height: 12, borderRadius: "50%", background: fill, flexShrink: 0 }} />
-            <div>
-              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
-              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
-            </div>
-          </div>
-        ))}
-        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
-          Each dot = 1 fire incident<br />
-          Color by ESTIMATEDTOTALACRES<br />
-          Query limit: 500 records<br />
-          Total in DB: 33,596 records<br />
-          Source: WFIGS via local MongoDB
-        </div>
-      </>)}
-
-      {viewMode === "cluster" && (<>
-        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
-          Cluster — Fire Count
-        </div>
-        <div style={{ color: "#1e293b", marginBottom: 8, lineHeight: 1.6 }}>
-          Each number = total fire incidents in that area.
-          Individual dots are colored by fire size (acres).
-        </div>
-        {[
-          { fill: "#dc2626", label: "≥ 10,000 acres", sub: "Major fire" },
-          { fill: "#ea580c", label: "1,000 – 9,999 acres", sub: "Large fire" },
-          { fill: "#eab308", label: "100 – 999 acres", sub: "Medium fire" },
-          { fill: "#22c55e", label: "10 – 99 acres", sub: "Small fire" },
-          { fill: "#3b82f6", label: "< 10 acres", sub: "Minor fire" },
-        ].map(({ fill, label, sub }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
-            <div style={{ width: 12, height: 12, borderRadius: "50%", background: fill, flexShrink: 0 }} />
-            <div>
-              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
-              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
-            </div>
-          </div>
-        ))}
-        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
-          Cluster radius: 50px<br />
-          Expands at zoom level 11<br />
-          Query limit: 500 records<br />
-          Total in DB: 33,596 records<br />
-          Source: WFIGS via local MongoDB
-        </div>
-      </>)}
-
       {viewMode === "heat" && (<>
-        <div style={{ fontWeight: 600, color: "#94a3b8", fontSize: 10, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
           Fire Incident Density
         </div>
-        <div style={{ color: "#64748b", fontSize: 10, marginBottom: 8, lineHeight: 1.6 }}>
-          Color reflects the number of recorded fire incidents per geographic area — not fire intensity or temperature.
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #0000ff, #00ff00, #ffff00, #ff0000)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>Few fires</span>
+          <span>Many fires</span>
         </div>
-        {[
-          { fill: "#ff0000", label: "Highest concentration", sub: "Most fire incidents recorded" },
-          { fill: "#ffff00", label: "High concentration", sub: "Frequent fire incidents" },
-          { fill: "#00ff00", label: "Moderate concentration", sub: "Occasional fire incidents" },
-          { fill: "#0000ff", label: "Low concentration", sub: "Few fire incidents recorded" },
-        ].map(({ fill, label, sub }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
-            <div style={{ width: 12, height: 8, borderRadius: 2, background: fill, flexShrink: 0 }} />
-            <div>
-              <div style={{ color: "#1e293b", fontWeight: 500 }}>{label}</div>
-              <div style={{ color: "#94a3b8", fontSize: 10 }}>{sub}</div>
-            </div>
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Color = fire incident count per area<br />
+          Not intensity or temperature<br />
+          Source: MongoDB · 33,596 records
+        </div>
+      </>)}
+
+      {viewMode === "smoke" && (<>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
+          PM2.5 Air Quality
+        </div>
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #00e400, #ffff00, #ff7e00, #ff0000, #8f3f97)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>Good</span>
+          <span>Hazardous</span>
+        </div>
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Source: Open-Meteo · NOAA GFS<br />
+          Updates hourly<br />
+          Grid: 1.5°lat × 2.5°lon<br />
+          Each circle = 120km radius<br />
+          Opacity ∝ PM2.5 concentration<br />
+          AQI ≤50 Good · ≤100 Moderate<br />
+          ≤150 Unhealthy · ≤200 Very Unhealthy<br />
+          &gt;200 Hazardous
+        </div>
+      </>)}
+
+      {(viewMode === "points" || viewMode === "cluster") && (<>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
+          {viewMode === "cluster" ? "Fire Count (Clustered)" : "Fire Size (Acres)"}
+        </div>
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #3b82f6, #22c55e, #eab308, #ea580c, #dc2626)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>&lt; 10 ac</span>
+          <span>≥ 10K ac</span>
+        </div>
+        {viewMode === "cluster" && (
+          <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+            Number = fires in area<br />
+            Expands at zoom 11
           </div>
-        ))}
-        <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #f1f5f9", color: "#94a3b8", fontSize: 10 }}>
-          Kernel radius: 18px · Blur: 16px<br />
-          Query limit: 500 records<br />
-          Total in DB: 33,596 records<br />
-          Source: WFIGS via local MongoDB
+        )}
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Source: MongoDB · 33,596 records
         </div>
       </>)}
     </div>
   );
+}
+
+
+function SmokeLayer({ enabled }: { enabled: boolean }) {
+  const map = useMap();
+  const layerRef = useRef<L.LayerGroup | null>(null);
+
+  useEffect(() => {
+    if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null; }
+    if (!enabled) return;
+
+    layerRef.current = L.layerGroup().addTo(map);
+
+    // Grid of points across Alaska
+    const points: [number, number][] = [];
+    for (let lat = 54; lat <= 72; lat += 1.5) {
+      for (let lon = -170; lon <= -130; lon += 2.5) {
+        points.push([lat, lon]);
+      }
+    }
+
+    Promise.all(
+      points.map(([lat, lon]) =>
+        fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,us_aqi`)
+          .then(r => r.json())
+          .then(data => ({ lat, lon, pm25: data.current?.pm2_5 ?? 0, aqi: data.current?.us_aqi ?? 0 }))
+          .catch(() => ({ lat, lon, pm25: 0, aqi: 0 }))
+      )
+    ).then(results => {
+      if (!layerRef.current) return;
+      results.forEach(({ lat, lon, pm25, aqi }) => {
+        if (pm25 === 0) return;
+        const color = aqi <= 50 ? "#00e400"
+                    : aqi <= 100 ? "#ffff00"
+                    : aqi <= 150 ? "#ff7e00"
+                    : aqi <= 200 ? "#ff0000"
+                    : "#8f3f97";
+        const opacity = Math.min(0.15 + (pm25 / 60) * 0.55, 0.7);
+        L.circle([lat, lon], {
+          radius: 120000,
+          color: "transparent",
+          fillColor: color,
+          fillOpacity: opacity,
+        }).bindTooltip(
+          `<div style="font-family:monospace;font-size:11px;background:#111;color:#fff;padding:6px 10px;border-radius:6px;border:1px solid #333">
+            <div style="color:#aaa;margin-bottom:2px">${lat.toFixed(1)}°N ${Math.abs(lon).toFixed(1)}°W</div>
+            <div>PM2.5: <b style="color:#ffbb00">${pm25} μg/m³</b></div>
+            <div>AQI: <b style="color:${color}">${aqi}</b></div>
+          </div>`,
+          { sticky: true, opacity: 1, className: "leaflet-tooltip-raw" }
+        ).addTo(layerRef.current!);
+      });
+    });
+
+    return () => {
+      if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null; }
+    };
+  }, [enabled, map]);
+
+  return null;
 }
 
 export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }) {
@@ -413,13 +528,15 @@ export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }
         <InvalidateSizeOnChange viewMode={viewMode} />
         <ExposeMapForDebug />
 
+        <DrawBoxLayer />
         <PointsLayer enabled={viewMode === "points"} rows={rows} />
         <ClusterLayer enabled={viewMode === "cluster"} rows={rows} />
         <HeatLayer enabled={viewMode === "heat"} rows={rows} />
+        <SmokeLayer enabled={viewMode === "smoke"} />
       </MapContainer>
 
       {/* Legend overlay — outside MapContainer so React renders it normally */}
-      <div className="absolute bottom-6 right-2 z-[1000] pointer-events-none">
+      <div className="absolute bottom-6 left-2 z-[1000] pointer-events-none">
         <MapLegend viewMode={viewMode} />
       </div>
     </div>

@@ -16,7 +16,7 @@
     "leaflet.heat": "^0.2.0",
     "leaflet.markercluster": "^1.5.3",
     "lucide-react": "^0.564.0",
-    "mongodb": "^7.0.0",
+    "mongodb": "^7.1.0",
     "next": "^16.1.4",
     "openai": "^6.22.0",
     "react": "19.2.0",
