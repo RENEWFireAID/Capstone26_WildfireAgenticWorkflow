@@ -46,38 +46,37 @@ export default function McpToolsPage() {
   const [running, setRunning] = useState(false);
   const [runErr, setRunErr] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("points");
-  const [llmQuery, setLlmQuery] = useState("");
-  const [llmAnswer, setLlmAnswer] = useState<string | null>(null);
+  const [llmInput, setLlmInput] = useState("");
+  const [llmMessages, setLlmMessages] = useState<{role:"user"|"ai", text:string, toolsUsed?: {name:string, recordCount:number}[]}[]>([]);
   const [llmLoading, setLlmLoading] = useState(false);
 
   async function askLlm() {
-    if (!llmQuery.trim()) return;
+    if (!llmInput.trim()) return;
+    const userText = llmInput.trim();
+    setLlmInput("");
+    const next = [...llmMessages, { role: "user" as const, text: userText }];
+    setLlmMessages(next);
     setLlmLoading(true);
-    setLlmAnswer(null);
     try {
-      const raw = localStorage.getItem("mcp:last_result");
-      const preview = raw ? JSON.parse(raw)?.results?.slice(0, 50) : [];
-      const res = await fetch("/api/mcp/chat", {
+      const res = await fetch("/api/mcp/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [
-            {
-              role: "user",
-              content: `You are a wildfire data analyst. Here is a sample of the current fire dataset (up to 50 rows):
-${JSON.stringify(preview, null, 2)}
-
-User question: ${llmQuery}
-
-Answer concisely in plain English.`,
-            },
-          ],
+          message: userText,
+          history: llmMessages.map(m => ({
+            role: m.role === "user" ? "user" : "assistant",
+            content: m.text,
+          })),
         }),
       });
       const data = await res.json();
-      setLlmAnswer(data?.content?.[0]?.text ?? data?.reply ?? "No response.");
+      const toolsUsed = data?.toolsUsed ?? [];
+      const reply = toolsUsed.length === 0
+        ? "⚠️ I could not verify this answer from the database. Please rephrase your question to ask about fire counts, acres, causes, or years — data that exists in our Alaska wildfire records."
+        : data?.reply ?? "No response.";
+      setLlmMessages([...next, { role: "ai" as const, text: reply, toolsUsed }]);
     } catch (e: any) {
-      setLlmAnswer("Error: " + e.message);
+      setLlmMessages([...next, { role: "ai" as const, text: "Error: " + e.message }]);
     } finally {
       setLlmLoading(false);
     }
@@ -215,28 +214,61 @@ Answer concisely in plain English.`,
       {/* Right */}
       <div className="min-w-0 space-y-4">
         {/* LLM Natural Language Query */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
-          <div className="text-sm font-semibold text-slate-900">Ask AI about this data</div>
-          <div className="text-xs text-slate-500">Ask a question in plain English — AI will analyze the current query results.</div>
-          <textarea
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none resize-none"
-            rows={3}
-            placeholder="e.g. What year had the most fires? Which fires were largest? How many were prescribed?"
-            value={llmQuery}
-            onChange={(e) => setLlmQuery(e.target.value)}
-          />
-          <button
-            className="w-full rounded-xl bg-slate-900 py-2 text-xs font-semibold text-white disabled:opacity-60"
-            onClick={askLlm}
-            disabled={llmLoading || !llmQuery.trim()}
-          >
-            {llmLoading ? "Analyzing…" : "Ask AI"}
-          </button>
-          {llmAnswer && (
-            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-xs text-slate-700 whitespace-pre-wrap">
-              {llmAnswer}
-            </div>
-          )}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-semibold text-slate-900">Ask AI about this data</div>
+            {llmMessages.length > 0 && (
+              <button className="text-[11px] text-slate-400 hover:text-slate-600" onClick={() => setLlmMessages([])}>Clear</button>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 max-h-[360px] overflow-y-auto">
+            {llmMessages.length === 0 && (
+              <div className="text-xs text-slate-400 text-center py-4">Ask anything about the wildfire data...</div>
+            )}
+            {llmMessages.map((m, i) => (
+              <div key={i} className={`rounded-xl px-3 py-2 text-xs whitespace-pre-wrap ${
+                m.role === "user"
+                  ? "bg-slate-900 text-white self-end max-w-[85%] ml-auto"
+                  : "bg-emerald-50 border border-emerald-100 text-slate-700 self-start max-w-[95%]"
+              }`}>
+                {m.text}
+                {m.role === "ai" && m.toolsUsed && m.toolsUsed.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {m.toolsUsed.map((t, j) => (
+                      <span key={j} className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                        ✓ {t.name} · {t.recordCount} records
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {m.role === "ai" && (!m.toolsUsed || m.toolsUsed.length === 0) && (
+                  <div className="mt-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                      ⚠ No database query — verify this answer
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+            {llmLoading && (
+              <div className="rounded-xl px-3 py-2 text-xs bg-slate-50 border border-slate-100 text-slate-400">Analyzing…</div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <input
+              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:border-slate-400"
+              placeholder="Ask about the wildfire data..."
+              value={llmInput}
+              onChange={(e) => setLlmInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); askLlm(); }}}
+              disabled={llmLoading}
+            />
+            <button
+              className="rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white disabled:opacity-60"
+              onClick={askLlm}
+              disabled={llmLoading || !llmInput.trim()}
+            >Send</button>
+          </div>
         </div>
 
         <QueryBuilderPanel

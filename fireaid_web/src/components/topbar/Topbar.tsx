@@ -6,13 +6,12 @@ export default function Topbar() {
     <header className="border-b border-slate-200 bg-[#003366]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
         {/* leftside: Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-2 ring-[#FFCC33]">
-            <span className="text-xl font-bold text-[#FFCC33]">🔥</span>
-          </div>
+        <div className="flex items-center gap-4">
+          <img src="/uaf-logo.png" alt="UAF Logo" style={{height:48, width:"auto", mixBlendMode:"screen", transform:"scale(1.6)", transformOrigin:"left center"}} />
+          <div className="h-8 w-px bg-white/20" />
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
-              UAF Data/AI Lab
+              Data/AI Lab
             </span>
             <span className="text-lg font-semibold tracking-tight text-white">
               FireAID
