@@ -16,7 +16,7 @@ const toolName =
         type: "function",
         name: "your_tool_name",
         description: "A plain text description of what your tool is for.",
-        paramaters: {
+        parameters: {
             type: "object",
             properties: {
                 yourParameterToPass: {
@@ -55,22 +55,22 @@ const historicWildfireDataTool =
         type: "function",
         name: "get_historic_data",
         description: "Get data on past wildfires in Alaska.",
-        paramaters: {
+        parameters: {
             type: "object",
             properties: {
-                yourParameterToPass: {
-                    type: "type of your parameter",
-                    description: "A plain text description of what the parameter is"
+                year: {
+                    type: "string",
+                    description: "The year to retrieve wildfire data for."
                 },
             },
-            required: ["yourParameterToPass"], // Include here if the parameter is required
+            required: ["year"],
         },
     };
 
 // Exported list of tools for use in API query
 export const query_tools = [
     wildfireTerminologyTool as Tool, 
-    historicWildfireDataTool as Tool
+    historicWildfireDataTool as Tool,
 ];
 
 
