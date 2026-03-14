@@ -3,6 +3,7 @@
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
 import { getWildfireTerm } from "../tools/handle_get_wildfire_term";
+import { getHistoricData } from "./handle_get_historic_data";
 
 // **** TOOL DEFINITIONS *****
 
@@ -48,8 +49,29 @@ const wildfireTerminologyTool =
         },
     };
 
+// Tool for accessing historic wildfire data from the MongoDB database
+const historicWildfireDataTool = 
+    {
+        type: "function",
+        name: "get_historic_data",
+        description: "Get data on past wildfires in Alaska.",
+        paramaters: {
+            type: "object",
+            properties: {
+                yourParameterToPass: {
+                    type: "type of your parameter",
+                    description: "A plain text description of what the parameter is"
+                },
+            },
+            required: ["yourParameterToPass"], // Include here if the parameter is required
+        },
+    };
+
 // Exported list of tools for use in API query
-export const query_tools = [wildfireTerminologyTool as Tool];
+export const query_tools = [
+    wildfireTerminologyTool as Tool, 
+    historicWildfireDataTool as Tool
+];
 
 
 // ***** HANDLE TOOL CALLS *****
@@ -60,7 +82,7 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
     for (const item of tool_call_list) {
 
         if(item.name == "get_wildfire_term") {
-            const def = await getWildfireTerm(JSON.parse(item.arguments).term)
+            const def = await getWildfireTerm(JSON.parse(item.arguments).term);
             tool_output.push(item);
 
             tool_output.push({
@@ -70,6 +92,16 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             });
         }
 
+        if(item.name == "get_historic_data") {
+            const data = await getHistoricData(JSON.parse(item.arguments));
+            tool_output.push(item);
+
+            tool_output.push({
+                type: "function_call_output",
+                call_id: item.call_id,
+                output: data
+            })
+        }
     };
 
     return tool_output;
