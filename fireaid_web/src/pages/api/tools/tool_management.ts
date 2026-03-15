@@ -2,8 +2,9 @@
 // Tool definitions for the OpenAI API
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
-import { getWildfireTerm } from "../tools/handle_get_wildfire_term";
-import { getHistoricData } from "./handle_get_historic_data";
+import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
+import { getHistoricData } from "./handlers/handle_historic_fires";
+import { historicWildfireQuery } from "./historic_fires/tools";
 
 // **** TOOL DEFINITIONS *****
 
@@ -49,28 +50,10 @@ const wildfireTerminologyTool =
         },
     };
 
-// Tool for accessing historic wildfire data from the MongoDB database
-const historicWildfireDataTool = 
-    {
-        type: "function",
-        name: "get_historic_data",
-        description: "Get data on past wildfires in Alaska.",
-        parameters: {
-            type: "object",
-            properties: {
-                year: {
-                    type: "string",
-                    description: "The year to retrieve wildfire data for."
-                },
-            },
-            required: ["year"],
-        },
-    };
-
 // Exported list of tools for use in API query
 export const query_tools = [
     wildfireTerminologyTool as Tool, 
-    historicWildfireDataTool as Tool,
+    historicWildfireQuery as Tool,
 ];
 
 
