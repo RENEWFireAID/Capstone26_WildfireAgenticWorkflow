@@ -3,7 +3,7 @@ export const historicWildfireQuery =
 {
     type: "function",
     name: "query_fire_points",
-    description: "Get total number of fires over a range of time in Alaska and more detailed information about subset of fires whose size is specified by limit.",
+    description: "Get detailed information on fires over a range of time in Alaska. Limit represents the maximum number of fires that information will be returned for",
     parameters: {
         type: "object",
         properties: {
