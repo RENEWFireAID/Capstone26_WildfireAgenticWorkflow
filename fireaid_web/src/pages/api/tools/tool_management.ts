@@ -3,7 +3,7 @@
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
 import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
-import { getHistoricData } from "./handlers/handle_historic_fires";
+import { query_fire_points } from "./handlers/handle_historic_fires";
 import { historicWildfireQuery } from "./historic_fires/tools";
 
 // **** TOOL DEFINITIONS *****
@@ -75,8 +75,9 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             });
         }
 
-        if(item.name == "get_historic_data") {
-            const data = await getHistoricData(JSON.parse(item.arguments));
+        if(item.name == "query_fire_points") {
+            const args = JSON.parse(item.arguments);
+            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
             tool_output.push(item);
 
             tool_output.push({
