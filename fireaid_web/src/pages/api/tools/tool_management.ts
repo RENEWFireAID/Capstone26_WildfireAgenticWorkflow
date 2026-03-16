@@ -4,7 +4,6 @@
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
 import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
 import { query_fire_points } from "./handlers/handle_historic_fires";
-import { historicWildfireQuery } from "./historic_fires/tools";
 
 // **** TOOL DEFINITIONS *****
 
@@ -50,6 +49,36 @@ const wildfireTerminologyTool =
         },
     };
 
+const historicWildfireQuery = 
+    {
+        type: "function",
+        name: "query_fire_points",
+        description: "Get detailed information on fires over a range of time in Alaska. Limit represents the maximum number of fires that information will be returned for",
+        parameters: {
+            type: "object",
+            properties: {
+                year_start: {
+                    type: [ "integer", "null" ],
+                    description: "The starting year to retrieve wildfires for."
+                },
+                year_end: {
+                    type: [ "integer", "null" ],
+                    description: "The ending year to retrieve wildfires for."
+                },
+                prescribed: {
+                    type: [ "string", "null" ],
+                    description: "Filters for prescribed fires, expects 'Y' or 'N'."
+                },
+                limit: {
+                    type: [ "integer", "null" ],
+                    description: "Limits the number of fires returned."
+                },
+            },
+            required: [ "year_start", "year_end", "prescribed", "limit" ],
+        },
+    };
+
+
 // Exported list of tools for use in API query
 export const query_tools = [
     wildfireTerminologyTool as Tool, 
@@ -71,7 +100,7 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             tool_output.push({
                 type: "function_call_output",
                 call_id: item.call_id,
-                output: def
+                output: def // This needs to be a string value or you will get an API error
             });
         }
 
