@@ -83,7 +83,7 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             tool_output.push({
                 type: "function_call_output",
                 call_id: item.call_id,
-                output: data
+                output: JSON.stringify(data)
             })
         }
     };

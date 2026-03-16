@@ -27,7 +27,7 @@ export default async function handler(
             content: text,
         },
     ] as ResponseInput;
-
+    var query_count = 1;
     try {
         // Send initial prompt with tools
         var response = await openai.responses.create({
@@ -45,6 +45,7 @@ export default async function handler(
 
         // Loop over response output and make queries while tool calls are needed.
         do {
+            query_count += 1
             var tool_requests: ResponseFunctionToolCall[] = [];
             found_term_tool_call = false;
 
@@ -79,7 +80,7 @@ export default async function handler(
         res.status(200).json({msg: response.output_text});
 
     } catch (e:any) {
-        console.log("Error with first query");
+        console.log("Error with query", query_count);
         console.log(e.error);
         console.log(e);
     }
