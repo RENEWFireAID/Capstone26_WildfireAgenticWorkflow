@@ -61,6 +61,7 @@ jobs:
               run: |
                 python3 -m venv .venv
                 source .venv/bin/activate
+                source .env
                 pip install --upgrade pip
                 pip install pymongo
                 python3 ./scripts/import_fire_data.py /home/fireaid/fire_points.csv
