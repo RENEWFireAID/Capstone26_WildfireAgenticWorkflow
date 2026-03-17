@@ -2,7 +2,8 @@
 // Tool definitions for the OpenAI API
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
-import { getWildfireTerm } from "../tools/handle_get_wildfire_term";
+import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
+import { query_fire_points } from "./handlers/handle_historic_fires";
 
 // **** TOOL DEFINITIONS *****
 
@@ -15,7 +16,7 @@ const toolName =
         type: "function",
         name: "your_tool_name",
         description: "A plain text description of what your tool is for.",
-        paramaters: {
+        parameters: {
             type: "object",
             properties: {
                 yourParameterToPass: {
@@ -48,8 +49,41 @@ const wildfireTerminologyTool =
         },
     };
 
+const historicWildfireQuery = 
+    {
+        type: "function",
+        name: "query_fire_points",
+        description: "Get detailed information on fires over a range of time in Alaska. Limit represents the maximum number of fires that information will be returned for",
+        parameters: {
+            type: "object",
+            properties: {
+                year_start: {
+                    type: [ "integer", "null" ],
+                    description: "The starting year to retrieve wildfires for."
+                },
+                year_end: {
+                    type: [ "integer", "null" ],
+                    description: "The ending year to retrieve wildfires for."
+                },
+                prescribed: {
+                    type: [ "string", "null" ],
+                    description: "Filters for prescribed fires, expects 'Y' or 'N'."
+                },
+                limit: {
+                    type: [ "integer", "null" ],
+                    description: "Limits the number of fires returned."
+                },
+            },
+            required: [ "year_start", "year_end", "prescribed", "limit" ],
+        },
+    };
+
+
 // Exported list of tools for use in API query
-export const query_tools = [wildfireTerminologyTool as Tool];
+export const query_tools = [
+    wildfireTerminologyTool as Tool, 
+    historicWildfireQuery as Tool,
+];
 
 
 // ***** HANDLE TOOL CALLS *****
@@ -60,16 +94,27 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
     for (const item of tool_call_list) {
 
         if(item.name == "get_wildfire_term") {
-            const def = await getWildfireTerm(JSON.parse(item.arguments).term)
+            const def = await getWildfireTerm(JSON.parse(item.arguments).term);
             tool_output.push(item);
 
             tool_output.push({
                 type: "function_call_output",
                 call_id: item.call_id,
-                output: def
+                output: def // This needs to be a string value or you will get an API error
             });
         }
 
+        if(item.name == "query_fire_points") {
+            const args = JSON.parse(item.arguments);
+            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
+            tool_output.push(item);
+
+            tool_output.push({
+                type: "function_call_output",
+                call_id: item.call_id,
+                output: JSON.stringify(data)
+            })
+        }
     };
 
     return tool_output;
