@@ -48,12 +48,12 @@ def import_csv(filepath: str):
         return
 
     # Optional: clear existing data first
-    existing = col.count_documents({})
-    if existing > 0:
-        ans = input(f"Collection already has {existing} documents. Clear before import? (y/N): ")
-        if ans.strip().lower() == "y":
-            col.delete_many({})
-            print("Cleared existing data.")
+    #existing = col.count_documents({})
+    #if existing > 0:
+    #    ans = input(f"Collection already has {existing} documents. Clear before import? (y/N): ")
+    #    if ans.strip().lower() == "y":
+    col.delete_many({})
+    print("Cleared existing data.")
 
     result = col.insert_many(docs)
     print(f"Successfully inserted {len(result.inserted_ids)} documents into fire_points.")
