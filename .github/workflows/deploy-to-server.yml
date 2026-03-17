@@ -56,7 +56,8 @@ jobs:
                   -p password \
                   --eval "use fireaid" \
                   --eval "db.terms.insertMany([$query])"
+                  
             - name: Populate MongoDB with fire_points.csv
               run: |
-                ./scripts/
+                python3 ./scripts/import_fire_data.py /home/fireaid/fire_points.csv
 
