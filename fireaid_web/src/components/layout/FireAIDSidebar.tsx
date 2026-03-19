@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, BarChart3, Book, Bot, Puzzle } from "lucide-react";
+import { Search, BarChart3, Book, Bot, Puzzle, FileText, MessageCircle, Home } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 export default function FireAIDSidebar({ active }: { active: string }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-72 shrink-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <aside className="w-72 shrink-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm self-start sticky top-6">
       {/* top */}
       <div className="mb-6">
         <div className="flex items-center gap-3">
@@ -36,13 +37,21 @@ export default function FireAIDSidebar({ active }: { active: string }) {
       {/* WORKSPACE */}
       <Section title="WORKSPACE">
         <NavItem
+          icon={Home}
+          label="Home"
+          href="/"
+          active={pathname === "/"}
+        />
+        <NavItem
           icon={Search}
           label="Search"
-          href="/fireaid"
-          active={pathname === "/fireaid"}
+          href="/search"
+          active={pathname === "/search"}
         />
-        <NavItem icon={BarChart3} label="Charts" href="/fireaid" active={false} />
-        <NavItem icon={Book} label="Library" href="/fireaid" active={false} />
+        <NavItem icon={BarChart3} label="Charts" href="/charts" active={pathname === "/charts"} />
+        <NavItem icon={TrendingUp} label="Prediction" href="/prediction" active={pathname === "/prediction"} />
+        <NavItem icon={Book} label="Library" href="/library" active={pathname === "/library"} />
+        <NavItem icon={FileText} label="Reports" href="/reports" active={pathname === "/reports"} />
       </Section>
 
       {/* AI & MCP */}
