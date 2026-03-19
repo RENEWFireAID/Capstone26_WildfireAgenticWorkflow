@@ -1,54 +1,50 @@
 "use client";
+import Link from "next/link";
 
 export default function Topbar() {
   return (
     <header className="border-b border-slate-200 bg-[#003366]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
-        {/* 左侧 Logo + 文案 */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-2 ring-[#FFCC33]">
-            <span className="text-xl font-bold text-[#FFCC33]">🔥</span>
-          </div>
+        {/* leftside: Logo */}
+        <div className="flex items-center gap-4">
+          <img src="/uaf-logo.png" alt="UAF Logo" style={{height:48, width:"auto", mixBlendMode:"screen", transform:"scale(1.6)", transformOrigin:"left center"}} />
+          <div className="h-8 w-px bg-white/20" />
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
-              UAF Data/AI Lab
+              Data/AI Lab
             </span>
             <span className="text-lg font-semibold tracking-tight text-white">
               FireAID
             </span>
           </div>
         </div>
-
-        {/* 中间导航 */}
+        {/* Middle */}
         <nav className="hidden items-center gap-10 text-sm font-semibold text-slate-200 md:flex">
-
-          {["Terminology", "Data", "Tools", "Apps", "Visualization", "Chat"].map(
-            (item) => (
-              <button
-                key={item}
-                className="border-b-2 border-transparent pb-1 transition hover:border-[#FFCC33] hover:text-white"
-              >
-                {item}
-              </button>
-            )
-          )}
+          {[
+            { label: "Terminology", href: "/library" },
+            { label: "Data", href: "/search" },
+            { label: "Tools", href: "/mcp-tools" },
+            { label: "Apps", href: "/reports" },
+            { label: "Visualization", href: "/charts" },
+            { label: "Chat", href: "/chat" },
+          ].map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="border-b-2 border-transparent pb-1 transition hover:border-[#FFCC33] hover:text-white"
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
-
-        {/* 右侧：搜索 + 上传 + 用户头像 */}
+        {/* rightside: only keep "search bar" */}
         <div className="flex items-center gap-3">
-          <button className="hidden items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] text-slate-100 backdrop-blur hover:bg-white/15 md:flex">
-            <span className="material-symbols-rounded text-base">search</span>
-            <span></span>
-          </button>
           <button className="rounded-full bg-[#FFCC33] px-3 py-1 text-[11px] font-semibold text-[#003366] shadow hover:bg-amber-300">
             Upload data
           </button>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-xs font-semibold text-[#003366]">
-            IS
-          </div>
+
         </div>
       </div>
-
       {/* bottom line */}
       <div className="h-1 w-full bg-[#FFCC33]" />
     </header>

@@ -8,12 +8,15 @@ import csv
 import os
 from pymongo import MongoClient
 
-MONGO_URI = os.getenv("MONGODB_URI", "mongodb://root:password@localhost:27018/fireaid?authSource=admin")
-DB_NAME   = os.getenv("MONGODB_DB", "fireaid")
+MONGO_URI = os.getenv(
+    "MONGODB_URI", "mongodb://root:password@localhost:27017/fireaid?authSource=admin"
+)
+DB_NAME = os.getenv("MONGODB_DB", "fireaid")
+
 
 def import_csv(filepath: str):
     client = MongoClient(MONGO_URI)
-    db  = client[DB_NAME]
+    db = client[DB_NAME]
     col = db["fire_points"]
 
     print(f"Connecting to {MONGO_URI}")
@@ -50,14 +53,19 @@ def import_csv(filepath: str):
     # Optional: clear existing data first
     existing = col.count_documents({})
     if existing > 0:
-        ans = input(f"Collection already has {existing} documents. Clear before import? (y/N): ")
+        ans = input(
+            f"Collection already has {existing} documents. Clear before import? (y/N): "
+        )
         if ans.strip().lower() == "y":
             col.delete_many({})
             print("Cleared existing data.")
 
     result = col.insert_many(docs)
-    print(f"Successfully inserted {len(result.inserted_ids)} documents into fire_points.")
+    print(
+        f"Successfully inserted {len(result.inserted_ids)} documents into fire_points."
+    )
     client.close()
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

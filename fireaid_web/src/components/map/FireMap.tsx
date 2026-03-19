@@ -6,7 +6,7 @@ import L from "leaflet";
 import "leaflet.heat";
 import "leaflet.markercluster";
 
-type ViewMode = "points" | "cluster" | "heat";
+type ViewMode = "points" | "cluster" | "heat" | "smoke";
 type AnyObj = Record<string, any>;
 
 function safeParseJSON(raw: string | null): any | null {
@@ -30,6 +30,15 @@ function pickRows(parsed: any): AnyObj[] {
 function toNum(v: any): number | null {
   const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
   return Number.isFinite(n) ? n : null;
+}
+
+function getFireColor(row: AnyObj): { fill: string; stroke: string } {
+  const acres = toNum(row.ESTIMATEDTOTALACRES ?? row.acres ?? row.TOTALACRES ?? null) ?? 0;
+  if (acres >= 10000) return { fill: "#dc2626", stroke: "#7f1d1d" };   // red    > 10,000
+  if (acres >= 1000)  return { fill: "#ea580c", stroke: "#9a3412" };   // orange 1,000-10,000
+  if (acres >= 100)   return { fill: "#eab308", stroke: "#854d0e" };   // yellow 100-1,000
+  if (acres >= 10)    return { fill: "#22c55e", stroke: "#14532d" };   // green  10-100
+  return                     { fill: "#3b82f6", stroke: "#1e3a8a" };   // blue   < 10
 }
 
 function pickLatLng(row: AnyObj): { lat: number; lng: number } | null {
@@ -177,11 +186,12 @@ function PointsLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
       const ll = pickLatLng(r);
       if (!ll) continue;
 
+      const { fill, stroke } = getFireColor(r);
       const m = L.circleMarker([ll.lat, ll.lng], {
-        radius: 4,
-        color: "#7f1d1d",
-        fillColor: "#ff3b30",
-        fillOpacity: 0.95,
+        radius: 5,
+        color: stroke,
+        fillColor: fill,
+        fillOpacity: 0.9,
         weight: 1,
       });
 
@@ -246,7 +256,18 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
       const ll = pickLatLng(r);
       if (!ll) continue;
 
-      const m = L.marker([ll.lat, ll.lng], { icon });
+      const { fill, stroke } = getFireColor(r);
+      const coloredIcon = L.divIcon({
+        className: "",
+        html: `<div style="
+          width:10px;height:10px;border-radius:9999px;
+          background:${fill};border:2px solid ${stroke};
+          box-shadow:0 0 6px ${fill}88;
+        "></div>`,
+        iconSize: [10, 10],
+        iconAnchor: [5, 5],
+      });
+      const m = L.marker([ll.lat, ll.lng], { icon: coloredIcon });
 
       const name = r.INCIDENT_NAME ?? r.IncidentName ?? r.name ?? "";
       if (name) m.bindPopup(String(name));
@@ -254,6 +275,223 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
       layerRef.current.addLayer(m);
     }
   }, [enabled, rows, icon]);
+
+  return null;
+}
+
+function DrawBoxLayer() {
+  const map = useMap();
+  const rectRef = useRef<L.Rectangle | null>(null);
+  const startRef = useRef<L.LatLng | null>(null);
+  const drawingRef = useRef(false);
+
+  useEffect(() => {
+    function startDraw() {
+      // Change cursor
+      map.getContainer().style.cursor = "crosshair";
+      map.dragging.disable();
+      drawingRef.current = true;
+
+      // Clean up previous rectangle
+      if (rectRef.current) { map.removeLayer(rectRef.current); rectRef.current = null; }
+
+      function onMouseDown(e: L.LeafletMouseEvent) {
+        if (!drawingRef.current) return;
+        startRef.current = e.latlng;
+
+        if (rectRef.current) map.removeLayer(rectRef.current);
+        rectRef.current = L.rectangle([e.latlng, e.latlng], {
+          color: "#f97316", weight: 2, fillColor: "#f97316", fillOpacity: 0.1, dashArray: "6,4"
+        }).addTo(map);
+      }
+
+      function onMouseMove(e: L.LeafletMouseEvent) {
+        if (!startRef.current || !rectRef.current) return;
+        rectRef.current.setBounds(L.latLngBounds(startRef.current, e.latlng));
+      }
+
+      function onMouseUp(e: L.LeafletMouseEvent) {
+        if (!startRef.current || !rectRef.current) return;
+        drawingRef.current = false;
+        map.getContainer().style.cursor = "";
+        map.dragging.enable();
+
+        const bounds = L.latLngBounds(startRef.current, e.latlng);
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        // Dispatch result so mcp-tools page can use it
+        window.dispatchEvent(new CustomEvent("mcp:boxselected", {
+          detail: {
+            lat_min: sw.lat, lat_max: ne.lat,
+            lng_min: sw.lng, lng_max: ne.lng,
+          }
+        }));
+
+        map.off("mousedown", onMouseDown);
+        map.off("mousemove", onMouseMove);
+        map.off("mouseup", onMouseUp);
+        startRef.current = null;
+      }
+
+      map.on("mousedown", onMouseDown);
+      map.on("mousemove", onMouseMove);
+      map.on("mouseup", onMouseUp);
+    }
+
+    function clearSelection() {
+      if (rectRef.current) { map.removeLayer(rectRef.current); rectRef.current = null; }
+      map.getContainer().style.cursor = "";
+      map.dragging.enable();
+      drawingRef.current = false;
+      startRef.current = null;
+      window.dispatchEvent(new CustomEvent("mcp:boxselected", { detail: null }));
+    }
+
+    window.addEventListener("mcp:drawbox", startDraw);
+    window.addEventListener("mcp:clearselection", clearSelection);
+    return () => {
+      window.removeEventListener("mcp:drawbox", startDraw);
+      window.removeEventListener("mcp:clearselection", clearSelection);
+    };
+  }, [map]);
+
+  return null;
+}
+
+function MapLegend({ viewMode }: { viewMode: ViewMode }) {
+  return (
+    <div style={{
+      position: "absolute", bottom: 32, left: 12, zIndex: 1000,
+      background: "rgba(255,255,255,0.95)", borderRadius: 10,
+      border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+      padding: "8px 12px", fontSize: 10, minWidth: 180,
+    }}>
+      {viewMode === "heat" && (<>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
+          Fire Incident Density
+        </div>
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #0000ff, #00ff00, #ffff00, #ff0000)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>Few fires</span>
+          <span>Many fires</span>
+        </div>
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Color = fire incident count per area<br />
+          Not intensity or temperature<br />
+          Source: MongoDB · 33,596 records
+        </div>
+      </>)}
+
+      {viewMode === "smoke" && (<>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
+          PM2.5 Air Quality
+        </div>
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #00e400, #ffff00, #ff7e00, #ff0000, #8f3f97)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>Good</span>
+          <span>Hazardous</span>
+        </div>
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Source: Open-Meteo · NOAA GFS<br />
+          Updates hourly<br />
+          Grid: 1.5°lat × 2.5°lon<br />
+          Each circle = 120km radius<br />
+          Opacity ∝ PM2.5 concentration<br />
+          AQI ≤50 Good · ≤100 Moderate<br />
+          ≤150 Unhealthy · ≤200 Very Unhealthy<br />
+          &gt;200 Hazardous
+        </div>
+      </>)}
+
+      {(viewMode === "points" || viewMode === "cluster") && (<>
+        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
+          {viewMode === "cluster" ? "Fire Count (Clustered)" : "Fire Size (Acres)"}
+        </div>
+        <div style={{
+          height: 10, borderRadius: 5, marginBottom: 4,
+          background: "linear-gradient(to right, #3b82f6, #22c55e, #eab308, #ea580c, #dc2626)",
+        }} />
+        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
+          <span>&lt; 10 ac</span>
+          <span>≥ 10K ac</span>
+        </div>
+        {viewMode === "cluster" && (
+          <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+            Number = fires in area<br />
+            Expands at zoom 11
+          </div>
+        )}
+        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          Source: MongoDB · 33,596 records
+        </div>
+      </>)}
+    </div>
+  );
+}
+
+
+function SmokeLayer({ enabled }: { enabled: boolean }) {
+  const map = useMap();
+  const layerRef = useRef<L.LayerGroup | null>(null);
+
+  useEffect(() => {
+    if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null; }
+    if (!enabled) return;
+
+    layerRef.current = L.layerGroup().addTo(map);
+
+    // Grid of points across Alaska
+    const points: [number, number][] = [];
+    for (let lat = 54; lat <= 72; lat += 1.5) {
+      for (let lon = -170; lon <= -130; lon += 2.5) {
+        points.push([lat, lon]);
+      }
+    }
+
+    Promise.all(
+      points.map(([lat, lon]) =>
+        fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,us_aqi`)
+          .then(r => r.json())
+          .then(data => ({ lat, lon, pm25: data.current?.pm2_5 ?? 0, aqi: data.current?.us_aqi ?? 0 }))
+          .catch(() => ({ lat, lon, pm25: 0, aqi: 0 }))
+      )
+    ).then(results => {
+      if (!layerRef.current) return;
+      results.forEach(({ lat, lon, pm25, aqi }) => {
+        if (pm25 === 0) return;
+        const color = aqi <= 50 ? "#00e400"
+                    : aqi <= 100 ? "#ffff00"
+                    : aqi <= 150 ? "#ff7e00"
+                    : aqi <= 200 ? "#ff0000"
+                    : "#8f3f97";
+        const opacity = Math.min(0.15 + (pm25 / 60) * 0.55, 0.7);
+        L.circle([lat, lon], {
+          radius: 120000,
+          color: "transparent",
+          fillColor: color,
+          fillOpacity: opacity,
+        }).bindTooltip(
+          `<div style="font-family:monospace;font-size:11px;background:#111;color:#fff;padding:6px 10px;border-radius:6px;border:1px solid #333">
+            <div style="color:#aaa;margin-bottom:2px">${lat.toFixed(1)}°N ${Math.abs(lon).toFixed(1)}°W</div>
+            <div>PM2.5: <b style="color:#ffbb00">${pm25} μg/m³</b></div>
+            <div>AQI: <b style="color:${color}">${aqi}</b></div>
+          </div>`,
+          { sticky: true, opacity: 1, className: "leaflet-tooltip-raw" }
+        ).addTo(layerRef.current!);
+      });
+    });
+
+    return () => {
+      if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null; }
+    };
+  }, [enabled, map]);
 
   return null;
 }
@@ -274,30 +512,33 @@ export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }
   }, []);
 
   return (
-    <MapContainer
-  className="h-full w-full"
-  style={{ width: "100%", height: "100%" }}
-  center={[64.8, -147.7]}
-  zoom={4}
-  scrollWheelZoom
->
+    <div className="relative h-full w-full">
+      <MapContainer
+        className="h-full w-full"
+        style={{ width: "100%", height: "100%" }}
+        center={[64.8, -147.7]}
+        zoom={4}
+        scrollWheelZoom
+      >
+        <TileLayer
+          attribution="&copy; OpenStreetMap contributors"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
-      <TileLayer
-        attribution="&copy; OpenStreetMap contributors"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+        <InvalidateSizeOnChange viewMode={viewMode} />
+        <ExposeMapForDebug />
 
-      <InvalidateSizeOnChange viewMode={viewMode} />
-      <ExposeMapForDebug />
+        <DrawBoxLayer />
+        <PointsLayer enabled={viewMode === "points"} rows={rows} />
+        <ClusterLayer enabled={viewMode === "cluster"} rows={rows} />
+        <HeatLayer enabled={viewMode === "heat"} rows={rows} />
+        <SmokeLayer enabled={viewMode === "smoke"} />
+      </MapContainer>
 
-      {/* Points */}
-      <PointsLayer enabled={viewMode === "points"} rows={rows} />
-
-      {/* Cluster */}
-      <ClusterLayer enabled={viewMode === "cluster"} rows={rows} />
-
-      {/* Heat */}
-      <HeatLayer enabled={viewMode === "heat"} rows={rows} />
-    </MapContainer>
+      {/* Legend overlay — outside MapContainer so React renders it normally */}
+      <div className="absolute bottom-6 left-2 z-[1000] pointer-events-none">
+        <MapLegend viewMode={viewMode} />
+      </div>
+    </div>
   );
 }

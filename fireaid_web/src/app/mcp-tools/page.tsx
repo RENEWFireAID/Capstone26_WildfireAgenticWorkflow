@@ -4,10 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import ToolButton from "@/components/ui/ToolButton";
-import FireDashboard from "@/components/mcp/FireDashboard";
-import McpResultPanel from "@/components/mcp/McpResultPanel";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
+import FireDashboard from "@/components/mcp/FireDashboard";
 
 // map app
 const FireMap = dynamic(() => import("@/components/map/FireMap"), { ssr: false });
@@ -15,7 +13,7 @@ const FireMap = dynamic(() => import("@/components/map/FireMap"), { ssr: false }
 type Tool = { name: string; desc: string };
 
 type PrescribedMode = "all" | "yes" | "no";
-type ViewMode = "points" | "cluster" | "heat";
+type ViewMode = "points" | "cluster" | "heat" | "smoke";
 
 type QuerySpec = {
   yearStart?: number;
@@ -48,6 +46,53 @@ export default function McpToolsPage() {
   const [running, setRunning] = useState(false);
   const [runErr, setRunErr] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("points");
+  const [llmInput, setLlmInput] = useState("");
+  const [llmMessages, setLlmMessages] = useState<{role:"user"|"ai", text:string, toolsUsed?: {name:string, recordCount:number}[]}[]>([]);
+  const [llmLoading, setLlmLoading] = useState(false);
+
+  async function askLlm() {
+    if (!llmInput.trim()) return;
+    const userText = llmInput.trim();
+    setLlmInput("");
+    const next = [...llmMessages, { role: "user" as const, text: userText }];
+    setLlmMessages(next);
+    setLlmLoading(true);
+    try {
+      const res = await fetch("/api/mcp/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          history: llmMessages.map(m => ({
+            role: m.role === "user" ? "user" : "assistant",
+            content: m.text,
+          })),
+        }),
+      });
+      const data = await res.json();
+      const toolsUsed = data?.toolsUsed ?? [];
+      const reply = toolsUsed.length === 0
+        ? "⚠️ I could not verify this answer from the database. Please rephrase your question to ask about fire counts, acres, causes, or years — data that exists in our Alaska wildfire records."
+        : data?.reply ?? "No response.";
+      setLlmMessages([...next, { role: "ai" as const, text: reply, toolsUsed }]);
+    } catch (e: any) {
+      setLlmMessages([...next, { role: "ai" as const, text: "Error: " + e.message }]);
+    } finally {
+      setLlmLoading(false);
+    }
+  }
+
+  // Listen for bbox selection from FireMap
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const bbox = (e as CustomEvent).detail as [number,number,number,number] | null;
+      const nextSpec = { ...spec, bbox };
+      setSpec(nextSpec);
+      if (bbox) runQuery(nextSpec);
+    };
+    window.addEventListener("mcp:boxselected", handler);
+    return () => window.removeEventListener("mcp:boxselected", handler);
+  }, [spec]);
 
   // Load MCP tools list
   useEffect(() => {
@@ -140,7 +185,7 @@ export default function McpToolsPage() {
   
         
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[260px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
+    <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
       {/* Left */}
       <FireAIDSidebar active="explore" />
 
@@ -148,9 +193,9 @@ export default function McpToolsPage() {
       <div className="min-w-0 space-y-4">
         <WorkbenchHeader
           title="Wildfire Analytics Dashboard"
-          subtitle="WFIGS / NIFC (MongoDB)"
+          subtitle="Local MongoDB"
           running={running}
-          onRefresh={() => window.dispatchEvent(new Event("mcp:updated"))}
+          onRefresh={() => runQuery()}
         />
 
               {/* Map card */}
@@ -164,67 +209,68 @@ export default function McpToolsPage() {
 
         <FireDashboard />
 
-        {/* MCP Tools & Apps */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">MCP Tools & Apps</h3>
-              <p className="text-xs text-slate-500">
-                Browse tools and import snippets into your prompt.
-              </p>
-            </div>
-
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600">
-              Live + Presets
-            </span>
-          </div>
-
-          {/* System tools */}
-          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 space-y-3">
-            <h4 className="text-sm font-semibold text-slate-900">
-              System tools <span className="text-emerald-600 text-[11px]">(live)</span>
-            </h4>
-
-            {loadingTools && <div className="text-xs text-slate-500">Loading…</div>}
-
-            {!loadingTools &&
-              tools.map((t) => (
-                <ToolCard
-                  key={t.name}
-                  name={t.name}
-                  tag="FireMCP"
-                  description={t.desc}
-                  rating="from backend"
-                />
-              ))}
-          </div>
-
-          {/* User apps */}
-          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-            <h4 className="mb-4 text-sm font-semibold text-slate-900">
-              User-apps <span className="text-emerald-600 text-[11px]">(LLM → PDF)</span>
-            </h4>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <ToolCard
-                name="Wildfire Incident Brief (PDF)"
-                tag="LLM Report App"
-                description="Generate a structured wildfire incident briefing PDF using live MCP data + LLM summarization."
-                rating="5★ preset by LLM team"
-              />
-              <ToolCard
-                name="Annual Fire Trend Report"
-                tag="Data-to-Report App"
-                description="Create an annual wildfire trends PDF with short narrative insights."
-                rating="5★ preset by LLM team"
-              />
-            </div>
-          </div>
-        </section>
       </div> {/* Center */}
 
       {/* Right */}
       <div className="min-w-0 space-y-4">
+        {/* LLM Natural Language Query */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-semibold text-slate-900">Ask AI about this data</div>
+            {llmMessages.length > 0 && (
+              <button className="text-[11px] text-slate-400 hover:text-slate-600" onClick={() => setLlmMessages([])}>Clear</button>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 max-h-[360px] overflow-y-auto">
+            {llmMessages.length === 0 && (
+              <div className="text-xs text-slate-400 text-center py-4">Ask anything about the wildfire data...</div>
+            )}
+            {llmMessages.map((m, i) => (
+              <div key={i} className={`rounded-xl px-3 py-2 text-xs whitespace-pre-wrap ${
+                m.role === "user"
+                  ? "bg-slate-900 text-white self-end max-w-[85%] ml-auto"
+                  : "bg-emerald-50 border border-emerald-100 text-slate-700 self-start max-w-[95%]"
+              }`}>
+                {m.text}
+                {m.role === "ai" && m.toolsUsed && m.toolsUsed.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {m.toolsUsed.map((t, j) => (
+                      <span key={j} className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                        ✓ {t.name} · {t.recordCount} records
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {m.role === "ai" && (!m.toolsUsed || m.toolsUsed.length === 0) && (
+                  <div className="mt-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                      ⚠ No database query — verify this answer
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+            {llmLoading && (
+              <div className="rounded-xl px-3 py-2 text-xs bg-slate-50 border border-slate-100 text-slate-400">Analyzing…</div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <input
+              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:border-slate-400"
+              placeholder="Ask about the wildfire data..."
+              value={llmInput}
+              onChange={(e) => setLlmInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); askLlm(); }}}
+              disabled={llmLoading}
+            />
+            <button
+              className="rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white disabled:opacity-60"
+              onClick={askLlm}
+              disabled={llmLoading || !llmInput.trim()}
+            >Send</button>
+          </div>
+        </div>
+
         <QueryBuilderPanel
           spec={spec}
           setSpec={setSpec}
@@ -236,14 +282,6 @@ export default function McpToolsPage() {
 
         <InsightsPanel />
 
-        <details className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <summary className="cursor-pointer select-none text-sm font-semibold text-slate-900">
-            Raw MCP Result (debug)
-          </summary>
-          <div className="mt-3">
-            <McpResultPanel />
-          </div>
-        </details>
       </div>
     </div>
   );
@@ -337,6 +375,9 @@ function MapToolbar({
       <button className={btn(viewMode === "heat")} onClick={() => setViewMode("heat")}>
         Heat
       </button>
+      <button className={btn(viewMode === "smoke")} onClick={() => setViewMode("smoke")}>
+        Smoke
+      </button>
 
       <div className="mx-2 h-4 w-px bg-slate-200" />
 
@@ -345,7 +386,13 @@ function MapToolbar({
       </button>
       <button
         className={btn(false)}
-        onClick={() => window.dispatchEvent(new Event("mcp:clearselection"))}
+        onClick={() => {
+          window.dispatchEvent(new Event("mcp:clearselection"));
+          setViewMode("points");
+          const nextSpec = { ...spec, bbox: null };
+          setSpec(nextSpec);
+          runQuery(nextSpec);
+        }}
       >
         Clear Selection
       </button>
@@ -380,51 +427,11 @@ function QueryBuilderPanel({
         <div>
           <div className="text-sm font-semibold text-slate-900">Query Builder</div>
           <div className="mt-1 text-xs text-slate-500">
-            Build a structured query (no natural-language topbar).
           </div>
         </div>
       </div>
 
-      {/* Presets */}
-      <div className="mt-4 space-y-2">
-        <PresetButton
-          label="Prescribed Fires in 2020"
-          onClick={() =>
-            setSpec({
-              ...spec,
-              yearStart: 2020,
-              yearEnd: 2020,
-              prescribed: "yes",
-              limit: 200,
-            })
-          }
-        />
-        <PresetButton
-          label="Top 200 largest fires in 2024"
-          onClick={() =>
-            setSpec({
-              ...spec,
-              yearStart: 2024,
-              yearEnd: 2024,
-              prescribed: "all",
-              limit: 200,
-            })
-          }
-        />
-        <PresetButton
-          label="Alaska fires (all years)"
-          onClick={() =>
-            setSpec({
-              ...spec,
-              yearStart: 2010,
-              yearEnd: 2024,
-              state: "Alaska",
-              prescribed: "all",
-              limit: 200,
-            })
-          }
-        />
-      </div>
+
 
       {/* Filters */}
       <div className="mt-4 space-y-3">
