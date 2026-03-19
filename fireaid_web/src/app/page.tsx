@@ -96,9 +96,16 @@ export default function HomePage() {
       opacity: 0.3 + Math.random() * 0.5,
     })));
   }, []);
-
+  
+  // Animation of rolling numbers for live fire count
   const displayCount = useCountUp(fireCount);
   const title = useTypewriter("FireAID", 300, 80);
+
+  // Fetch live weather for Fairbanks, AK 
+  // And compute a simple fire risk level based on humidity and wind speed
+  // This is a simple way to calculate the risk of fire
+  // For the next scientific calculations, we will use more complex models and more data (like fuel moisture, topography, etc.)
+  // Now, we only offer two index: relative humidity and wind speed, which are two of the most important factors for fire behavior
 
   useEffect(() => {
     fetch("https://api.open-meteo.com/v1/forecast?latitude=64.84&longitude=-147.72&current=temperature_2m,relative_humidity_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph")
@@ -114,6 +121,8 @@ export default function HomePage() {
                    : "LOW";
         setWeather({ temp: Math.round(c.temperature_2m), risk });
       }).catch(() => {});
+  // Fetch current PM2.5 and AQI for Fairbanks, AK
+
     fetch("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=64.84&longitude=-147.72&current=pm2_5,us_aqi")
       .then(r => r.json())
       .then(data => {

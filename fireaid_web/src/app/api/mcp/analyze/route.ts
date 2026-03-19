@@ -1,3 +1,11 @@
+// * Overrall Request Flow:
+// 1. User sends a natrual language question
+// 2. Claude (1st call) -> Coverts natrual language question into a MongoDB aggregation pipeline
+// 3. Internal API call -> Executes the pipeline against MongoDB and returns real data
+// 4. Claude (2nd call) -> Analyzes the real data and answers the user's question in plain English
+// 5. Return the final answer to the frontend, along with any relevant metadata about the tools used (e.g. record count)
+// * Note: MongoDB aggregation pipelines: Raw Data -> $match ->$group -> $sort -> $limit -> Final Results
+
 import { NextResponse } from "next/server";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -5,7 +13,12 @@ const MODEL = "anthropic/claude-3.5-sonnet";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 async function queryDatabase(userMessage: string): Promise<string> {
-  // Step 1: Ask Claude to write a MongoDB pipeline based on the question
+
+  // ============================================================
+  // PART 2 — Claude (1st Call): Natural Language → MongoDB Pipeline
+  // Ask Claude to generate a MongoDB aggregation pipeline based
+  // on the user's question. Returns ONLY a raw JSON array.
+  // ============================================================
   const planRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -36,6 +49,7 @@ Examples:
   const planData = await planRes.json();
   const pipelineText = planData?.choices?.[0]?.message?.content ?? "[]";
 
+  // Parse Claude's response
   let pipeline;
   try {
     const clean = pipelineText.replace(/```json|```/g, "").trim();
@@ -44,7 +58,12 @@ Examples:
     return "[]";
   }
 
-  // Step 2: Execute the pipeline against MongoDB
+  // ============================================================
+  // PART 3 — Internal API Call: Execute the MongoDB Query
+  // Send the generated pipeline to our internal /api/mcp/aggregate
+  // route, which runs it against the real MongoDB database.
+  // Limit results to 50 records to avoid overflowing the AI context.
+  // ============================================================
   const dbRes = await fetch(`${BASE_URL}/api/mcp/aggregate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -58,6 +77,11 @@ Examples:
 
 export async function POST(req: Request) {
   try {
+    // ============================================================
+    // PART 1 — Receive & Validate the User's Question
+    // Parse the incoming request, extract the user message and
+    // conversation history. Reject empty messages immediately.
+    // ============================================================
     const body = await req.json();
     const userMessage: string = body.message ?? "";
     if (!userMessage.trim()) return NextResponse.json({ error: "Empty message" }, { status: 400 });
@@ -69,7 +93,12 @@ export async function POST(req: Request) {
     const parsed = JSON.parse(dbResults);
     const hasData = parsed?.count > 0 || (Array.isArray(parsed?.results) && parsed.results.length > 0);
 
-    // Step 2: Ask Claude to analyze the real data
+   // ============================================================
+    // PART 4 — Claude (2nd Call): Analyze Data → Natural Language Answer
+    // Feed the real database results back to Claude. It acts as
+    // FireAID and explains the data in plain English.
+    // Must cite actual numbers; must not fabricate any figures.
+    // ============================================================
     const analysisRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {

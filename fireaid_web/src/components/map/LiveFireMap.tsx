@@ -45,9 +45,16 @@ function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
           const cause = f.properties?.FireCause ?? "Unknown";
 
           // Size tiers
+          //radius 14 = massive fire areas
+          //radius 10 = large fires
+          //radius 7 = medium fires
+          //others are smaller fires
           const radius = acres >= 10000 ? 14 : acres >= 1000 ? 10 : acres >= 100 ? 7 : 5;
 
+
+          /*************** Effect of glowing spot *************** */
           // Outer glow ring
+          // For very large fires, use a more intense red and larger glow; for smaller fires, use a softer orange glow
           L.circleMarker([lat, lng], {
             radius: radius + 6,
             color: acres >= 10000 ? "rgba(255,60,0,0.25)" : "rgba(255,120,0,0.2)",
@@ -73,7 +80,8 @@ function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
             fillColor: acres >= 10000 ? "#ff4400" : acres >= 1000 ? "#ff8800" : "#ffbb00",
             fillOpacity: 0.95,
           });
-
+        /*************** Effect of POPUP cards  *************** */
+        /*************** Info of fire spots *************** */
           core.bindPopup(`
             <div style="
               background:#0d0d0d;
@@ -153,6 +161,9 @@ function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
 export default function LiveFireMap({ onFireCount }: { onFireCount?: (n: number) => void }) {
   return (
     <>
+
+
+
       <style>{`
         /* CartoDB dark tile — boost coastline glow */
         .fire-map-dark .leaflet-tile {
