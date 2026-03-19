@@ -3,6 +3,7 @@
 Import AK_fire_location_points_NAD83.csv into MongoDB fire_points collection.
 Usage: python3 import_fire_data.py <path_to_csv>
 """
+
 import sys
 import csv
 import os
