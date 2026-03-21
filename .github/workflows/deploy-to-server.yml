@@ -24,7 +24,7 @@ jobs:
                 echo "MONGO_INITDB_ROOT_PASSWORD=password" >> .env
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
                 echo "MCP_ALLOWED_HOSTS=137.229.25.190,localhost,0.0.0.0" >> .env
-echo "RAG_API_URL=http://137.229.25.190:8000/api/retrieve" >> .env
+                echo "RAG_API_URL=http://137.229.25.190:8000/api/retrieve" >> .env
                 
             - name: Update fireaid_web Dependancies
               run: |
