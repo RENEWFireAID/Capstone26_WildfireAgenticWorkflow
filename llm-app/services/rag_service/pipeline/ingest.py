@@ -4,7 +4,7 @@ import os
 import csv
 import ast
 from shared import Document, Chunk
-from typing import Any, Dict, List, Optional 
+from typing import Any, Dict, List, Optional
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 """
@@ -16,7 +16,15 @@ in the Document class.
 Notes: PDF ingestion is abstract and can accept most cases of PDF documents. CSV ingestion
 is a hard coded case specific ingestion accepting a certain formatted CSV table. 
 """
-def ingest_sources(sources: list[Path], chunk_size: int, chunk_overlap: int, limit: int = None, offset: int = 0):
+
+
+def ingest_sources(
+    sources: list[Path],
+    chunk_size: int,
+    chunk_overlap: int,
+    limit: int = None,
+    offset: int = 0,
+):
     docs = []
 
     for src in sources:
@@ -24,9 +32,11 @@ def ingest_sources(sources: list[Path], chunk_size: int, chunk_overlap: int, lim
 
     chunks = []
 
-    chunks.extend(chunk_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap))
+    chunks.extend(
+        chunk_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    )
 
-    return chunks 
+    return chunks
 
 
 def validate_source_path(path: Path):
@@ -36,13 +46,13 @@ def validate_source_path(path: Path):
 
 def load_documents(source: Path, limit: int = None, offset: int = 0) -> list[Document]:
     documents = []
-    
+
     if source.is_dir():
         for file_path in source.rglob("*"):
             if not file_path.is_file():
                 continue
             if file_path.name.startswith("."):
-                continue 
+                continue
             try:
                 documents.extend(load_file(file_path, limit=limit, offset=offset))
             except Exception as e:
@@ -52,7 +62,7 @@ def load_documents(source: Path, limit: int = None, offset: int = 0) -> list[Doc
             documents.extend(load_file(source, limit=limit, offset=offset))
         except Exception as e:
             print(f"Skipping {source}: {e}")
-            
+
     return documents
 
 
@@ -69,14 +79,14 @@ def parse_pdf(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
     try:
         reader = PdfReader(str(path))
     except Exception as e:
-        raise ParseError(f"Failed to open PDF '{path}': {e}") from e 
+        raise ParseError(f"Failed to open PDF '{path}': {e}") from e
 
     text = ""
     for page in reader.pages:
         try:
             page_text = page.extract_text()
         except Exception as e:
-            raise ParseError(f"Failed extracting text from '{path}': {e}") from e 
+            raise ParseError(f"Failed extracting text from '{path}': {e}") from e
 
         if page_text:
             text += page_text + "\n"
@@ -85,7 +95,7 @@ def parse_pdf(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
     meta: Dict[str, Any] = {
         "filetype": "pdf",
         "filename": path.name,
-        "path": str(path.resolve())
+        "path": str(path.resolve()),
     }
 
     return [
@@ -99,12 +109,12 @@ def parse_pdf(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
 
 
 def parse_csv(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
-    try: 
+    try:
         f = path.open("r", encoding="utf-8", newline="")
-    except Exception as e: 
+    except Exception as e:
         raise Exception(f"Failed to open CSV '{path}': {e}") from e
 
-    with f: 
+    with f:
         reader = csv.DictReader(f)
         docs = []
         for i, row in enumerate(reader):
@@ -112,11 +122,10 @@ def parse_csv(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
                 continue
             if limit is not None and i >= offset + limit:
                 break
-            
+
             abstract = str(row.get("abstract", "")).strip()
             if not abstract:
                 continue
-
 
             # Store metadata as primitive types supported by vector databases
             meta: Dict[str, Any] = {
@@ -140,7 +149,9 @@ def parse_csv(path: Path, limit: int = None, offset: int = 0) -> list[Document]:
     return docs
 
 
-def chunk_documents(docs: list[Document], chunk_size: int, chunk_overlap:int) -> list[Chunk]:
+def chunk_documents(
+    docs: list[Document], chunk_size: int, chunk_overlap: int
+) -> list[Chunk]:
     separators = ["\n\n", "\n", ".", " ", ""]
 
     splitter = RecursiveCharacterTextSplitter(
@@ -154,9 +165,9 @@ def chunk_documents(docs: list[Document], chunk_size: int, chunk_overlap:int) ->
     for doc in docs:
         text = (doc.text).strip()
         if not text:
-            continue 
+            continue
 
-        # Per instructions from Tanwi, the abstracts in CSV's should be one chunk. 
+        # Per instructions from Tanwi, the abstracts in CSV's should be one chunk.
         filetype = doc.metadata.get("filetype")
         if filetype == "pdf":
             pieces = splitter.split_text(text)
@@ -171,15 +182,15 @@ def chunk_documents(docs: list[Document], chunk_size: int, chunk_overlap:int) ->
                 continue
 
             meta: Dict[str, any] = dict(doc.metadata)
-            meta["chunk_index"] = i 
+            meta["chunk_index"] = i
 
             chunks.append(
                 Chunk(
                     chunk_id=f"{doc.doc_id}::chunk-{i}",
                     doc_id=doc.doc_id,
                     text=chunk_text,
-                    metadata=meta
+                    metadata=meta,
                 )
             )
 
-    return chunks 
+    return chunks

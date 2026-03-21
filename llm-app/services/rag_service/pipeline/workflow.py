@@ -1,17 +1,19 @@
-from dataclasses import dataclass 
+from dataclasses import dataclass
 from .ingest import ingest_sources
-from .embed import embed_chunks 
+from .embed import embed_chunks
 from .retrieve import retrieve_chunks
 
 import chromadb
 
-@dataclass 
+
+@dataclass
 class RAGPipelineConfig:
     default_top_k: int = 5
     chunk_size: int = 1200
     chunk_overlap: int = 200
     embedding_model: str = "all-MiniLM-L6-v2"
     embed_batch_size: int = 32
+
 
 def index_embeddings(embeddings: list[dict], collection: str, reindex: bool = False):
     """
@@ -28,7 +30,9 @@ def index_embeddings(embeddings: list[dict], collection: str, reindex: bool = Fa
                 pass
         chroma_collection = client.get_or_create_collection(name=collection)
     except Exception as e:
-        raise Exception(f"Failed to connect to ChromaDB or retrieve collection '{collection}': {e}") from e
+        raise Exception(
+            f"Failed to connect to ChromaDB or retrieve collection '{collection}': {e}"
+        ) from e
 
     if not embeddings:
         return
@@ -42,19 +46,27 @@ def index_embeddings(embeddings: list[dict], collection: str, reindex: bool = Fa
         batch_size = 5000
         for i in range(0, len(ids), batch_size):
             chroma_collection.add(
-                ids=ids[i:i+batch_size],
-                embeddings=embs[i:i+batch_size],
-                documents=docs[i:i+batch_size],
-                metadatas=metadatas[i:i+batch_size]
+                ids=ids[i : i + batch_size],
+                embeddings=embs[i : i + batch_size],
+                documents=docs[i : i + batch_size],
+                metadatas=metadatas[i : i + batch_size],
             )
     except Exception as e:
         raise Exception(f"Error indexing to ChromaDB collection: {e}") from e
 
+
 class RAGPipeline:
     def __init__(self, config: RAGPipelineConfig):
-        self.config = config 
+        self.config = config
 
-    def ingest(self, sources, collection: str, reindex: bool = False, limit: int = None, offset: int = 0):
+    def ingest(
+        self,
+        sources,
+        collection: str,
+        reindex: bool = False,
+        limit: int = None,
+        offset: int = 0,
+    ):
         """
         Ingest:
             Workflow function for ingesting documents. Should be called from the API point to
@@ -67,7 +79,7 @@ class RAGPipeline:
             chunk_size=self.config.chunk_size,
             chunk_overlap=self.config.chunk_overlap,
             limit=limit,
-            offset=offset
+            offset=offset,
         )
 
         # Takes the type: Document and embeds them
@@ -77,22 +89,12 @@ class RAGPipeline:
             batch_size=self.config.embed_batch_size,
         )
 
-        index_embeddings(
-            embeddings=embeddings,
-            collection=collection,
-            reindex=reindex
-        )
+        index_embeddings(embeddings=embeddings, collection=collection, reindex=reindex)
 
     def retrieve(self, query: str, collection: str, top_k: int):
         """
-        Retrieve: 
-            Retrieve chunks from a collection in the vector DB from a query passed by the user. 
-            Should be called from the API endpoint. 
+        Retrieve:
+            Retrieve chunks from a collection in the vector DB from a query passed by the user.
+            Should be called from the API endpoint.
         """
-        return retrieve_chunks(
-            query = query,
-            collection = collection,
-            top_k=top_k
-        )
-
-
+        return retrieve_chunks(query=query, collection=collection, top_k=top_k)
