@@ -16,6 +16,6 @@ jobs:
         steps:
             - name: List Home 
               run: |
-                cd /home/fireaid
+                cd /home/fireaid/chromadb
                 echo "Path: $(pwd)"
                 echo $(ls)
