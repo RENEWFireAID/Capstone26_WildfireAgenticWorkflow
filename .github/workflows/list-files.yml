@@ -1,0 +1,17 @@
+name: Display Fireaid Home Directory
+
+permissions:
+    contents: read
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+    deploy:
+        runs-on: [self-hosted]
+        steps:
+            - name: List Home 
+              run: |
+                echo $(ls)
