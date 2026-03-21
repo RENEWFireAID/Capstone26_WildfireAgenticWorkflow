@@ -16,4 +16,6 @@ jobs:
         steps:
             - name: List Home 
               run: |
+                cd /home/fireaid
+                echo "Path: $(pwd)"
                 echo $(ls)
