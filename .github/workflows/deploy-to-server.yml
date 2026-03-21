@@ -39,7 +39,7 @@ jobs:
 
             - name: Copy chroma_db into working dir
               run: |
-                cp -r /home/fireaid/chroma_db ./llm-app/
+                cp -r /home/fireaid/chromadb/chroma_db ./llm-app/
 
             - name: Populate MongoDB with terms.csv
               run: |
