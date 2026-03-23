@@ -2,3 +2,6 @@
 .DS_Store
 **/.DS_Store
 *.zip
+llm-app/chroma_db/
+llm-app/data/
+*.csv
