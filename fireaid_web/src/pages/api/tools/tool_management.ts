@@ -2,8 +2,11 @@
 // Tool definitions for the OpenAI API
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
+
 import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
 import { query_fire_points } from "./handlers/handle_historic_fires";
+import { retrieveRagContext } from "../tools/handle_rag_search";
+
 
 // **** TOOL DEFINITIONS *****
 
@@ -78,11 +81,30 @@ const historicWildfireQuery =
         },
     };
 
+// Tool for retrieving RAG context from database of wildfire literature
+const ragTool = {
+    type: "function",
+    name: "retrieve_rag_context",
+    description: "ALWAYS use this tool to retrieve relevant context from the wildfire literature database whenever the user asks about wildfire risks, scenarios, mitigation, or scientific phenomena. If you do not have sufficient information to answer the question, or if you are guessing, you MUST use this tool first.",
+    parameters: {
+        type: "object",
+        properties: {
+            query: {
+                type: "string",
+                description: "The targeted search query to look up in the vector database.",
+            },
+        },
+        required: ["query"],
+    },
+};
+
+
 
 // Exported list of tools for use in API query
 export const query_tools = [
     wildfireTerminologyTool as Tool, 
     historicWildfireQuery as Tool,
+    ragTool as Tool
 ];
 
 
@@ -93,8 +115,8 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
 
     for (const item of tool_call_list) {
 
-        if(item.name == "get_wildfire_term") {
-            const def = await getWildfireTerm(JSON.parse(item.arguments).term);
+        if (item.name == "get_wildfire_term") {
+            const def = await getWildfireTerm(JSON.parse(item.arguments).term)
             tool_output.push(item);
 
             tool_output.push({
@@ -108,11 +130,22 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             const args = JSON.parse(item.arguments);
             const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
             tool_output.push(item);
+          
+            tool_output.push({
+                  type: "function_call_output",
+                  call_id: item.call_id,
+                  output: JSON.stringify(data)
+            });
+        }
+          
+        if (item.name == "retrieve_rag_context") {
+            const context = await retrieveRagContext(JSON.parse(item.arguments).query)
+            tool_output.push(item)
 
             tool_output.push({
                 type: "function_call_output",
                 call_id: item.call_id,
-                output: JSON.stringify(data)
+                output: context
             })
         }
     };

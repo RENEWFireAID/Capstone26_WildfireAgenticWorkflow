@@ -24,11 +24,15 @@ jobs:
                 echo "MONGO_INITDB_ROOT_PASSWORD=password" >> .env
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
                 echo "MCP_ALLOWED_HOSTS=137.229.25.190,localhost,0.0.0.0" >> .env
+                echo "RAG_API_URL=http://137.229.25.190:8000/api/retrieve" >> .env
                 
             - name: Update fireaid_web Dependancies
               run: |
                 cd fireaid_web
                 docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
+            - name: Copy chroma_db into working dir
+              run: |
+                cp -r /home/fireaid/chromadb/chroma_db ./llm-app/
 
             - name: Build and Start Docker Containers
               run: |

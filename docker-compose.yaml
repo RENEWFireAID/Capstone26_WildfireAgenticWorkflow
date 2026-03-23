@@ -14,6 +14,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal=host-gateway"
 
   firemcp:
     build:
@@ -27,6 +29,16 @@ services:
     ports:
       - "8081:8081"
 
+  rag-service:
+    build:
+      context: ./llm-app
+    env_file:
+      - .env
+    container_name: rag-service 
+    restart: always
+    ports:
+      - "8000:8000"
+     
   mongo:
     image: mongo:8.0
     container_name: mongo

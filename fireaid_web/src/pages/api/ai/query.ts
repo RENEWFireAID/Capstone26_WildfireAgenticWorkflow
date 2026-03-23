@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ResponseInput, ResponseFunctionToolCall } from "openai/resources/responses/responses.mjs";
+import { ResponseInput, ResponseFunctionToolCall, Tool } from "openai/resources/responses/responses.mjs";
 import { query_tools, make_tool_calls } from "../tools/tool_management";
 
 
@@ -22,17 +22,21 @@ export default async function handler(
     // Format user input
     const {msg: text} = req.body
     const input = [
+        { role: "system", content: "You are a wildfire intelligence assistant. When answering questions regarding fire risks, history, mitigation, or research, you MUST ALWAYS use the retrieve_rag_context tool to look up information from the literature database before answering. Delay responding until you have retrieved context." },
         {
             role: "user",
             content: text,
         },
-    ] as ResponseInput;
+    ] as unknown as ResponseInput;
+  
+    const all_tools = [...query_tools];
     var query_count = 1;
+  
     try {
         // Send initial prompt with tools
         var response = await openai.responses.create({
             model: "gpt-5",
-            tools: query_tools,
+            tools: all_tools,
             input,
             tool_choice: "auto",
         });
@@ -55,6 +59,7 @@ export default async function handler(
                 console.log();
 
                 if (item.type == "function_call") {
+
                     found_term_tool_call = true;
                     tool_requests.push(item);
                 }
@@ -68,10 +73,10 @@ export default async function handler(
 
                 response = await openai.responses.create({
                     model: "gpt-5",
-                    instructions: "Respond using information retrieved from a tool. Indicate whether you have included information from a tool.",
+                    instructions: "Respond using information retrieved from tool(s). Indicate whether you have included information from a tool.",
                     previous_response_id: response.id,
                     input: new_input,
-                    tools: query_tools,
+                    tools: all_tools,
                 });
             }
             
