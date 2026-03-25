@@ -1,7 +1,7 @@
 // * Overrall Request Flow:
 // 1. User sends a natrual language question
-// 2. Claude (1st call) -> Coverts natrual language question into a MongoDB aggregation pipeline
-// 3. Internal API call -> Executes the pipeline against MongoDB and returns real data
+// 2. Claude (1st call) -> Coverts natrual language question into a MongoDB aggregation pipeline (check aggregation safety! No $out, $merge, etc. allowed)
+// 3. Internal API call -> Executes the pipeline against MongoDB and returns real data 
 // 4. Claude (2nd call) -> Analyzes the real data and answers the user's question in plain English
 // 5. Return the final answer to the frontend, along with any relevant metadata about the tools used (e.g. record count)
 // * Note: MongoDB aggregation pipelines: Raw Data -> $match ->$group -> $sort -> $limit -> Final Results
@@ -78,7 +78,7 @@ Examples:
 export async function POST(req: Request) {
   try {
     // ============================================================
-    // PART 1 — Receive & Validate the User's Question
+    // PART 3.1 — Receive & Validate the User's Question
     // Parse the incoming request, extract the user message and
     // conversation history. Reject empty messages immediately.
     // ============================================================

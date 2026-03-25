@@ -238,7 +238,7 @@ export default function HomePage() {
             )}
           </div>
 
-          <Link href="/fireaid"
+          <Link href="/portal"
             className="enter-btn rounded-2xl bg-orange-500 px-8 py-4 text-sm font-bold text-white hover:bg-orange-600 transition flex items-center gap-2"
             style={{ animation: "fade-slide-up 0.8s ease 1s both, pulse-glow 2.5s ease-in-out 2s infinite" }}
           >
