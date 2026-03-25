@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutGrid, Database, Terminal, Download, MapPin } from "lucide-react";
+import { LayoutGrid, Database, Terminal, BarChart3, Download, MapPin } from "lucide-react";
 
 const SIDEBAR_ITEMS = [
   { key: "apps",   label: "APPS",   icon: LayoutGrid, href: "/apps" },
   { key: "data",   label: "DATA",   icon: Database,   href: "/data" },
+  { key: "visualization", label: "VISUAL", icon: BarChart3, href: "/visualization" },
   { key: "prompt", label: "PROMPT", icon: Terminal,    href: "/prompt" },
 ];
 

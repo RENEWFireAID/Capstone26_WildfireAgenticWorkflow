@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
-import { Send, RefreshCw, Bot, User, LayoutGrid, Database, Terminal } from "lucide-react";
+import { LayoutGrid, Database, Terminal, BarChart3, Send, Bot, User, RefreshCw } from "lucide-react";
 
 type Message = { role: "user" | "ai"; content: string; time: string };
 
@@ -18,6 +18,7 @@ const SUGGESTED = [
 const SIDEBAR_ITEMS = [
   { key: "apps",   label: "APPS",   icon: LayoutGrid, href: "/apps" },
   { key: "data",   label: "DATA",   icon: Database,   href: "/data" },
+  { key: "visualization", label: "VISUAL", icon: BarChart3,  href: "/visualization" },
   { key: "prompt", label: "PROMPT", icon: Terminal,    href: "/prompt" },
 ];
 

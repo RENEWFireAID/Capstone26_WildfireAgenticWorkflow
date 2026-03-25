@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   LayoutGrid,
+  BarChart3,
   Database,
   Terminal,
   BookOpen,
@@ -16,6 +17,7 @@ import {
 const SIDEBAR_ITEMS = [
   { key: "apps", label: "APPS", icon: LayoutGrid, href: "/apps" },
   { key: "data", label: "DATA", icon: Database, href: "/data" },
+  { key: "visualization", label: "VISUAL", icon: BarChart3, href: "/visualization" },
   { key: "prompt", label: "PROMPT", icon: Terminal, href: "/prompt" },
 ];
 
@@ -98,23 +100,11 @@ export default function DataPage() {
       </aside>
 
       <main className="flex-1 flex flex-col">
-        <div className="bg-[#003366] px-12 py-10">
-          <p className="text-[#FFCC33] text-xs font-semibold tracking-widest uppercase mb-1">
-            FireAID
-          </p>
-          <div className="flex items-center gap-4">
-            <img
-              src="/uaf-logo.png"
-              alt="UAF"
-              style={{ height: 48, width: "auto", mixBlendMode: "screen" }}
-            />
-            <h1 className="text-3xl font-bold text-white tracking-tight">Data</h1>
-          </div>
-          <p className="text-blue-200 text-sm mt-1">
-            Explore datasets and data sources
-          </p>
-        </div>
-
+      <div className="bg-slate-50 px-12 py-10 border-b border-slate-200">
+          <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">FireAID</p>
+            <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Data</h1>
+          <p className="text-slate-400 text-sm mt-1">Explore datasets and data sources</p>
+      </div>
         <div className="flex-1 bg-slate-50 px-12 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
             {DATA_ITEMS.map(

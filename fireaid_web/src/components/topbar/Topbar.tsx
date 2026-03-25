@@ -7,7 +7,17 @@ export default function Topbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
         {/* leftside: Logo */}
         <div className="flex items-center gap-4">
-          <img src="/uaf-logo.png" alt="UAF Logo" style={{height:48, width:"auto", mixBlendMode:"screen", transform:"scale(1.6)", transformOrigin:"left center"}} />
+          <img
+            src="/uaf-logo.png"
+            alt="UAF Logo"
+            style={{
+              height: 48,
+              width: "auto",
+              mixBlendMode: "screen",
+              transform: "scale(1.6)",
+              transformOrigin: "left center",
+            }}
+          />
           <div className="h-8 w-px bg-white/20" />
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
@@ -18,15 +28,17 @@ export default function Topbar() {
             </span>
           </div>
         </div>
+
         {/* Middle */}
-        <nav className="hidden items-center gap-10 text-sm font-semibold text-slate-200 md:flex">
+        <nav className="hidden items-center gap-22 text-sm font-semibold text-slate-200 md:flex ml-10">
           {[
+            { label: "Home", href: "/" },
             { label: "Terminology", href: "/library" },
-            { label: "Data", href: "/search" },
-            { label: "Tools", href: "/mcp-tools" },
-            { label: "Apps", href: "/reports" },
-            { label: "Visualization", href: "/charts" },
-            { label: "Chat", href: "/chat" },
+            { label: "Data", href: "/data" },
+            { label: "Apps", href: "/apps" },
+            { label: "Visualization", href: "/visualization" },
+            { label: "Projects", href: "/projects" },
+            { label: "Chat", href: "/portal" },
           ].map(({ label, href }) => (
             <Link
               key={label}
@@ -37,14 +49,8 @@ export default function Topbar() {
             </Link>
           ))}
         </nav>
-        {/* rightside: only keep "search bar" */}
-        <div className="flex items-center gap-3">
-          <button className="rounded-full bg-[#FFCC33] px-3 py-1 text-[11px] font-semibold text-[#003366] shadow hover:bg-amber-300">
-            Upload data
-          </button>
-
-        </div>
       </div>
+
       {/* bottom line */}
       <div className="h-1 w-full bg-[#FFCC33]" />
     </header>
