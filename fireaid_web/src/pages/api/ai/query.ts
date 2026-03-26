@@ -10,8 +10,8 @@ export default async function handler(
 ) {
     console.log("Starting LLM query in query.ts ...");
 
-    if(!process.env.OPENROUTER_API_KEY) {
-        res.status(500).json({error: "Missing API key"})
+    if (!process.env.OPENROUTER_API_KEY) {
+        res.status(500).json({ error: "Missing API key" })
     }
 
     const openai = new OpenAI({
@@ -20,7 +20,7 @@ export default async function handler(
     });
 
     // Format user input
-    const {msg: text} = req.body
+    const { msg: text } = req.body
     const input = [
         { role: "system", content: "You are a wildfire intelligence assistant. When answering questions regarding fire risks, history, mitigation, or research, you MUST ALWAYS use the retrieve_rag_context tool to look up information from the literature database before answering. Delay responding until you have retrieved context." },
         {
@@ -28,14 +28,14 @@ export default async function handler(
             content: text,
         },
     ] as unknown as ResponseInput;
-  
+
     const all_tools = [...query_tools];
     var query_count = 1;
-  
+
     try {
         // Send initial prompt with tools
         var response = await openai.responses.create({
-            model: "gpt-5",
+            model: "openai/gpt-4o-mini",
             tools: all_tools,
             input,
             tool_choice: "auto",
@@ -72,19 +72,19 @@ export default async function handler(
                 new_input.push(...tool_output);
 
                 response = await openai.responses.create({
-                    model: "gpt-5",
-                    instructions: "Respond using information retrieved from tool(s). Indicate whether you have included information from a tool.",
+                    model: "openai/gpt-4o",
+                    instructions: "Respond using information retrieved from tool(s). YOU MUST CITE YOUR SOURCES AND INDICATE whether you have included information from a tool. Any information from a rag_tool_context must be MLA CITED. ALSO AT THE END OF EACH MESSAGE, PROVIDE A SOURCES LIST INCLUDING AN MLA CITED REFERENCE OF ALL INFORMATION AUTHOR, TITLE, ETC",
                     previous_response_id: response.id,
                     input: new_input,
                     tools: all_tools,
                 });
             }
-            
+
         } while (found_term_tool_call);
 
-        res.status(200).json({msg: response.output_text});
+        res.status(200).json({ msg: response.output_text });
 
-    } catch (e:any) {
+    } catch (e: any) {
         console.log("Error with query", query_count);
         console.log(e.error);
         console.log(e);
