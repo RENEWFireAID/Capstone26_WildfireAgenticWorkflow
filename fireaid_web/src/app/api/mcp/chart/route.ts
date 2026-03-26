@@ -22,7 +22,7 @@ Key fields available:
 Given a user question, respond with a JSON object (no markdown, no backticks) in this exact format:
 {
   "pipeline": [...],
-  "chartType": "bar" | "line" | "pie",
+  "chartType": "bar" | "line" | "pie" | "scatter",
   "labelField": "fieldname",
   "valueField": "fieldname",
   "title": "Chart title",
@@ -32,7 +32,7 @@ Given a user question, respond with a JSON object (no markdown, no backticks) in
 
 Rules:
 - pipeline must be a valid MongoDB aggregation pipeline array
-- For time series use "line", for comparisons use "bar", for proportions use "pie"
+- For time series use "line", for comparisons use "bar", for proportions use "pie", for correlation/distribution use "scatter"
 - Always limit results to 20 or fewer data points using $limit
 - labelField and valueField must match fields in the pipeline output
 - Return ONLY the JSON object, nothing else. No explanation, no markdown, no backticks. Just the raw JSON.`;
@@ -89,10 +89,16 @@ export async function POST(req: NextRequest) {
     }
 
     // Step 3: Format for Recharts
-    const chartData = results.map((row: any) => ({
-      label: String(row[labelField] ?? row._id ?? "Unknown"),
-      value: Number(row[valueField] ?? row.count ?? 0),
-    }));
+    const chartData = results.map((row: any) => {
+      const rawLabel = row[labelField] ?? row._id ?? "Unknown";
+      const label = typeof rawLabel === "object" && rawLabel !== null
+        ? Object.values(rawLabel).join(" / ")
+        : String(rawLabel);
+      return {
+        label,
+        value: Number(row[valueField] ?? row.count ?? 0),
+      };
+    });
 
     return NextResponse.json({
       summary,

@@ -5,10 +5,11 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { BarChart3, Send, X, Download } from "lucide-react";
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
+  ScatterChart, Scatter, ZAxis,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 
-type ChartType = "bar" | "line" | "pie";
+type ChartType = "bar" | "line" | "pie" | "scatter";
 type ChatMsg = { role: "user" | "ai"; text: string };
 
 type ChartData = {
@@ -158,6 +159,15 @@ export default function ChartsPage() {
                   <Tooltip />
                   <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} />
                 </LineChart>
+              ) : chart.type === "scatter" ? (
+                <ScatterChart>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} name="X" />
+                  <YAxis dataKey="value" tick={{ fontSize: 11 }} name="Y" />
+                  <ZAxis range={[40, 400]} />
+                  <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+                  <Scatter data={chart.data} fill="#f97316" />
+                </ScatterChart>
               ) : (
                 <PieChart>
                   <Pie data={chart.data} dataKey="value" nameKey="label" cx="50%" cy="50%" outerRadius={110} label={({ label, percent }) => `${label} ${(percent*100).toFixed(0)}%`}>

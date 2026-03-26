@@ -73,11 +73,9 @@ export default function FireAIDSidebar({ active }: { active: string }) {
       {/* PROJECTS */}
       <Section title="PROJECTS">
         <div className="space-y-2 text-xs">
-          <ProjectItem name="Interior Alaska 2024 fire season" />
-          <ProjectItem name="Tundra NDVI trend explorer" />
-          <Link href="/fireaid" className="mt-1 block text-blue-600 hover:underline">
-            Custom analysis workspace
-          </Link>
+        <Link href="/projects" className="text-blue-600 hover:underline text-xs font-semibold">
+            View all projects →
+        </Link>
         </div>
       </Section>
     </aside>
