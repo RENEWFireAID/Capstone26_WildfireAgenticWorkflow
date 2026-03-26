@@ -1,4 +1,7 @@
 .env
+*.csv
+*.txt
+*.tiff
 .DS_Store
 **/.DS_Store
 *.zip
