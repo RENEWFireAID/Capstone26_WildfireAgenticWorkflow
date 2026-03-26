@@ -30,15 +30,14 @@ export default function Topbar() {
         </div>
 
         {/* Middle */}
-        <nav className="hidden items-center gap-22 text-sm font-semibold text-slate-200 md:flex ml-10">
+        <nav className="hidden items-center gap-40 text-sm font-semibold text-slate-200 md:flex ml-10">
           {[
-            { label: "Home", href: "/" },
-            { label: "Terminology", href: "/library" },
-            { label: "Data", href: "/data" },
-            { label: "Apps", href: "/apps" },
-            { label: "Visualization", href: "/visualization" },
-            { label: "Projects", href: "/projects" },
-            { label: "Chat", href: "/portal" },
+            { label: "Home",   href: "/" },
+            { label: "Data",   href: "/data" },
+            { label: "Apps",   href: "/apps" },
+            { label: "Prompt", href: "/prompt" },
+            { label: "Team",   href: "/team" },
+        
           ].map(({ label, href }) => (
             <Link
               key={label}
