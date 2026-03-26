@@ -195,6 +195,13 @@ export default function PortalPage() {
           )}
         </main>
       </div>
+      {/* Feedback floating button */}
+      <Link
+          href="/feedback"
+          className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#003366] text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#002244] transition text-sm font-semibold z-50"
+    >
+          💬 Feedback
+      </Link>
     </div>
   );
 }
