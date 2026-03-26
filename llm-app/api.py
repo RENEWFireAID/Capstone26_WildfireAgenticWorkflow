@@ -34,11 +34,16 @@ def retrieve(req: RetrieveRequest):
         for i, chunk in enumerate(chunks):
             print(f"--- Retrieved Chunk {i + 1} ---")
             print(f"Metadata: {chunk.metadata}")
-            print(f"Text Preview (first 200 chars): {chunk.text[:200] if chunk.text else ''}...")
+            print(
+                f"Text Preview (first 200 chars): {chunk.text[:200] if chunk.text else ''}..."
+            )
             print("----------------------------\n", flush=True)
             results.append({"text": chunk.text, "metadata": chunk.metadata})
 
-        print(f"Total chunks retrieved and returned by RAG service: {len(results)}", flush=True)
+        print(
+            f"Total chunks retrieved and returned by RAG service: {len(results)}",
+            flush=True,
+        )
         return RetrieveResponse(chunks=results)
     except Exception as e:
         import traceback
