@@ -16,7 +16,7 @@ function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
     async function loadFires() {
       try {
         const params = new URLSearchParams({
-          where: "1=1",
+          where: "POOState='US-AK'",
           outFields: "*",
           f: "geojson",
           resultRecordCount: "2000",
@@ -214,8 +214,8 @@ export default function LiveFireMap({ onFireCount }: { onFireCount?: (n: number)
       <MapContainer
         className="fire-map-dark h-full w-full"
         style={{ width: "100%", height: "100%", background: "#0a0400" }}
-        center={[39, -98]}
-        zoom={4}
+        center={[64, -153]}
+        zoom={5}
         scrollWheelZoom
         zoomControl={false}
       >
