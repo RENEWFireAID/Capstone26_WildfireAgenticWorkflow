@@ -164,6 +164,28 @@ export default function FeedbackPage() {
                   />
                 </div>
 
+                <div className="flex flex-col gap-1.5">
+                  <textarea
+                    rows={4}
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    placeholder="Did you find the website useful?"
+                    value={form.suggestions}
+                    onChange={e => setForm(f => ({ ...f, suggestions: e.target.value }))}
+                  />
+                </div>
+                
+
+                <div className="flex flex-col gap-1.5">
+                  <textarea
+                    rows={4}
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    placeholder="Could you tell us how you would like to use it?"
+                    value={form.suggestions}
+                    onChange={e => setForm(f => ({ ...f, suggestions: e.target.value }))}
+                  />
+                </div>
+               
+
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
