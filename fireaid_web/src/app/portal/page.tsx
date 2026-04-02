@@ -38,12 +38,20 @@ export default function PortalPage() {
     setInput("");
     setLoading(true);
     const userMsg: Message = { role: "user", content: msg, time: new Date().toLocaleTimeString() };
-    setMessages(prev => [...prev, userMsg]);
+    
+    const updatedMessages = [...messages, userMsg];
+    
+    setMessages(updatedMessages);
+
     try {
+      console.log();
+      console.log("CURRENT MESSAGE LIST");
+      console.log(updatedMessages);
+      console.log();
       const res = await fetch("/api/ai/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ msg: msg }),
+        body: JSON.stringify({ msgs: updatedMessages }),
       });
       const data = await res.json();
       const reply = data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";

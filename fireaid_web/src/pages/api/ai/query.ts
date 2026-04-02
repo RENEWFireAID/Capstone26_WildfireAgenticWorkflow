@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { ResponseInput, ResponseFunctionToolCall, Tool } from "openai/resources/responses/responses.mjs";
 import { query_tools, make_tool_calls } from "../tools/tool_management";
 
+type Message = { role: "user" | "ai"; content: string; time: string };
 
 export default async function handler(
     req: NextApiRequest,
@@ -20,14 +21,28 @@ export default async function handler(
     });
 
     // Format user input
-    const {msg: text} = req.body
+    const {msgs: historyMsgs} = req.body
+
+    console.log();
+    console.log("HISTORYMSGS");
+    console.log(historyMsgs);
+    console.log();
+
+    const historyInput = historyMsgs.map((msg: Message) => ({
+        role: msg.role == "ai" ? "assistant" : msg.role,
+        content: msg.content,
+    }));
+
+
     const input = [
-        { role: "system", content: "You are a wildfire intelligence assistant. When answering questions regarding fire risks, history, mitigation, or research, you MUST ALWAYS use the retrieve_rag_context tool to look up information from the literature database before answering. Delay responding until you have retrieved context." },
-        {
-            role: "user",
-            content: text,
-        },
+        { role: "system", content: "You are a wildfire intelligence assistant. Address the user's most recent query, using the rest of the conversation as context. When answering questions related to wildfires, primarily use the provided wildfire data tools to provide an answer, and cite your tool usage." },
+        ...historyInput
     ] as unknown as ResponseInput;
+
+    console.log();
+    console.log("INPUT");
+    console.log(input);
+    console.log();
   
     const all_tools = [...query_tools];
     var query_count = 1;
@@ -42,16 +57,15 @@ export default async function handler(
         });
 
         // Add initial message as context to input for subsequent queries
-        var new_input = [] as ResponseInput;
-        new_input.push(input[0]);
+        var new_input = input;
 
-        var found_term_tool_call = false;
+        var found_tool_call = false;
 
         // Loop over response output and make queries while tool calls are needed.
         do {
             query_count += 1
             var tool_requests: ResponseFunctionToolCall[] = [];
-            found_term_tool_call = false;
+            found_tool_call = false;
 
             console.log("Iterating over response output:")
             for (const item of response.output) {
@@ -60,13 +74,13 @@ export default async function handler(
 
                 if (item.type == "function_call") {
 
-                    found_term_tool_call = true;
+                    found_tool_call = true;
                     tool_requests.push(item);
                 }
             };
 
             // Make new query with results from tool calling if necessary
-            if (found_term_tool_call) {
+            if (found_tool_call) {
 
                 const tool_output = await make_tool_calls(tool_requests);
                 new_input.push(...tool_output);
@@ -75,12 +89,12 @@ export default async function handler(
                     model: "gpt-5",
                     instructions: "Respond using information retrieved from tool(s). Indicate whether you have included information from a tool.",
                     previous_response_id: response.id,
-                    input: new_input,
+                    input: tool_output,
                     tools: all_tools,
                 });
             }
             
-        } while (found_term_tool_call);
+        } while (found_tool_call);
 
         res.status(200).json({msg: response.output_text});
 
