@@ -22,7 +22,7 @@ export default async function handler(
     // Format user input
     const { msg: text } = req.body
     const input = [
-        { role: "system", content: "You are a wildfire intelligence assistant. When answering questions regarding fire risks, history, mitigation, or research, you MUST ALWAYS use the retrieve_rag_context tool to look up information from the literature database before answering. Delay responding until you have retrieved context." },
+        { role: "system", content: "You are a wildfire intelligence assistant. When answering questions regarding fire risks, history, mitigation, or research, utilize the tools provided to retrieve information to answer user questions. Decide which tool you need to use to including retrieve_rag_context, get_wildfire_term, query_fire_points to answer the question."},
         {
             role: "user",
             content: text,
