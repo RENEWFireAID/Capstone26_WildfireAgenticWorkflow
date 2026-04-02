@@ -30,11 +30,12 @@ export default function Topbar() {
         </div>
 
         {/* Middle */}
-        <nav className="hidden items-center gap-40 text-sm font-semibold text-slate-200 md:flex ml-10">
+        <nav className="hidden items-center gap-30 text-sm font-semibold text-slate-200 md:flex ml-10">
           {[
             { label: "Home",   href: "/" },
-            { label: "Data",   href: "/data" },
+            { label: "Chat",   href: "/portal" },
             { label: "Apps",   href: "/apps" },
+            { label: "Data",   href: "/data" },
             { label: "Prompt", href: "/prompt" },
             { label: "Team",   href: "/team" },
         
