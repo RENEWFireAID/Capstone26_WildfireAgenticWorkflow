@@ -96,7 +96,7 @@ export default function PredictionPage() {
             </div>
             <div>
               <div className="text-xl font-bold text-slate-900">AI Fire Prediction</div>
-              <div className="text-xs text-slate-500">Statistical trend analysis based on WFIGS historical data (2010-2024)</div>
+              <div className="text-xs text-slate-500">Statistical trend analysis based on historical data (1939-2024)</div>
             </div>
           </div>
 
@@ -231,7 +231,7 @@ export default function PredictionPage() {
 
             {/* Disclaimer */}
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-xs text-slate-500">
-              <span className="font-semibold">Disclaimer:</span> Predictions are based on linear regression of historical WFIGS data and are intended for research purposes only. Actual fire activity depends on weather, climate, and other factors not captured in this model.
+              <span className="font-semibold">Disclaimer:</span> Predictions are based on linear regression of historical data and are intended for research purposes only. Actual fire activity depends on weather, climate, and other factors not captured in this model.
             </div>
           </>
         )}

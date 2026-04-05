@@ -1,3 +1,29 @@
+/**
+ * Linear Regression using Ordinary Least Squares (OLS)
+ *
+ * Prediction formula:
+ *   ŷ = β₁x + β₀
+ *
+ * Slope (β₁):
+ *   β₁ = (n·ΣxᵢYᵢ - Σxᵢ·ΣYᵢ) / (n·Σxᵢ² - (Σxᵢ)²)
+ *
+ * Intercept (β₀):
+ *   β₀ = (ΣYᵢ - β₁·Σxᵢ) / n
+ *
+ * Coefficient of Determination (R²):
+ *   R² = 1 - SS_res / SS_tot
+ *   where:
+ *     SS_res = Σ(yᵢ - ŷᵢ)²  (residual sum of squares)
+ *     SS_tot = Σ(yᵢ - ȳ)²   (total sum of squares)
+ *
+ * Variables:
+ *   x  = year (e.g. 1939, 1940, ..., 2024)
+ *   y  = fire count per year
+ *   n  = number of data points
+ *   ȳ  = mean of y values
+ *   R² → 1.0 means perfect linear fit, higher = more reliable prediction
+ */
+
 import { NextResponse } from "next/server";
 import { callFireTool } from "@/lib/mcpClient";
 import OpenAI from "openai";
@@ -37,7 +63,7 @@ export async function POST(req: Request) {
     // Parse natural language if provided
     if (message.trim()) {
       const parseRes = await openai.chat.completions.create({
-        model: "google/gemini-flash-1.5",
+        model: "google/gemini-2.0-flash-001",
         messages: [
           {
             role: "system",
@@ -62,11 +88,11 @@ Return only JSON.`
       } catch {}
     }
 
-    // Fetch historical data (2010-2024)
+    // Fetch historical data (1939-2024)
     const result = await callFireTool("query_fire_points", {
-      year_start: 2010,
+      year_start: 1939,
       year_end: 2024,
-      limit: 2000,
+      limit: 33596,
     });
     const rows: any[] = result?.results ?? result?.items ?? (Array.isArray(result) ? result : []);
 
@@ -115,7 +141,7 @@ Return only JSON.`
 
     // LLM analysis
     const context = `
-Historical wildfire data (Alaska, 2010-2024):
+Historical wildfire data (Alaska, 1939-2024):
 - Total records analyzed: ${rows.length}
 - Year range: ${historicalYears[0]} to ${historicalYears[historicalYears.length - 1]}
 - Fire count trend: slope = ${countReg.slope.toFixed(2)} fires/year (R²=${countReg.r2.toFixed(2)})
@@ -127,7 +153,7 @@ Historical wildfire data (Alaska, 2010-2024):
 `;
 
     const aiRes = await openai.chat.completions.create({
-      model: "google/gemini-flash-1.5",
+      model: "google/gemini-2.0-flash-001",
       messages: [
         {
           role: "system",
