@@ -48,10 +48,10 @@ export default function PortalPage() {
     const userMsg: Message = { role: "user", content: msg, time: new Date().toLocaleTimeString() };
     setMessages(prev => [...prev, userMsg]);
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("/api/ai/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({ msg: msg }),
       });
       const data = await res.json();
       const reply = data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";
