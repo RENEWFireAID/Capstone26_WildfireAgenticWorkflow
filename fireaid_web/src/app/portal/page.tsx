@@ -5,7 +5,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import { LayoutGrid, Database, Terminal, BarChart3, Send, Bot, User, RefreshCw } from "lucide-react";
 
-type Message = { role: "user" | "ai"; content: string; time: string };
+type Message = { role: "user" | "assistant"; content: string; time: string };
 
 const SUGGESTED = [
   "How many fires in Alaska in 2022?",
@@ -55,9 +55,9 @@ export default function PortalPage() {
       });
       const data = await res.json();
       const reply = data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";
-      setMessages(prev => [...prev, { role: "ai", content: reply, time: new Date().toLocaleTimeString() }]);
+      setMessages(prev => [...prev, { role: "assistant", content: reply, time: new Date().toLocaleTimeString() }]);
     } catch {
-      setMessages(prev => [...prev, { role: "ai", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
     } finally {
       setLoading(false);
     }

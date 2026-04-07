@@ -57,7 +57,7 @@ export default async function handler(
         });
 
         // Add initial message as context to input for subsequent queries
-        var new_input = input;
+        var new_input = [...input];
 
         var found_tool_call = false;
 
@@ -87,16 +87,21 @@ export default async function handler(
 
                 response = await openai.responses.create({
                     model: "gpt-5",
-                    instructions: "Respond using information retrieved from tool(s). Indicate whether you have included information from a tool.",
-                    previous_response_id: response.id,
-                    input: tool_output,
+                    instructions: "Respond using information retrieved from tool(s). If you have received information from the rag tool, use it and respond. Do not call the rag tool again. If the information you received is not sufficient to answer the user, indicate that to the user. Indicate whether you have included information from a tool.",
+                    //previous_response_id: response.id,
+                    input: new_input,
                     tools: all_tools,
                 });
             }
             
         } while (found_tool_call);
 
-        res.status(200).json({msg: response.output_text});
+        new_input.push({
+            role: "assistant",
+            content: response.output_text
+        });
+
+        res.status(200).json({msg: response.output_text, hist: new_input});
 
     } catch (e:any) {
         console.log("Error with query", query_count);
