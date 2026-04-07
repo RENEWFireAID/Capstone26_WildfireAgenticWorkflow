@@ -96,7 +96,7 @@ export default function PredictionPage() {
             </div>
             <div>
               <div className="text-xl font-bold text-slate-900">AI Fire Prediction</div>
-              <div className="text-xs text-slate-500">Statistical trend analysis based on WFIGS historical data (2010-2024)</div>
+              <div className="text-xs text-slate-500">Statistical trend analysis based on historical data (1939-2024)</div>
             </div>
           </div>
 
@@ -155,7 +155,7 @@ export default function PredictionPage() {
               <div className={`rounded-2xl border p-4 shadow-sm ${confidence >= 70 ? "border-emerald-200 bg-emerald-50" : confidence >= 40 ? "border-yellow-200 bg-yellow-50" : "border-red-200 bg-red-50"}`}>
                 <div className={`text-[11px] font-semibold ${confidence >= 70 ? "text-emerald-600" : confidence >= 40 ? "text-yellow-600" : "text-red-600"}`}>Model Confidence</div>
                 <div className={`mt-1 text-2xl font-bold ${confidence >= 70 ? "text-emerald-700" : confidence >= 40 ? "text-yellow-700" : "text-red-700"}`}>{confidence}%</div>
-                <div className={`text-[11px] ${confidence >= 70 ? "text-emerald-500" : confidence >= 40 ? "text-yellow-500" : "text-red-500"}`}>R² = {result.regression.count.r2.toFixed(2)}</div>
+                <div className={`text-[11px] ${confidence >= 70 ? "text-emerald-500" : confidence >= 40 ? "text-yellow-500" : "text-red-500"}`}>R² = {result.regression.count.r2.toFixed(2)} (1939–2024 fit)</div>
                 <div className={`mt-1 text-xs ${confidence >= 70 ? "text-emerald-600" : confidence >= 40 ? "text-yellow-600" : "text-red-600"}`}>Trend: {trend}</div>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function PredictionPage() {
 
             {/* Disclaimer */}
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-xs text-slate-500">
-              <span className="font-semibold">Disclaimer:</span> Predictions are based on linear regression of historical WFIGS data and are intended for research purposes only. Actual fire activity depends on weather, climate, and other factors not captured in this model.
+              <span className="font-semibold">Disclaimer:</span> Predictions are based on linear regression of historical data and are intended for research purposes only. Actual fire activity depends on weather, climate, and other factors not captured in this model.
             </div>
           </>
         )}

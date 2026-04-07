@@ -14,27 +14,33 @@ export default function Topbar() {
               height: 48,
               width: "auto",
               mixBlendMode: "screen",
-              transform: "scale(1.6)",
+              transform: "scale(2.0)",
               transformOrigin: "left center",
             }}
           />
-          <div className="h-8 w-px bg-white/20" />
+          <div className="h8 w-px bg-white/20 ml-10" />
+          
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
               Data/AI Lab
             </span>
             <span className="text-lg font-semibold tracking-tight text-white">
-              FireAID
+               FireAID
             </span>
-          </div>
+            <span className="text-[10px] font-medium text-white/50 tracking-wide">
+              Beta v1.0
+            </span>
+            </div>
         </div>
+        
 
         {/* Middle */}
-        <nav className="hidden items-center gap-40 text-sm font-semibold text-slate-200 md:flex ml-10">
+        <nav className="hidden items-center gap-30 text-sm font-semibold text-slate-200 md:flex ml-10">
           {[
             { label: "Home",   href: "/" },
-            { label: "Data",   href: "/data" },
+            { label: "Chat",   href: "/portal" },
             { label: "Apps",   href: "/apps" },
+            { label: "Data",   href: "/data" },
             { label: "Prompt", href: "/prompt" },
             { label: "Team",   href: "/team" },
         
