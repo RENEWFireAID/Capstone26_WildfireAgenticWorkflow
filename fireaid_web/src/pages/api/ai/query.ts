@@ -11,8 +11,8 @@ export default async function handler(
 ) {
     console.log("Starting LLM query in query.ts ...");
 
-    if(!process.env.OPENROUTER_API_KEY) {
-        res.status(500).json({error: "Missing API key"})
+    if (!process.env.OPENROUTER_API_KEY) {
+        res.status(500).json({ error: "Missing API key" })
     }
 
     const openai = new OpenAI({
@@ -46,11 +46,11 @@ export default async function handler(
   
     const all_tools = [...query_tools];
     var query_count = 1;
-  
+
     try {
         // Send initial prompt with tools
         var response = await openai.responses.create({
-            model: "gpt-5",
+            model: "openai/gpt-4o-mini",
             tools: all_tools,
             input,
             tool_choice: "auto",
@@ -86,9 +86,8 @@ export default async function handler(
                 new_input.push(...tool_output);
 
                 response = await openai.responses.create({
-                    model: "gpt-5",
-                    instructions: "Respond using information retrieved from tool(s). If you have received information from the rag tool, use it and respond. Do not call the rag tool again. If the information you received is not sufficient to answer the user, indicate that to the user. Indicate whether you have included information from a tool.",
-                    //previous_response_id: response.id,
+                    model: "openai/gpt-4o",
+                    instructions: "Respond using information retrieved from tool(s). If you have received information from the rag tool, do not call the rag tool again. If the information you received is not sufficient to answer the user, indicate that to the user. Indicate whether you have included information from a tool. YOU MUST CITE YOUR SOURCES AND INDICATE whether you have included information from a tool. Any information from a rag_tool_context must be MLA CITED. ALSO AT THE END OF EACH MESSAGE, PROVIDE A SOURCES LIST INCLUDING AN MLA CITED REFERENCE OF ALL INFORMATION AUTHOR, TITLE, ETC",
                     input: new_input,
                     tools: all_tools,
                 });
@@ -103,7 +102,7 @@ export default async function handler(
 
         res.status(200).json({msg: response.output_text, hist: new_input});
 
-    } catch (e:any) {
+    } catch (e: any) {
         console.log("Error with query", query_count);
         console.log(e.error);
         console.log(e);

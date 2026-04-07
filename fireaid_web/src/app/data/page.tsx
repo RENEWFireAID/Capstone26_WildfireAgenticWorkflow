@@ -17,7 +17,6 @@ import {
 const SIDEBAR_ITEMS = [
   { key: "apps", label: "APPS", icon: LayoutGrid, href: "/apps" },
   { key: "data", label: "DATA", icon: Database, href: "/data" },
-  { key: "visualization", label: "VISUAL", icon: BarChart3, href: "/visualization" },
   { key: "prompt", label: "PROMPT", icon: Terminal, href: "/prompt" },
 ];
 

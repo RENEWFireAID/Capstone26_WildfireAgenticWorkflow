@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 import Topbar from "@/components/topbar/Topbar";
 
-const HIDE_TOPBAR = ["/portal", "/prompt", "/weather", "/fire-location", "/permafrost"];
+const HIDE_TOPBAR = ["/portal", "/prompt", "/weather", "/fire-location", "/permafrost", "/feedback", "/admin"];
 
 export default function ConditionalTopbar() {
   const pathname = usePathname();
