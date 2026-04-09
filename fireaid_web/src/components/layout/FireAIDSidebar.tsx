@@ -2,134 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, BarChart3, Book, Bot, Puzzle, FileText, MessageCircle, Home } from "lucide-react";
-import { TrendingUp } from "lucide-react";
+import { LayoutGrid, Database, Terminal } from "lucide-react";
 
-export default function FireAIDSidebar({ active }: { active: string }) {
+const SIDEBAR_ITEMS = [
+  { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
+  { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
+  { key: "prompt",        label: "PROMPT", icon: Terminal,   href: "/prompt" },
+];
+
+export default function FireAIDSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-72 shrink-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm self-start sticky top-6">
-      {/* top */}
-      <div className="mb-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white text-lg">
-            🔥
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-semibold text-[#FFCC33]">
-              UAF Data/AI Lab
-            </span>
-            <span className="text-xs font-semibold text-slate-900">
-              FireAID
-            </span>
-          </div>
-        </div>
-
+    <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
+      {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
         <Link
-          href="/fireaid"
-          className="mt-4 block w-full rounded-xl border border-blue-500 px-3 py-2 text-center text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
+          key={key}
+          href={href}
+          className="w-11 py-2.5 rounded-xl flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-100 hover:text-[#003366] transition text-[8px] font-semibold tracking-widest"
         >
-          + New analysis
+          <Icon size={18} strokeWidth={1.8} />
+          {label}
         </Link>
-      </div>
-
-      {/* WORKSPACE */}
-      <Section title="WORKSPACE">
-        <NavItem
-          icon={Home}
-          label="Home"
-          href="/"
-          active={pathname === "/"}
-        />
-        <NavItem
-          icon={Search}
-          label="Search"
-          href="/search"
-          active={pathname === "/search"}
-        />
-        <NavItem icon={BarChart3} label="Charts" href="/charts" active={pathname === "/charts"} />
-        <NavItem icon={TrendingUp} label="Prediction" href="/prediction" active={pathname === "/prediction"} />
-        <NavItem icon={Book} label="Library" href="/library" active={pathname === "/library"} />
-        <NavItem icon={FileText} label="Reports" href="/reports" active={pathname === "/reports"} />
-      </Section>
-
-      {/* AI & MCP */}
-      <Section title="AI & TOOLS">
-        <NavItem
-          icon={Bot}
-          label="FireAID Assistant"
-          href="/fireaid"
-          active={pathname === "/fireaid"}
-        />
-        <NavItem
-          icon={Puzzle}
-          label="Explore (MCP tools)"
-          href="/mcp-tools"
-          active={pathname === "/mcp-tools"}
-        />
-      </Section>
-
-      {/* PROJECTS */}
-      <Section title="PROJECTS">
-        <div className="space-y-2 text-xs">
-        <Link href="/projects" className="text-blue-600 hover:underline text-xs font-semibold">
-            View all projects →
-        </Link>
-        </div>
-      </Section>
+      ))}
     </aside>
-  );
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="mb-6">
-      <div className="mb-3 text-[11px] uppercase tracking-widest text-slate-400">
-        {title}
-      </div>
-      <div className="space-y-2">{children}</div>
-    </div>
-  );
-}
-
-function NavItem({
-  icon: Icon,
-  label,
-  href,
-  active,
-}: {
-  icon: any;
-  label: string;
-  href: string;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition
-        ${
-          active
-            ? "bg-blue-50 text-blue-600 font-semibold"
-            : "text-slate-700 hover:bg-slate-100"
-        }`}
-    >
-      <Icon size={18} className={active ? "text-blue-600" : "text-slate-500"} />
-      {label}
-    </Link>
-  );
-}
-
-function ProjectItem({ name }: { name: string }) {
-  return (
-    <div className="rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-100 cursor-pointer transition">
-      {name}
-    </div>
   );
 }
