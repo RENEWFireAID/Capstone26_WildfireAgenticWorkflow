@@ -193,7 +193,7 @@ export default function McpToolsPage() {
       <div className="min-w-0 space-y-4">
         <WorkbenchHeader
           title="Wildfire Analytics Dashboard"
-          subtitle="Local MongoDB"
+          subtitle="Alaska Wildfire Historical Records · 1939–2024"
           running={running}
           onRefresh={() => runQuery()}
         />
@@ -311,7 +311,7 @@ function WorkbenchHeader({
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
               {subtitle}
             </span>
-            <span className="text-[11px] text-slate-500">Local MongoDB</span>
+            <span className="text-[11px] text-slate-500">AK Fire Location Points</span>
           </div>
         </div>
 

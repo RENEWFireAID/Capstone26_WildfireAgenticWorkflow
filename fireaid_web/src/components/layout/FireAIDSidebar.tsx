@@ -1,13 +1,10 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, BarChart3, Book, Bot, Puzzle, FileText, MessageCircle, Home } from "lucide-react";
-import { TrendingUp } from "lucide-react";
+import { Search, BarChart3, Book, Puzzle, FileText, TrendingUp } from "lucide-react";
 
 export default function FireAIDSidebar({ active }: { active: string }) {
   const pathname = usePathname();
-
   return (
     <aside className="w-72 shrink-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm self-start sticky top-6">
       {/* top */}
@@ -25,7 +22,6 @@ export default function FireAIDSidebar({ active }: { active: string }) {
             </span>
           </div>
         </div>
-
         <Link
           href="/fireaid"
           className="mt-4 block w-full rounded-xl border border-blue-500 px-3 py-2 text-center text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
@@ -36,35 +32,18 @@ export default function FireAIDSidebar({ active }: { active: string }) {
 
       {/* WORKSPACE */}
       <Section title="WORKSPACE">
-        <NavItem
-          icon={Home}
-          label="Home"
-          href="/"
-          active={pathname === "/"}
-        />
-        <NavItem
-          icon={Search}
-          label="Search"
-          href="/search"
-          active={pathname === "/search"}
-        />
+        <NavItem icon={Search} label="Search" href="/search" active={pathname === "/search"} />
         <NavItem icon={BarChart3} label="Charts" href="/charts" active={pathname === "/charts"} />
         <NavItem icon={TrendingUp} label="Prediction" href="/prediction" active={pathname === "/prediction"} />
         <NavItem icon={Book} label="Library" href="/library" active={pathname === "/library"} />
         <NavItem icon={FileText} label="Reports" href="/reports" active={pathname === "/reports"} />
       </Section>
 
-      {/* AI & MCP */}
+      {/* AI & TOOLS */}
       <Section title="AI & TOOLS">
         <NavItem
-          icon={Bot}
-          label="FireAID Assistant"
-          href="/fireaid"
-          active={pathname === "/fireaid"}
-        />
-        <NavItem
           icon={Puzzle}
-          label="Explore (MCP tools)"
+          label="Data Explorer"
           href="/mcp-tools"
           active={pathname === "/mcp-tools"}
         />
@@ -73,22 +52,16 @@ export default function FireAIDSidebar({ active }: { active: string }) {
       {/* PROJECTS */}
       <Section title="PROJECTS">
         <div className="space-y-2 text-xs">
-        <Link href="/projects" className="text-blue-600 hover:underline text-xs font-semibold">
+          <Link href="/projects" className="text-blue-600 hover:underline text-xs font-semibold">
             View all projects →
-        </Link>
+          </Link>
         </div>
       </Section>
     </aside>
   );
 }
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-6">
       <div className="mb-3 text-[11px] uppercase tracking-widest text-slate-400">
@@ -99,12 +72,7 @@ function Section({
   );
 }
 
-function NavItem({
-  icon: Icon,
-  label,
-  href,
-  active,
-}: {
+function NavItem({ icon: Icon, label, href, active }: {
   icon: any;
   label: string;
   href: string;
@@ -114,22 +82,10 @@ function NavItem({
     <Link
       href={href}
       className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition
-        ${
-          active
-            ? "bg-blue-50 text-blue-600 font-semibold"
-            : "text-slate-700 hover:bg-slate-100"
-        }`}
+        ${active ? "bg-blue-50 text-blue-600 font-semibold" : "text-slate-700 hover:bg-slate-100"}`}
     >
       <Icon size={18} className={active ? "text-blue-600" : "text-slate-500"} />
       {label}
     </Link>
-  );
-}
-
-function ProjectItem({ name }: { name: string }) {
-  return (
-    <div className="rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-100 cursor-pointer transition">
-      {name}
-    </div>
   );
 }
