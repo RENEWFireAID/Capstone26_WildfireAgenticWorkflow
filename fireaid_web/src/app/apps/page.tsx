@@ -2,13 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LayoutGrid, Database, Terminal, BarChart3, BookOpen, FileText, Flame, Search, TrendingUp } from "lucide-react";
-
-const SIDEBAR_ITEMS = [
-  { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
-  { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
-  { key: "prompt",        label: "PROMPT", icon: Terminal,   href: "/prompt" },
-];
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { BarChart3, BookOpen, FileText, Flame, Search, TrendingUp } from "lucide-react";
 
 const APPS = [
   { label: "Terminology", desc: "Browse wildfire terms & definitions", icon: BookOpen, href: "/library",   accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600" },
@@ -29,19 +24,7 @@ export default function AppsPage() {
 
   return (
     <div className="flex w-full min-h-screen">
-      <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
-        {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-          <Link key={key} href={href}
-            className={`w-11 py-2.5 flex flex-col items-center gap-1 text-[8px] font-semibold tracking-widest transition ${
-              key === "apps"
-                ? "rounded-l-xl bg-blue-50 text-[#003366] border-r-[3px] border-[#003366] w-12"
-                : "rounded-xl text-slate-400 hover:bg-slate-100 hover:text-[#003366]"
-            }`}>
-            <Icon size={18} strokeWidth={1.8} />
-            {label}
-          </Link>
-        ))}
-      </aside>
+      <FireAIDSidebar/>
 
       <main className="flex-1 flex flex-col">
         {/* Header */}

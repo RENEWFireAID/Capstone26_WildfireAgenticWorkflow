@@ -187,7 +187,7 @@ export default function McpToolsPage() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
       {/* Left */}
-      <FireAIDSidebar active="explore" />
+      <FireAIDSidebar/>
 
       {/* Center */}
       <div className="min-w-0 space-y-4">
