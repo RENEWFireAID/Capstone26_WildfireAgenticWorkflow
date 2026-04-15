@@ -12,7 +12,6 @@ import {
   Bot,
   User,
   RefreshCw,
-  Paperclip,
 } from "lucide-react";
 
 type Message = { role: "user" | "assistant"; content: string; time: string };
@@ -118,16 +117,7 @@ export default function PortalPage() {
                     onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
                     disabled={loading}
                   />
-                  <div className="flex justify-end gap-2">
-                    {/* Darker Green Save Chat Button First */}
-                    <button
-                      type="button"
-                      className="rounded-xl bg-green-600 px-5 py-2 text-white text-sm hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
-                    >
-                      <Paperclip size={14} className="-rotate-45" />
-                      Save chat
-                    </button>
-                    {/* Send Button Second */}
+                  <div className="flex justify-end">
                     <button
                       className="rounded-xl bg-[#003366] px-5 py-2 text-white text-sm hover:bg-[#002244] disabled:opacity-40 flex items-center gap-2 transition"
                       onClick={() => send()}
@@ -193,16 +183,7 @@ export default function PortalPage() {
                       onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
                       disabled={loading}
                     />
-                    <div className="flex justify-end gap-2">
-                      {/* Darker Green Save Chat Button First */}
-                      <button
-                        type="button"
-                        className="rounded-xl bg-green-600 px-5 py-2 text-white text-sm hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
-                      >
-                        <Paperclip size={14} className="-rotate-45" />
-                        Save chat
-                      </button>
-                      {/* Send Button Second */}
+                    <div className="flex justify-end">
                       <button
                         className="rounded-xl bg-[#003366] px-5 py-2 text-white text-sm hover:bg-[#002244] disabled:opacity-40 flex items-center gap-2 transition"
                         onClick={() => send()}
@@ -224,10 +205,10 @@ export default function PortalPage() {
       </div>
       {/* Feedback floating button */}
       <Link
-        href="/feedback"
-        className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#003366] text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#002244] transition text-sm font-semibold z-50"
-      >
-        💬 Feedback
+          href="/feedback"
+          className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#003366] text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#002244] transition text-sm font-semibold z-50"
+    >
+          💬 Feedback
       </Link>
     </div>
   );
