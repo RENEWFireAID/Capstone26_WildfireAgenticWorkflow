@@ -9,3 +9,5 @@ fireaid_dump/
 llm-app/chroma_db/
 llm-app/data/
 *.csv
+ml_model/data/
+

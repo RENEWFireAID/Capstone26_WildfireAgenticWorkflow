@@ -34,10 +34,12 @@ services:
       context: ./llm-app
     env_file:
       - .env
-    container_name: rag-service 
+    container_name: rag-service
     restart: always
     ports:
       - "8000:8000"
+    volumes:
+      - ./ml_model/data:/app/data 
      
   mongo:
     image: mongo:8.0
