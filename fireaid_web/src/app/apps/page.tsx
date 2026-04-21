@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+<<<<<<< IS/changes
 import { LayoutGrid, Database, Terminal, BookOpen, FileText, Flame } from "lucide-react";
 
 const SIDEBAR_ITEMS = [
@@ -8,6 +9,11 @@ const SIDEBAR_ITEMS = [
   { key: "data",   label: "DATA",   icon: Database,   href: "/data" },
   { key: "prompt", label: "PROMPT", icon: Terminal,   href: "/prompt" },
 ];
+=======
+import { useState } from "react";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { BarChart3, BookOpen, FileText, Flame, Search, TrendingUp } from "lucide-react";
+>>>>>>> main
 
 const APPS = [
   { label: "Terminology", desc: "Browse wildfire terms & definitions", icon: BookOpen, href: "/library",     accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-500",developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" }, 
@@ -18,6 +24,7 @@ const APPS = [
 export default function AppsPage() {
   return (
     <div className="flex w-full min-h-screen">
+<<<<<<< IS/changes
       <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
         {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
           <Link key={key} href={href}
@@ -31,6 +38,9 @@ export default function AppsPage() {
           </Link>
         ))}
       </aside>
+=======
+      <FireAIDSidebar/>
+>>>>>>> main
 
       <main className="flex-1 flex flex-col">
         <div className="bg-slate-50 px-12 py-8 border-b border-slate-200">

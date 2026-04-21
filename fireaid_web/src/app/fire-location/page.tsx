@@ -3,40 +3,17 @@
 import Link from "next/link";
 import Topbar from "@/components/topbar/Topbar";
 import {
-  LayoutGrid,
-  Database,
-  Terminal,
   Download,
   MapPin,
 } from "lucide-react";
-
-const SIDEBAR_ITEMS = [
-  { key: "apps", label: "APPS", icon: LayoutGrid, href: "/apps" },
-  { key: "data", label: "DATA", icon: Database, href: "/data" },
-  { key: "prompt", label: "PROMPT", icon: Terminal, href: "/prompt" },
-];
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 
 export default function FireLocationPage() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Topbar />
       <div className="flex flex-1">
-        <aside className="flex w-14 shrink-0 flex-col items-center gap-2 border-r border-slate-200 bg-white py-6">
-          {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-            <Link
-              key={key}
-              href={href}
-              className={`flex w-11 flex-col items-center gap-1 py-2.5 text-[8px] font-semibold tracking-widest transition ${
-                key === "data"
-                  ? "w-12 rounded-l-xl border-r-[3px] border-[#003366] bg-blue-50 text-[#003366]"
-                  : "rounded-xl text-slate-400 hover:bg-slate-100 hover:text-[#003366]"
-              }`}
-            >
-              <Icon size={18} strokeWidth={1.8} />
-              {label}
-            </Link>
-          ))}
-        </aside>
+        <FireAIDSidebar/>
 
         <main className="flex flex-1 flex-col">
           <div className="border-b border-slate-200 bg-slate-50 px-12 py-10">
