@@ -24,7 +24,7 @@ export default function AppsPage() {
 
         <div className="flex-1 bg-slate-50 px-12 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent, developer, role }) => (
+          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent }) => (
   <Link key={label} href={href}
     className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200">
     <div className="h-1.5 w-full" style={{ background: accent }} />
@@ -36,7 +36,7 @@ export default function AppsPage() {
         <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">{label}</div>
         <div className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</div>
       </div>
-      {developer && (
+      {/* {developer && (
         <div className="border-t border-slate-100 pt-3 flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-[#003366] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
             {developer.split(" ").map((n: string) => n[0]).join("")}
@@ -46,7 +46,7 @@ export default function AppsPage() {
             <div className="text-[10px] text-slate-400">{role}</div>
           </div>
         </div>
-      )}
+      )} */}
       <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">Open →</div>
     </div>
   </Link>
