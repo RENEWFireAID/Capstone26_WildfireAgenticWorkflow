@@ -3,29 +3,45 @@
 ## Description
 This is a monorepo for the FireAID project at the University of Alaska Fairbanks. Each project has a more detailed readme in its directory. 
 
-## Projects
-**fireaid_web**: Source code for the frontend website \
-**scripts**: Helper scripts for other projects
 
 ## Running the Project
-You will need to create a `.env` file in this directory following the template layed out in `.env.example`.
 
-The project can be run with `docker compose`. The docker setup for `fireaid_web` is multi-step, more details and the motivation behind this can be found in `fireaid_web/docker/README.md`.
+1) Clone this repo.
 
-To run the project the first time you will need to use the below commands:
+2) Create a `.env` file in this directory, following the template in `.env.example`.
 
-```
-cd fireaid_web
-docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
-cd ..
-docker compose build
-docker compose up
-```
+3) The first time you run the project, use the following commands
+   ```bash
+   cd fireaid_web
+   docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
+   cd ..
+   docker compose build
+   docker compose up
+   ```
+> **Note:** If `package.json` dependencies change, you must rebuild the base image using the command above.
 
-After the first time you can simply run:
+4) The website can be viewed at `http://localhost:3000/`
+
+5) After the first time you can simply run:
 ```
 docker compose build; docker compose up
 ```
+6) Some databases will need to be populated before all the LLM tools are fully functional. Learn more in the [scripts documentation](./scripts/README.md)
+
+
+## Further Project Documentation
+
+**Docker**: [./fireaid_web/docker/README.md](./fireaid_web/docker/README.md)
+
+  Learn more about the Docker setup of the project.
+
+**Scripts**: [./scripts/README.md](./scripts/README.md)
+
+  Covers the scripts needed to populate the terminology and historic wildfire databases.
+
+**FireAID Frontend**: [./fireaid_web/README.md](./fireaid_web/README.md)
+
+  Learn more about the frontend website setup with Next.js.
 
 
 ## Linting and Formatting
@@ -35,37 +51,15 @@ There are GitHub actions that will prevent Pull Requests from being merged into 
 - Format: `ruff format <file-or-directory>` 
 - Lint:   `ruff check  <file-or-directory>`
 
-## Branches and Pull Requests
-**Branch Names**
-___
-Branch names use the following conventions:
-`initials/brief-description`. In the description use - to represent spaces.
 
-An example of this would be: `erl/update-readme`
-
-**Pull Requests**
+##Pull Requests
 ___
 Any merge into main must be performed via Pull Request (PR). The GitHub repostiory is configured to require at least one reviewer to approve the PR before it can be merged.
-
- Code review standards are fairly lax, just make sure the PR correctly implements its intended funcitonality and there are no glaring issues or bugs in the code.
 
 
 ## Contributors
 Ivy Swenson \
+Elliott Lewandowski \
 Jenae Matson \
 Andrew Winford \
-Daniel Kim \
-Elliott Lewandowski
-
-## First Time Setup
-
-After cloning, run the following to build the base image before starting:
-```bash
-cd fireaid_web
-docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
-cd ..
-docker compose build
-docker compose up
-```
-
-> **Note:** If `package.json` dependencies change, you must rebuild the base image using the command above.
+Daniel Kim
