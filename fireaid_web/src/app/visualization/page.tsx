@@ -1,14 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutGrid, Database, Terminal, BarChart3, Search, TrendingUp, FileText } from "lucide-react";
+import { BarChart3, Search, TrendingUp, FileText } from "lucide-react";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 
-const SIDEBAR_ITEMS = [
-  { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
-  { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
-  { key: "visualization", label: "VISUAL", icon: BarChart3,  href: "/visualization" },
-  { key: "prompt",        label: "PROMPT", icon: Terminal,   href: "/prompt" },
-];
 
 const VIZ_ITEMS = [
   {
@@ -52,19 +47,7 @@ const VIZ_ITEMS = [
 export default function VisualizationPage() {
   return (
     <div className="flex w-full min-h-screen">
-      <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
-        {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-          <Link key={key} href={href}
-            className={`w-11 py-2.5 flex flex-col items-center gap-1 text-[8px] font-semibold tracking-widest transition ${
-              key === "visualization"
-                ? "rounded-l-xl bg-blue-50 text-[#003366] border-r-[3px] border-[#003366] w-12"
-                : "rounded-xl text-slate-400 hover:bg-slate-100 hover:text-[#003366]"
-            }`}>
-            <Icon size={18} strokeWidth={1.8} />
-            {label}
-          </Link>
-        ))}
-      </aside>
+      <FireAIDSidebar/>
 
       <main className="flex-1 flex flex-col">
         <div className="bg-slate-50 px-12 py-10 border-b border-slate-200">

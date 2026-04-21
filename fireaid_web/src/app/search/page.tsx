@@ -246,7 +246,7 @@ export default function SearchPage() {
 
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.2fr)_minmax(0,0.8fr)]">
-      <FireAIDSidebar active="search" />
+      <FireAIDSidebar/>
 
       {/* Center: Search */}
       <div className="min-w-0 space-y-4">
