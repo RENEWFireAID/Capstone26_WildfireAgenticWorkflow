@@ -99,7 +99,7 @@ def predict_june_regression(
     # Clean up column names (remove "pred_val" hierarchy)
     res_df.columns.name = None
     res_df["pred_year"] = predict_year
-    res_df["month"] = month
+    res_df["month"] = int(month)
     
     return res_df
 

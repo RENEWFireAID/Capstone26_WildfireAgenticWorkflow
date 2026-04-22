@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,17 +21,17 @@ TEST_SIZE    = 0.15
 VAL_SIZE     = 0.15
 
 FEATURE_COLS = [
-    "t2m",                # Air temperature at 2 m — hotter → higher fire risk
-    "d2m",                # Dew point at 2 m — lower → drier air → higher fire risk
-    "tp",                 # Total precipitation — more rain → lower fire risk
+    "t2m",                # Air temperature at 2 m - hotter -> higher fire risk
+    "d2m",                # Dew point at 2 m - lower -> drier air -> higher fire risk
+    "tp",                 # Total precipitation - more rain -> lower fire risk
     "u10",                # Eastward wind at 10 m
     "v10",                # Northward wind at 10 m
-    "swvl1",              # Top-layer soil moisture — drier soil → more fuel
+    "swvl1",              # Top-layer soil moisture - drier soil -> more fuel
     "wind_speed",         # Derived: sqrt(u10² + v10²)
     "relative_humidity",  # Derived via Magnus approximation
-    "grid_lat",           # Grid cell latitude  — spatial context for the model
-    "grid_lon",           # Grid cell longitude — spatial context for the model
-
+    "grid_lat",           # Grid cell latitude  - spatial context for the model
+    "grid_lon",           # Grid cell longitude - spatial context for the model
+    "month",              # Calendar month (5-8) - captures seasonal fire risk pattern
 ]
 
 TARGET_COL = "risk_score"
@@ -38,12 +39,14 @@ TARGET_COL = "risk_score"
 
 def load_data():
     df = pd.read_csv(ML_READY_CSV)
-    
+    df["month"] = pd.to_datetime(df["date"]).dt.month
+
     available = [c for c in FEATURE_COLS if c in df.columns]
     X = df[available]
     y = (df[TARGET_COL] > 0).astype(int)
 
     df_sorted = df.sort_values("date").reset_index(drop=True)
+    df_sorted["month"] = pd.to_datetime(df_sorted["date"]).dt.month
     X = df_sorted[available]
     y = (df_sorted[TARGET_COL] > 0).astype(int)
 
@@ -55,9 +58,9 @@ def load_data():
     X_val,   y_val   = X.iloc[train_end:val_end], y.iloc[train_end:val_end]
     X_test,  y_test  = X.iloc[val_end:],         y.iloc[val_end:]
 
-    print(f"[INFO] Train dates: {df_sorted['date'].iloc[0]} → {df_sorted['date'].iloc[train_end - 1]}")
-    print(f"[INFO] Val dates:   {df_sorted['date'].iloc[train_end]} → {df_sorted['date'].iloc[val_end - 1]}")
-    print(f"[INFO] Test dates:  {df_sorted['date'].iloc[val_end]} → {df_sorted['date'].iloc[-1]}")
+    print(f"[INFO] Train dates: {df_sorted['date'].iloc[0]} -> {df_sorted['date'].iloc[train_end - 1]}")
+    print(f"[INFO] Val dates:   {df_sorted['date'].iloc[train_end]} -> {df_sorted['date'].iloc[val_end - 1]}")
+    print(f"[INFO] Test dates:  {df_sorted['date'].iloc[val_end]} -> {df_sorted['date'].iloc[-1]}")
 
     return X_train, X_val, X_test, y_train, y_val, y_test, available
 
@@ -111,9 +114,14 @@ if __name__ == "__main__":
     y_pred_proba_test, y_pred_class_test, auc_test, cm_test = evaluate_split(model, X_test, y_test, "TEST")
     
     df = pd.read_csv(ML_READY_CSV)
+    df["month"] = pd.to_datetime(df["date"]).dt.month
     available = [c for c in FEATURE_COLS if c in df.columns]
 
     df["fire_probability"] = model.predict_proba(df[available])[:, 1]
+
+    MODEL_PATH = current_dir / "data" / "xgb_model.json"
+    model.save_model(MODEL_PATH)
+    print(f"[INFO] Model saved to: {MODEL_PATH}")
 
     GRID_CSV = current_dir / "data" / "ml_ready_scored_grid.csv"
     grid_cols = ["date", "grid_lat", "grid_lon", "fire_probability", "risk_score"]

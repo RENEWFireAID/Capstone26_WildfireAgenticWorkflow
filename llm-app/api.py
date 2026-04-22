@@ -12,6 +12,11 @@ except ImportError:
     _pandas_available = False
 
 sys.path.append(str(Path(__file__).parent.resolve()))
+
+_ML_SRC = Path("/app/ml_model_src")
+if _ML_SRC.exists():
+    sys.path.insert(0, str(_ML_SRC))
+
 from services.rag_service.pipeline.workflow import RAGPipeline, RAGPipelineConfig
 
 app = FastAPI(title="FireAID RAG API")
@@ -112,6 +117,87 @@ def get_ml_predictions(
             "total_days":      int(r["total_days"]),
         }
         for _, r in agg.iterrows()
+    ]
+
+    return {"points": points, "year": year, "month": month}
+
+
+FEATURE_COLS = [
+    "t2m", "d2m", "tp", "u10", "v10", "swvl1",
+    "wind_speed", "relative_humidity", "grid_lat", "grid_lon", "month",
+]
+
+ML_READY_CSV = Path("/app/data/ml_ready.csv")
+MODEL_PATH   = Path("/app/data/xgb_model.json")
+
+
+@lru_cache(maxsize=1)
+def _load_xgb_model():
+    try:
+        from xgboost import XGBClassifier
+    except ImportError:
+        raise RuntimeError("xgboost is not installed")
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(
+            f"Trained model not found at {MODEL_PATH}. "
+            "Run ml_model/train_model.py first."
+        )
+    model = XGBClassifier()
+    model.load_model(MODEL_PATH)
+    return model
+
+
+@lru_cache(maxsize=1)
+def _load_weather_df():
+    if not _pandas_available:
+        raise RuntimeError("pandas is not installed")
+    if not ML_READY_CSV.exists():
+        raise FileNotFoundError(
+            f"Weather data not found at {ML_READY_CSV}. "
+            "Run ml_model/train_model.py first."
+        )
+    return pd.read_csv(ML_READY_CSV)
+
+
+@app.get("/api/future-predictions")
+def get_future_predictions(
+    year:  int = Query(..., description="Future year to forecast (e.g. 2010)"),
+    month: int = Query(..., description="Month (5=May … 8=Aug)"),
+):
+    try:
+        from weather_predict import predict_june_regression
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Could not import weather_predict: {e}")
+
+    try:
+        weather_df = _load_weather_df()
+        model      = _load_xgb_model()
+    except (FileNotFoundError, RuntimeError) as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    month_str = str(month).zfill(2)
+    pred_weather = predict_june_regression(weather_df, year, month=month_str)
+
+    if pred_weather.empty:
+        return {"points": [], "year": year, "month": month}
+
+    available = [c for c in FEATURE_COLS if c in pred_weather.columns]
+    if not available:
+        raise HTTPException(status_code=500, detail="No feature columns found in weather predictions")
+
+    pred_weather = pred_weather.dropna(subset=available)
+    pred_weather["fire_probability"] = model.predict_proba(pred_weather[available])[:, 1]
+
+    points = [
+        {
+            "lat":             round(float(r["grid_lat"]),        4),
+            "lng":             round(float(r["grid_lon"]),        4),
+            "avg_probability": round(float(r["fire_probability"]), 4),
+            "max_probability": round(float(r["fire_probability"]), 4),
+            "fire_days":       0,
+            "total_days":      0,
+        }
+        for _, r in pred_weather.iterrows()
     ]
 
     return {"points": points, "year": year, "month": month}

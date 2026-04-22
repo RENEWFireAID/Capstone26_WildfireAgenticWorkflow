@@ -133,19 +133,28 @@ const MONTH_NAMES: Record<number, string> = {
   5: "May", 6: "June", 7: "July", 8: "August",
 };
 
+type DataMode = "historical" | "future";
+
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default function PredictionFireMap() {
+  const [dataMode, setDataMode] = useState<DataMode>("historical");
   const [year,     setYear]     = useState(2003);
+  const [futureYear, setFutureYear] = useState(CURRENT_YEAR);
   const [month,    setMonth]    = useState(7);
   const [viewMode, setViewMode] = useState<ViewMode>("probability");
   const [points,   setPoints]   = useState<GridPoint[]>([]);
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState<string | null>(null);
 
-  async function fetchPoints(y: number, m: number) {
+  const activeYear = dataMode === "historical" ? year : futureYear;
+
+  async function fetchPoints(y: number, m: number, mode: DataMode) {
     setLoading(true);
     setError(null);
+    const endpoint = mode === "future" ? "/api/ml/future-map-data" : "/api/ml/map-data";
     try {
-      const res = await fetch(`/api/ml/map-data?year=${y}&month=${m}`);
+      const res = await fetch(`${endpoint}?year=${y}&month=${m}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to load map data");
       setPoints(data.points ?? []);
@@ -157,23 +166,63 @@ export default function PredictionFireMap() {
     }
   }
 
+  function handleDataModeChange(mode: DataMode) {
+    setDataMode(mode);
+    setPoints([]);
+    setError(null);
+  }
+
   return (
     <div className="flex flex-col gap-3">
+      {/* Data mode toggle */}
+      <div className="flex gap-1 self-start rounded-xl border border-slate-200 bg-white p-1">
+        {(["historical", "future"] as DataMode[]).map((m) => (
+          <button
+            key={m}
+            onClick={() => handleDataModeChange(m)}
+            className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition ${
+              dataMode === m
+                ? "bg-orange-500 text-white"
+                : "text-slate-500 hover:bg-slate-100"
+            }`}
+          >
+            {m === "historical" ? "Historical (2000–2007)" : "Future Forecast"}
+          </button>
+        ))}
+      </div>
+
+      {dataMode === "future" && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+          Future fire probability is estimated by extrapolating historical weather trends with linear regression, then running the XGBoost model on those predicted conditions.
+        </div>
+      )}
+
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
           <label className="text-xs font-semibold uppercase tracking-wide text-slate-800">
             Year
           </label>
-          <select
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-          >
-            {Array.from({ length: 8 }, (_, i) => 2000 + i).map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
+          {dataMode === "historical" ? (
+            <select
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+            >
+              {Array.from({ length: 8 }, (_, i) => 2000 + i).map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="number"
+              min={2008}
+              max={2100}
+              value={futureYear}
+              onChange={(e) => setFutureYear(Number(e.target.value))}
+              className="w-24 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
+            />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -192,7 +241,7 @@ export default function PredictionFireMap() {
         </div>
 
         <button
-          onClick={() => fetchPoints(year, month)}
+          onClick={() => fetchPoints(activeYear, month, dataMode)}
           disabled={loading}
           className="rounded-lg bg-orange-500 px-4 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
         >
@@ -253,7 +302,7 @@ export default function PredictionFireMap() {
             ))}
             {points.length > 0 && (
               <div className="mt-1.5 border-t border-slate-100 pt-1 text-slate-400">
-                {MONTH_NAMES[month]} {year} · click map to reveal
+                {MONTH_NAMES[month]} {activeYear}{dataMode === "future" ? " (forecast)" : ""} · click map to reveal
               </div>
             )}
           </div>

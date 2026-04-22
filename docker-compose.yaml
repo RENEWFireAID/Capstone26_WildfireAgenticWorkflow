@@ -39,7 +39,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./ml_model/data:/app/data 
+      - ./ml_model/data:/app/data
+      - ./ml_model:/app/ml_model_src
      
   mongo:
     image: mongo:8.0
