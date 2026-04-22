@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, Database, Terminal } from "lucide-react";
@@ -12,7 +11,6 @@ const SIDEBAR_ITEMS = [
 
 export default function FireAIDSidebar() {
   const pathname = usePathname();
-
   return (
     <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
       {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
