@@ -1,19 +1,20 @@
-FROM fireaid_web_base:latest
+FROM alpine:3.23
 
+RUN apk add nodejs npm
+RUN npm install -g pnpm
+RUN mkdir /var/web
 WORKDIR /var/web
 
-# 1) Copy manifests first so Docker can cache pnpm install
-COPY package.json pnpm-lock.yaml ./
+RUN adduser -HD node
+COPY --chown=root:node package-lock.json /var/web/
+COPY --chown=root:node package.json /var/web/
+COPY --chown=root:node pnpm-lock.yaml /var/web/
 
-# Enable pnpm via corepack and install deps (this is the key)
 RUN npm i -g pnpm@10 && pnpm install
 
-
-# 2) Copy app source
 COPY public/ ./public/
 COPY src/ ./src/
 
-# 3) Copy configs
 COPY tsconfig.json next.config.ts postcss.config.mjs eslint.config.mjs ./
 
 COPY --chown=root:node public/ /var/web/public/
