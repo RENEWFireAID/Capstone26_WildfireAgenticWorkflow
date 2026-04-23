@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { Book, Search, ChevronRight, X } from "lucide-react";
 
@@ -46,8 +47,17 @@ export default function LibraryPage() {
               <Book size={18} />
             </div>
             <div>
-              <div className="text-xl font-bold text-slate-900">Wildfire Terminology Library</div>
-              <div className="text-xs text-slate-500">{terms.length} terms from the WFIGS database</div>
+              <div className="flex items-center gap-2">
+                <div className="text-xl font-bold text-slate-900">Wildfire Terminology Library</div>
+                <Image
+                  src="/usda-logo.svg"
+                  alt="USDA Fire Service Logo"
+                  width={250}
+                  height={50}
+                  className="opacity-80"
+                />
+              </div>
+              <div className="text-xs text-slate-500">{terms.length} terms</div>
             </div>
           </div>
 
