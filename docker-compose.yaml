@@ -6,6 +6,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - ./fireaid_web/src:/var/web/src
+      - ./fireaid_web/public:/var/web/public
     depends_on:
       - mongo
       - firemcp
