@@ -4,7 +4,10 @@
 
 ## LLM Query
 
-Query processing occurs in [query.ts](./query.ts). In this file you can edit which model is used for queries and change the initial system prompt.
+Query processing occurs in [query.ts](./query.ts). In this file you can
+
+- Edit which model is used for queries
+- Change the initial system prompt.
 
 ## Tool Handling
 
