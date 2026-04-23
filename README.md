@@ -31,6 +31,10 @@ docker compose build; docker compose up
 
 ## Further Project Documentation
 
+**LLM Query**: [./fireaid_web/src/pages/api/llm_query/README.md](./fireaid_web/src/pages/api/llm_query/README.md)
+
+  Learn more about the LLM query, tool handling, and adding new tools for the LLM to use.
+
 **Docker**: [./fireaid_web/docker/README.md](./fireaid_web/docker/README.md)
 
   Learn more about the Docker setup of the project.
@@ -52,7 +56,7 @@ There are GitHub actions that will prevent Pull Requests from being merged into 
 - Lint:   `ruff check  <file-or-directory>`
 
 
-##Pull Requests
+## Pull Requests
 ___
 Any merge into main must be performed via Pull Request (PR). The GitHub repostiory is configured to require at least one reviewer to approve the PR before it can be merged.
 
