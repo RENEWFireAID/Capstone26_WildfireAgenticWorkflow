@@ -67,3 +67,11 @@ Elliott Lewandowski \
 Jenae Matson \
 Andrew Winford \
 Daniel Kim
+
+## Acknowledgements
+
+A. This research was, in part, funded by the following grant: 6) DOE RENEW #DE-SC0025715, 5) NSF MRI #2320196, 4) NSF EP-SCoR RII Track4 #2327456, 1) USGS NIWR G00014344, 2) UAF Arctic Fellow Grant (UAF Center of ICE/Office of Naval Research), 3) AIM AHEAD PAIR (NIH Agreement No. 1OT2OD032581), and 7) Google Summer of Code-'24, 25, 26. The views and conclusions contained in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of the funding agencies.
+
+B. This work was supported in part by the high-performance computing and data storage resources operated by the Research Computing Systems Group at the University of Alaska Fairbanks Geophysical Institute.
+
+C. We gratefully acknowledge the faculty, staff, and scientists at the University of Alaska Fairbanks, Anchorage, and Southeast, as well as Argonne National Laboratory, for their invaluable contributions and mentorship to this project. We especially thank Arghya Kusum Das, Orion Lawlor, Liam Forbes, Kevin Galloway, Santosh Panda, Mario Muscarella, Murat Keceli, and Tanwi Mallick for their support.  
