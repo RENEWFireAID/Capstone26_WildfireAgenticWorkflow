@@ -3,9 +3,9 @@
 
 import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/responses/responses.mjs";
 
-import { getWildfireTerm } from "./handlers/handle_get_wildfire_term";
-import { query_fire_points } from "./handlers/handle_historic_fires";
-import { retrieveRagContext } from "../tools/handle_rag_search";
+import { getWildfireTerm } from "./terminology_tool/handle_get_wildfire_term";
+import { query_fire_points } from "./historic_wildfires_tool/handle_historic_fires";
+import { retrieveRagContext } from "./rag_tool/handle_rag_search";
 
 
 // **** TOOL DEFINITIONS *****

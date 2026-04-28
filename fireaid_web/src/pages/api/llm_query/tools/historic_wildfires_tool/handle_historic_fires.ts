@@ -1,5 +1,5 @@
 // TO-DO: This should probably move to lib so we dont have api endpoints for all tool definitions
-import { getDb } from '../../../../lib/mongo'
+import { getDb } from '../../../../../lib/mongo'
 
 export async function query_fire_points(
     yr_start: Number | null = null,

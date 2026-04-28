@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ResponseInput, ResponseFunctionToolCall, Tool } from "openai/resources/responses/responses.mjs";
-import { query_tools, make_tool_calls } from "../tools/tool_management";
+import { query_tools, make_tool_calls } from "./tools/tool_management";
 
 type Message = { role: "user" | "ai"; content: string; time: string };
 
@@ -34,6 +34,7 @@ export default async function handler(
     }));
 
 
+    // Add initial system prompt to conversation
     const input = [
         { role: "system", content: "You are a wildfire intelligence assistant. Address the user's most recent query, using the rest of the conversation as context. When answering questions related to wildfires, primarily use the provided wildfire data tools to provide an answer, and cite your tool usage." },
         ...historyInput

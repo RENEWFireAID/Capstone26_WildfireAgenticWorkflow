@@ -1,4 +1,4 @@
-import { getDb } from '../../lib/mongo'
+import { getDb } from '../../../../../lib/mongo'
 
 export async function getSingleTerm(term: String) {
     try {
