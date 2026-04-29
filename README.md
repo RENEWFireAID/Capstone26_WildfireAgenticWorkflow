@@ -13,7 +13,7 @@ This is a monorepo for the FireAID project at the University of Alaska Fairbanks
 3) The first time you run the project, use the following commands
    ```bash
    cd fireaid_web
-   docker build -t fireaid_web_base:latest -f docker/Dockerfile-Base .
+   docker build -t fireaid_web_base:latest -f docker/Dockerfile .
    cd ..
    docker compose build
    docker compose up

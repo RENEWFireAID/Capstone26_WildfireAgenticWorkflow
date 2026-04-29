@@ -11,6 +11,7 @@ import {
   Paperclip,
 } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import ReactMarkdown from "react-markdown";
 
 type Message = { role: "user" | "assistant"; content: string; time: string };
 
@@ -168,12 +169,22 @@ export default function PortalPage() {
                     <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white text-xs ${msg.role === "user" ? "bg-orange-500" : "bg-[#003366]"}`}>
                       {msg.role === "user" ? <User size={14} /> : <Bot size={14} />}
                     </div>
+
                     <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       msg.role === "user"
                         ? "bg-white border border-slate-200 text-slate-800"
                         : "bg-blue-50 border border-blue-100 text-slate-800"
                     }`}>
-                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                      <div>
+                        <ReactMarkdown
+                          components={{
+                            h1: ({node, ...props}) => <h1 className="text-xl font-bold mb-2" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-lg font-semibold mb-2" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-base font-semibold mb-1" {...props} />,
+                          }}
+                        >{msg.content}</ReactMarkdown>
+                      </div>
+
                       <div className="mt-1 text-[10px] text-slate-400">{msg.time}</div>
                     </div>
                   </div>
