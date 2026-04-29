@@ -76,7 +76,7 @@ export default function PortalPage() {
       console.log("CURRENT MESSAGE LIST");
       console.log(updatedMessages);
       console.log();
-      const res = await fetch("/api/ai/query", {
+      const res = await fetch("/api/llm_query/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ msgs: updatedMessages }),
