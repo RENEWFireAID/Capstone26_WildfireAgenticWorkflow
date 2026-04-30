@@ -6,9 +6,17 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { BarChart3, BookOpen, FileText, Flame, Search, TrendingUp } from "lucide-react";
 
 const APPS = [
-  { label: "Terminology", desc: "Browse wildfire terms & definitions", icon: BookOpen, href: "/library",     accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-500",developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" }, 
-  { label: "Publication",  desc: "Research papers & reports",          icon: FileText, href: "/publication", accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500",developer: "Utsav Dutta", role: "Undergraduate Student · UAA Computer Science" },
-  { label: "Fire History", desc: "Explore historical fire records",    icon: Flame,    href: "/mcp-tools",   accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson", role: "Undergraduate Student · UAF Computer Science" },
+  { label: "Terminology",        desc: "Browse wildfire terms & definitions", icon: BookOpen,   href: "/library",             accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600",  developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" },
+  { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Student · UAA Computer Science" },
+  { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
+  { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
+];
+
+const VISUALS = [
+  { label: "Search",     desc: "Search historical fire records",   icon: Search,     href: "/search",     accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600" },
+  { label: "Charts",     desc: "Visualize fire data & trends",     icon: BarChart3,  href: "/charts",     accent: "#7c3aed", bg: "bg-violet-50", iconColor: "text-violet-600" },
+  { label: "Prediction", desc: "AI-powered fire prediction",       icon: TrendingUp, href: "/prediction", accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500" },
+  { label: "Reports",    desc: "Generate & export reports",        icon: FileText,   href: "/reports",    accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600" },
 ];
 
 export default function AppsPage() {
