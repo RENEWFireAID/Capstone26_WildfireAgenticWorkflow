@@ -29,23 +29,41 @@ docker compose build; docker compose up
 6) Some databases will need to be populated before all the LLM tools are fully functional. Learn more in the [scripts documentation](./scripts/README.md)
 
 
-## Further Project Documentation
+## Project Structure and Further Documentation
 
-**LLM Query**: [./fireaid_web/src/pages/api/llm_query/README.md](./fireaid_web/src/pages/api/llm_query/README.md)
+### [fireaid_web](./fireaid_web): Website frontend
 
-  Learn more about the LLM query, tool handling, and adding new tools for the LLM to use.
+- **FireAID Frontend**: [./fireaid_web/README.md](./fireaid_web/README.md)
 
-**Docker**: [./fireaid_web/docker/README.md](./fireaid_web/docker/README.md)
+  Learn more about the frontend website setup with Next.js.
+
+- **Docker**: [./fireaid_web/docker/README.md](./fireaid_web/docker/README.md)
 
   Learn more about the Docker setup of the project.
 
-**Scripts**: [./scripts/README.md](./scripts/README.md)
+- **LLM Query**: [./fireaid_web/src/pages/api/llm_query/README.md](./fireaid_web/src/pages/api/llm_query/README.md)
+
+  Learn more about the LLM query, tool handling, and adding new tools for the LLM to use.
+
+### [FireMCP](./FireMCP): Fire History App MCP Server
+
+MCP Server for the manual access Fire History app. The historic fire data tool that the LLM query has access to uses the same database, but not the MCP server.
+
+### [llm-app](./llm-app): Publication App RAG Tool
+
+The LLM query has access to this tool to retrieve context from a database of academic paper titles and abstracts.
+
+### [ml_model](./ml_model): Fire Visualization App
+
+This feature is not currently functional. Further work needed. [Learn more](./ml_model/README.md)
+
+### [scripts](./scripts): Data Population Scripts
+
+- **Scripts**: [./scripts/README.md](./scripts/README.md)
 
   Covers the scripts needed to populate the terminology and historic wildfire databases.
 
-**FireAID Frontend**: [./fireaid_web/README.md](./fireaid_web/README.md)
 
-  Learn more about the frontend website setup with Next.js.
 
 
 ## Linting and Formatting
@@ -65,6 +83,8 @@ Any merge into main must be performed via Pull Request (PR). The GitHub repostio
 Ivy Swenson \
 Elliott Lewandowski \
 Jenae Matson \
+Utsav Dutta \
+Yara Hassan \
 Andrew Winford \
 Daniel Kim
 
