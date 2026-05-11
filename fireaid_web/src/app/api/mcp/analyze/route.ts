@@ -9,7 +9,7 @@
 import { NextResponse } from "next/server";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const MODEL = "anthropic/claude-3.5-sonnet";
+const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 async function queryDatabase(userMessage: string): Promise<string> {
