@@ -4,17 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Topbar from "@/components/topbar/Topbar";
 import {
-  LayoutGrid,
-  Database,
-  Terminal,
-  BarChart3,
   Send,
   Bot,
   User,
   RefreshCw,
+  Paperclip,
 } from "lucide-react";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import ReactMarkdown from "react-markdown";
 
-type Message = { role: "user" | "ai"; content: string; time: string };
+type Message = { role: "user" | "assistant"; content: string; time: string };
 
 const SUGGESTED = [
   "How many fires in Alaska in 2022?",
@@ -24,21 +23,43 @@ const SUGGESTED = [
   "What fuel types cause large fires?",
 ];
 
-const SIDEBAR_ITEMS = [
-  { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
-  { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
-  { key: "prompt",        label: "PROMPT", icon: Terminal,   href: "/prompt" },
-];
 
 export default function PortalPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // NEW: Track save state
   const bottomRef               = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // NEW FUNCTION: Save the chat to the database
+  async function saveChat() {
+    // Do nothing if there are no messages or if a save is already in progress
+    if (messages.length === 0 || isSaving) return;
+    
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/ai/save_chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages }),
+      });
+      
+      if (res.ok) {
+        alert("Chat archived successfully!");
+      } else {
+        alert("Failed to save chat.");
+      }
+    } catch (error) {
+      console.error("Error saving chat:", error);
+      alert("An error occurred while saving the chat.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   async function send(text?: string) {
     const msg = text ?? input.trim();
@@ -46,18 +67,26 @@ export default function PortalPage() {
     setInput("");
     setLoading(true);
     const userMsg: Message = { role: "user", content: msg, time: new Date().toLocaleTimeString() };
-    setMessages(prev => [...prev, userMsg]);
+    
+    const updatedMessages = [...messages, userMsg];
+    
+    setMessages(updatedMessages);
+
     try {
-      const res = await fetch("/api/chat", {
+      console.log();
+      console.log("CURRENT MESSAGE LIST");
+      console.log(updatedMessages);
+      console.log();
+      const res = await fetch("/api/llm_query/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({ msgs: updatedMessages }),
       });
       const data = await res.json();
       const reply = data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";
-      setMessages(prev => [...prev, { role: "ai", content: reply, time: new Date().toLocaleTimeString() }]);
+      setMessages(prev => [...prev, { role: "assistant", content: reply, time: new Date().toLocaleTimeString() }]);
     } catch {
-      setMessages(prev => [...prev, { role: "ai", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
     } finally {
       setLoading(false);
     }
@@ -71,18 +100,7 @@ export default function PortalPage() {
 
       <div className="flex flex-1">
         {/* SIDEBAR */}
-        <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
-          {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-            <Link
-              key={key}
-              href={href}
-              className="w-11 py-2.5 rounded-xl flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-100 hover:text-[#003366] transition text-[8px] font-semibold tracking-widest"
-            >
-              <Icon size={18} strokeWidth={1.8} />
-              {label}
-            </Link>
-          ))}
-        </aside>
+        <FireAIDSidebar/>
 
         {/* MAIN */}
         <main className="flex-1 flex flex-col bg-slate-50">
@@ -109,7 +127,18 @@ export default function PortalPage() {
                     onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
                     disabled={loading}
                   />
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-2">
+                    {/* Darker Green Save Chat Button */}
+                    <button
+                      type="button"
+                      onClick={saveChat}
+                      disabled={isEmpty || isSaving}
+                      className="rounded-xl bg-green-600 px-5 py-2 text-white text-sm hover:bg-green-700 disabled:opacity-40 transition flex items-center gap-2 shadow-sm"
+                    >
+                      <Paperclip size={14} className="-rotate-45" />
+                      {isSaving ? "Saving..." : "Save chat"}
+                    </button>
+                    {/* Send Button */}
                     <button
                       className="rounded-xl bg-[#003366] px-5 py-2 text-white text-sm hover:bg-[#002244] disabled:opacity-40 flex items-center gap-2 transition"
                       onClick={() => send()}
@@ -140,12 +169,22 @@ export default function PortalPage() {
                     <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white text-xs ${msg.role === "user" ? "bg-orange-500" : "bg-[#003366]"}`}>
                       {msg.role === "user" ? <User size={14} /> : <Bot size={14} />}
                     </div>
+
                     <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       msg.role === "user"
                         ? "bg-white border border-slate-200 text-slate-800"
                         : "bg-blue-50 border border-blue-100 text-slate-800"
                     }`}>
-                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                      <div>
+                        <ReactMarkdown
+                          components={{
+                            h1: ({node, ...props}) => <h1 className="text-xl font-bold mb-2" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-lg font-semibold mb-2" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-base font-semibold mb-1" {...props} />,
+                          }}
+                        >{msg.content}</ReactMarkdown>
+                      </div>
+
                       <div className="mt-1 text-[10px] text-slate-400">{msg.time}</div>
                     </div>
                   </div>
@@ -175,7 +214,18 @@ export default function PortalPage() {
                       onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
                       disabled={loading}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-2">
+                      {/* Darker Green Save Chat Button */}
+                      <button
+                        type="button"
+                        onClick={saveChat}
+                        disabled={isEmpty || isSaving}
+                        className="rounded-xl bg-green-600 px-5 py-2 text-white text-sm hover:bg-green-700 disabled:opacity-40 transition flex items-center gap-2 shadow-sm"
+                      >
+                        <Paperclip size={14} className="-rotate-45" />
+                        {isSaving ? "Saving..." : "Save chat"}
+                      </button>
+                      {/* Send Button */}
                       <button
                         className="rounded-xl bg-[#003366] px-5 py-2 text-white text-sm hover:bg-[#002244] disabled:opacity-40 flex items-center gap-2 transition"
                         onClick={() => send()}
@@ -197,10 +247,10 @@ export default function PortalPage() {
       </div>
       {/* Feedback floating button */}
       <Link
-          href="/feedback"
-          className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#003366] text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#002244] transition text-sm font-semibold z-50"
-    >
-          💬 Feedback
+        href="/feedback"
+        className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#003366] text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#002244] transition text-sm font-semibold z-50"
+      >
+        💬 Feedback
       </Link>
     </div>
   );

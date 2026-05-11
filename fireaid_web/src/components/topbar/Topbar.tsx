@@ -11,7 +11,6 @@ export default function Topbar() {
     { label: "Chat", href: "/portal" },
     { label: "Apps", href: "/apps" },
     { label: "Data", href: "/data" },
-    { label: "Prompt", href: "/prompt" },
     { label: "Team", href: "/team" },
   ];
 

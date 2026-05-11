@@ -98,7 +98,7 @@ export default function ReportsPage() {
 
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1fr)]">
-      <FireAIDSidebar active="reports" />
+      <FireAIDSidebar/>
 
       <div className="min-w-0 space-y-4">
         {/* Header */}

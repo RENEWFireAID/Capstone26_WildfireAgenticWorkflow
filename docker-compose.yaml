@@ -6,6 +6,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - ./fireaid_web/src:/var/web/src
+      - ./fireaid_web/public:/var/web/public
     depends_on:
       - mongo
       - firemcp
@@ -14,6 +15,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal=host-gateway"
 
   firemcp:
     build:
@@ -26,18 +29,20 @@ services:
     restart: always
     ports:
       - "8081:8081"
-     
-  term_mcp:
+
+  rag-service:
     build:
-      context: ./mcp_server/
-      dockerfile: Dockerfile
+      context: ./llm-app
     env_file:
       - .env
-    container_name: term_mcp
+    container_name: rag-service
     restart: always
     ports:
-      - "3001:3001"
-
+      - "8000:8000"
+    volumes:
+      - ./ml_model/data:/app/data
+      - ./ml_model:/app/ml_model_src
+     
   mongo:
     image: mongo:8.0
     container_name: mongo

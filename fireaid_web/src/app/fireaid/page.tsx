@@ -200,7 +200,7 @@ export default function FireAIDPage() {
 
   return (
     <div className="flex gap-5 min-h-screen">
-      <FireAIDSidebar active="fireaid" />
+      <FireAIDSidebar/>
 
       <div className="flex-1 space-y-6 min-w-0 flex flex-col">
 

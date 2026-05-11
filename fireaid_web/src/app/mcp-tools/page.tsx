@@ -186,7 +186,7 @@ export default function McpToolsPage() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
       {/* Left */}
-      <FireAIDSidebar active="explore" />
+      <FireAIDSidebar/>
 
       {/* Center */}
       <div className="min-w-0 space-y-4">
@@ -437,7 +437,7 @@ function QueryBuilderPanel({
         <Field label="Year range">
           <div className="grid grid-cols-2 gap-2">
             <input
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
               type="number"
               value={spec.yearStart ?? ""}
               onChange={(e) =>
@@ -446,7 +446,7 @@ function QueryBuilderPanel({
               placeholder="start"
             />
             <input
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
               type="number"
               value={spec.yearEnd ?? ""}
               onChange={(e) =>
@@ -473,7 +473,7 @@ function QueryBuilderPanel({
 
         <Field label="State (UI only for now)">
           <input
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
             value={spec.state ?? ""}
             onChange={(e) => set({ state: e.target.value || undefined })}
             placeholder="e.g., Alaska"
@@ -483,7 +483,7 @@ function QueryBuilderPanel({
         <Field label="Acres (UI only for now)">
           <div className="grid grid-cols-2 gap-2">
             <input
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
               type="number"
               value={spec.acresMin ?? ""}
               onChange={(e) =>
@@ -492,7 +492,7 @@ function QueryBuilderPanel({
               placeholder="min"
             />
             <input
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
               type="number"
               value={spec.acresMax ?? ""}
               onChange={(e) =>
@@ -505,7 +505,7 @@ function QueryBuilderPanel({
 
         <Field label="Limit">
           <select
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
             value={spec.limit ?? 200}
             onChange={(e) => set({ limit: Number(e.target.value) })}
           >

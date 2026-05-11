@@ -1,5 +1,13 @@
 .env
+*.csv
+*.txt
+*.tiff
 .DS_Store
 **/.DS_Store
 *.zip
 fireaid_dump/
+llm-app/chroma_db/
+llm-app/data/
+*.csv
+ml_model/data/
+

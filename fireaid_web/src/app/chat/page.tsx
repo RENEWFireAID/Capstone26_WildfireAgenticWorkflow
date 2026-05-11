@@ -67,7 +67,7 @@ export default function ChatPage() {
 
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1fr)]">
-      <FireAIDSidebar active="chat" />
+      <FireAIDSidebar/>
 
       <div className="flex min-h-[calc(100vh-5rem)] flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
         {/* Header */}

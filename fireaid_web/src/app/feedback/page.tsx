@@ -3,13 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Topbar from "@/components/topbar/Topbar";
-import { LayoutGrid, Database, Terminal, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 
-const SIDEBAR_ITEMS = [
-  { key: "apps",   label: "APPS",   icon: LayoutGrid, href: "/apps" },
-  { key: "data",   label: "DATA",   icon: Database,   href: "/data" },
-  { key: "prompt", label: "PROMPT", icon: Terminal,   href: "/prompt" },
-];
 
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -67,15 +63,7 @@ export default function FeedbackPage() {
     <div className="flex flex-col w-full min-h-screen">
       <Topbar />
       <div className="flex flex-1">
-        <aside className="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
-          {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-            <Link key={key} href={href}
-              className="rounded-xl text-slate-400 hover:bg-slate-100 hover:text-[#003366] transition w-11 py-2.5 flex flex-col items-center gap-1 text-[8px] font-semibold tracking-widest">
-              <Icon size={18} strokeWidth={1.8} />
-              {label}
-            </Link>
-          ))}
-        </aside>
+        <FireAIDSidebar/>
 
         <main className="flex-1 flex flex-col bg-slate-50">
           <div className="bg-slate-50 px-12 py-10 border-b border-slate-200">
