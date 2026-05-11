@@ -11,3 +11,6 @@ llm-app/data/
 *.csv
 ml_model/data/
 
+scripts/.venv/
+mcp_server/.venv/
+ml_model/__pycache__/
