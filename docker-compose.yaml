@@ -42,6 +42,7 @@ services:
     volumes:
       - ./ml_model/data:/app/data
       - ./ml_model:/app/ml_model_src
+      - ./llm-app/chroma_db:/app/chroma_db
      
   mongo:
     image: mongo:8.0
