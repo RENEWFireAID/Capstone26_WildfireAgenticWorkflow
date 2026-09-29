@@ -29,6 +29,11 @@ services:
     restart: always
     ports:
       - "8081:8081"
+    volumes:
+      # Read-only host credentials from `earthengine authenticate`, for the
+      # vegetation trends tool in development. Harmless if the directory does
+      # not exist; production uses EE_SERVICE_ACCOUNT/EE_KEY_FILE instead.
+      - ~/.config/earthengine:/root/.config/earthengine:ro
 
   rag-service:
     build:

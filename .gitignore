@@ -12,6 +12,9 @@ llm-app/data/
 ml_model/data/
 
 
+__pycache__/
+*.pyc
+
 # Google Earth Engine credentials — never commit
 *-key.json
 *-credentials.json

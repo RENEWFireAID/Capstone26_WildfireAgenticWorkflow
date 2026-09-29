@@ -1,6 +1,9 @@
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 from tools.mongo_fire_tools import search_fire_points, count_fire_points
+from tools.vegetation_tools import (
+    get_vegetation_timeseries as _get_vegetation_timeseries,
+)
 from typing import Optional
 
 mcp = FastMCP(
@@ -58,6 +61,32 @@ def list_available_years() -> dict:
         if r.get("year") is not None
     ]
     return {"ok": True, "years": years}
+
+
+@mcp.tool()
+async def get_vegetation_timeseries(
+    lat: float,
+    lon: float,
+    start_year: int = 2000,
+    end_year: int = 2024,
+    reducer: str = "median",
+) -> dict:
+    """Get annual summer vegetation and climate values at a point from Landsat.
+
+    Returns one record per year with NDVI, NBR and NDMI (June-August composite,
+    cloud masked) plus TerraClimate summer temperature, precipitation, spring
+    snow water equivalent and soil moisture, including 1-year lagged climate.
+    Use it to assess pre- and post-fire vegetation change at a fire point.
+    Values may be null for years with no usable imagery. Requires Earth Engine
+    credentials; a cold query can take up to a minute.
+    """
+    return await _get_vegetation_timeseries(
+        lat=lat,
+        lon=lon,
+        start_year=start_year,
+        end_year=end_year,
+        reducer=reducer,
+    )
 
 
 if __name__ == "__main__":

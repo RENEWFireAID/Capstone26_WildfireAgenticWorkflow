@@ -2,3 +2,4 @@ mcp[cli]
 uvicorn[standard]
 pymongo
 starlette
+earthengine-api
