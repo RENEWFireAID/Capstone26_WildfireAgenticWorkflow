@@ -11,3 +11,12 @@ llm-app/data/
 *.csv
 ml_model/data/
 
+
+# Google Earth Engine credentials — never commit
+*-key.json
+*-credentials.json
+gee-key*.json
+service-account*.json
+.config/earthengine/
+**/.config/earthengine/
+earthengine-credentials*
