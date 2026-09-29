@@ -197,6 +197,9 @@ function PointsLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
 
       const name = r.INCIDENT_NAME ?? r.IncidentName ?? r.name ?? "";
       if (name) m.bindPopup(String(name));
+      m.on("click", () => {
+        window.dispatchEvent(new CustomEvent("mcp:pointselected", { detail: r }));
+      });
 
       m.addTo(layerRef.current);
     }
@@ -271,6 +274,9 @@ function ClusterLayer({ enabled, rows }: { enabled: boolean; rows: AnyObj[] }) {
 
       const name = r.INCIDENT_NAME ?? r.IncidentName ?? r.name ?? "";
       if (name) m.bindPopup(String(name));
+      m.on("click", () => {
+        window.dispatchEvent(new CustomEvent("mcp:pointselected", { detail: r }));
+      });
 
       layerRef.current.addLayer(m);
     }

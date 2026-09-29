@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
 import FireDashboard from "@/components/mcp/FireDashboard";
+import FirePointDetail from "@/components/mcp/FirePointDetail";
 
 // map app
 const FireMap = dynamic(() => import("@/components/map/FireMap"), { ssr: false });
@@ -49,6 +50,7 @@ export default function McpToolsPage() {
   const [llmInput, setLlmInput] = useState("");
   const [llmMessages, setLlmMessages] = useState<{role:"user"|"ai", text:string, toolsUsed?: {name:string, recordCount:number}[]}[]>([]);
   const [llmLoading, setLlmLoading] = useState(false);
+  const [selectedFire, setSelectedFire] = useState<Record<string, any> | null>(null);
 
   async function askLlm() {
     if (!llmInput.trim()) return;
@@ -93,6 +95,22 @@ export default function McpToolsPage() {
     window.addEventListener("mcp:boxselected", handler);
     return () => window.removeEventListener("mcp:boxselected", handler);
   }, [spec]);
+
+  // Listen for a fire marker click from FireMap
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setSelectedFire((e as CustomEvent).detail as Record<string, any>);
+    };
+    window.addEventListener("mcp:pointselected", handler);
+    return () => window.removeEventListener("mcp:pointselected", handler);
+  }, []);
+
+  // A new query replaces the rows behind the map, so drop the stale selection
+  useEffect(() => {
+    const clear = () => setSelectedFire(null);
+    window.addEventListener("mcp:updated", clear);
+    return () => window.removeEventListener("mcp:updated", clear);
+  }, []);
 
   // Load MCP tools list
   useEffect(() => {
@@ -211,6 +229,14 @@ export default function McpToolsPage() {
 
       {/* Right */}
       <div className="min-w-0 space-y-4">
+        {selectedFire ? (
+          <FirePointDetail row={selectedFire} onClose={() => setSelectedFire(null)} />
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-4 text-center text-xs text-slate-400">
+            Click a fire on the map to see its details and vegetation recovery.
+          </div>
+        )}
+
         {/* LLM Natural Language Query */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
           <div className="flex items-center justify-between">
