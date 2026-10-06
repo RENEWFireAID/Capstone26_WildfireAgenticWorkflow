@@ -1,6 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 from tools.mongo_fire_tools import search_fire_points, count_fire_points
+from tools.fire_risk_model import predict_risk
 from typing import Optional
 
 mcp = FastMCP(
@@ -58,6 +59,15 @@ def list_available_years() -> dict:
         if r.get("year") is not None
     ]
     return {"ok": True, "years": years}
+
+
+@mcp.tool()
+def predict_fire_risk(features: dict) -> dict:
+    """Predict a wildfire risk category: Very Low, Low, Moderate or High.
+
+    Call with an empty object for the required feature names, units and ranges.
+    """
+    return predict_risk(features)
 
 
 if __name__ == "__main__":

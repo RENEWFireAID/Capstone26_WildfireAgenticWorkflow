@@ -1,4 +1,7 @@
-mcp[cli]
+mcp[cli]<2
 uvicorn[standard]
 pymongo
 starlette
+scikit-learn==1.9.0
+joblib
+pandas
