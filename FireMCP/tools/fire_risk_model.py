@@ -4,11 +4,11 @@ from typing import Any, Dict, List
 import joblib
 import pandas as pd
 
-MODEL_PATH = Path(__file__).parent.parent / "models" / "fire_risk_model.joblib"
+MODELS_DIR = Path(__file__).parent.parent / "models"
+MODEL_NAMES = ["random_forest", "xgboost", "svm"]
 
-_bundle = joblib.load(MODEL_PATH)
-_model = _bundle["model"]
-FEATURES: List[str] = _bundle["features"]
+_bundles = {name: joblib.load(MODELS_DIR / f"{name}.joblib") for name in MODEL_NAMES}
+FEATURES: List[str] = _bundles["random_forest"]["features"]
 
 
 INPUT_SPEC = {
@@ -29,8 +29,13 @@ INPUT_SPEC = {
 }
 
 
-def predict_risk(features: Dict[str, float]) -> Dict[str, Any]:
+def predict_risk(
+    features: Dict[str, float], model: str = "random_forest"
+) -> Dict[str, Any]:
     """Predict a risk category from a full set of feature values."""
+    if model not in _bundles:
+        return {"ok": False, "error": "unknown model", "models": MODEL_NAMES}
+
     missing = [f for f in FEATURES if f not in features]
     if missing:
         return {
@@ -40,14 +45,19 @@ def predict_risk(features: Dict[str, float]) -> Dict[str, Any]:
             "input_spec": INPUT_SPEC,
         }
 
+    bundle = _bundles[model]
+    classes = bundle["classes"]
     row = pd.DataFrame([{f: features[f] for f in FEATURES}])
-    probabilities = _model.predict_proba(row)[0]
-    best = int(probabilities.argmax())
+    probabilities = bundle["model"].predict_proba(row)[0]
+    # The category comes from predict() because SVM's probabilities can
+    # occasionally rank a different class first.
+    best = int(bundle["model"].predict(row)[0])
     return {
         "ok": True,
-        "category": str(_model.classes_[best]),
+        "model": model,
+        "category": classes[best],
         "confidence": round(float(probabilities[best]), 4),
         "probabilities": {
-            str(c): round(float(p), 4) for c, p in zip(_model.classes_, probabilities)
+            c: round(float(p), 4) for c, p in zip(classes, probabilities)
         },
     }

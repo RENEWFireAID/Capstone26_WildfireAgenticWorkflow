@@ -62,12 +62,13 @@ def list_available_years() -> dict:
 
 
 @mcp.tool()
-def predict_fire_risk(features: dict) -> dict:
+def predict_fire_risk(features: dict, model: str = "random_forest") -> dict:
     """Predict a wildfire risk category: Very Low, Low, Moderate or High.
 
-    Call with an empty object for the required feature names, units and ranges.
+    model is one of random_forest, xgboost or svm.
+    Call with an empty features object for the required feature names, units and ranges.
     """
-    return predict_risk(features)
+    return predict_risk(features, model)
 
 
 if __name__ == "__main__":
