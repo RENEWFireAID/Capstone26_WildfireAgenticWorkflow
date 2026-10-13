@@ -6,6 +6,8 @@ import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/
 import { getWildfireTerm } from "./terminology_tool/handle_get_wildfire_term";
 import { query_fire_points } from "./historic_wildfires_tool/handle_historic_fires";
 import { retrieveRagContext } from "./rag_tool/handle_rag_search";
+import { generateChart } from "./chart_tool/handle_generate_chart";
+import type { ChartSpec } from "@/lib/chartBuilder";
 
 
 // **** TOOL DEFINITIONS *****
@@ -99,12 +101,30 @@ const ragTool = {
 };
 
 
+// Tool for plotting a chart from the historic fire database, rendered in chat.
+const chartTool = {
+    type: "function",
+    name: "generate_chart",
+    description: "Plot a chart of the Alaska wildfire database and show it to the user in the chat. Use this whenever the user asks to see, plot, graph, visualise or chart the fire data, or asks how a quantity changes over time or compares across categories. The chart is displayed automatically, so never say you are unable to show charts.",
+    parameters: {
+        type: "object",
+        properties: {
+            request: {
+                type: "string",
+                description: "A plain English description of the chart to plot, naming the quantity, the grouping and any year range. For example 'total acres burned per year since 2000'.",
+            },
+        },
+        required: ["request"],
+    },
+};
+
 
 // Exported list of tools for use in API query
 export const query_tools = [
     wildfireTerminologyTool as Tool, 
     historicWildfireQuery as Tool,
-    ragTool as Tool
+    ragTool as Tool,
+    chartTool as Tool
 ];
 
 
@@ -112,6 +132,7 @@ export const query_tools = [
 
 export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]) {
     var tool_output = [] as ResponseInput;
+    const charts: ChartSpec[] = [];
 
     for (const item of tool_call_list) {
 
@@ -138,6 +159,18 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
             });
         }
           
+        if (item.name == "generate_chart") {
+            const result = await generateChart(JSON.parse(item.arguments).request);
+            if (result.chart) charts.push(result.chart);
+            tool_output.push(item);
+
+            tool_output.push({
+                type: "function_call_output",
+                call_id: item.call_id,
+                output: result.output
+            });
+        }
+
         if (item.name == "retrieve_rag_context") {
             const context = await retrieveRagContext(JSON.parse(item.arguments).query)
             tool_output.push(item)
@@ -150,5 +183,5 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
         }
     };
 
-    return tool_output;
+    return { tool_output, charts };
 }

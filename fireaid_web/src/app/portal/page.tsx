@@ -12,8 +12,9 @@ import {
 } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import ReactMarkdown from "react-markdown";
+import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
 
-type Message = { role: "user" | "assistant"; content: string; time: string };
+type Message = { role: "user" | "assistant"; content: string; time: string; charts?: ChatChartSpec[] };
 
 const SUGGESTED = [
   "How many fires in Alaska in 2022?",
@@ -83,8 +84,15 @@ export default function PortalPage() {
         body: JSON.stringify({ msgs: updatedMessages }),
       });
       const data = await res.json();
-      const reply = data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";
-      setMessages(prev => [...prev, { role: "assistant", content: reply, time: new Date().toLocaleTimeString() }]);
+      const reply = data?.error
+        ? `Error: ${data.error}`
+        : data?.message ?? data?.msg ?? data?.content ?? "Sorry, I could not get a response.";
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: reply,
+        time: new Date().toLocaleTimeString(),
+        charts: data?.charts?.length ? data.charts : undefined,
+      }]);
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
     } finally {
@@ -170,7 +178,7 @@ export default function PortalPage() {
                       {msg.role === "user" ? <User size={14} /> : <Bot size={14} />}
                     </div>
 
-                    <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                    <div className={`${msg.charts?.length ? "max-w-[95%] w-full" : "max-w-[80%]"} rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       msg.role === "user"
                         ? "bg-white border border-slate-200 text-slate-800"
                         : "bg-blue-50 border border-blue-100 text-slate-800"
@@ -184,6 +192,8 @@ export default function PortalPage() {
                           }}
                         >{msg.content}</ReactMarkdown>
                       </div>
+
+                      {msg.charts?.map((c, j) => <ChatChart key={j} chart={c} />)}
 
                       <div className="mt-1 text-[10px] text-slate-400">{msg.time}</div>
                     </div>

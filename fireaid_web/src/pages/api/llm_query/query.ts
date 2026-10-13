@@ -2,6 +2,7 @@ import { OpenAI } from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ResponseInput, ResponseFunctionToolCall, Tool } from "openai/resources/responses/responses.mjs";
 import { query_tools, make_tool_calls } from "./tools/tool_management";
+import type { ChartSpec } from "@/lib/chartBuilder";
 
 type Message = { role: "user" | "ai"; content: string; time: string };
 
@@ -48,6 +49,10 @@ export default async function handler(
     const all_tools = [...query_tools];
     var query_count = 1;
 
+    // Charts are structured, so they travel to the client separately from the
+    // assistant's text; a function_call_output can only carry a string.
+    const charts: ChartSpec[] = [];
+
     try {
         // Send initial prompt with tools
         var response = await openai.responses.create({
@@ -83,8 +88,9 @@ export default async function handler(
             // Make new query with results from tool calling if necessary
             if (found_tool_call) {
 
-                const tool_output = await make_tool_calls(tool_requests);
+                const { tool_output, charts: newCharts } = await make_tool_calls(tool_requests);
                 new_input.push(...tool_output);
+                charts.push(...newCharts);
 
                 response = await openai.responses.create({
                     model: "openai/gpt-4o",
@@ -101,11 +107,13 @@ export default async function handler(
             content: response.output_text
         });
 
-        res.status(200).json({msg: response.output_text, hist: new_input});
+        res.status(200).json({msg: response.output_text, hist: new_input, charts});
 
     } catch (e: any) {
         console.log("Error with query", query_count);
         console.log(e.error);
         console.log(e);
+        // Without this the request hangs until the client times out.
+        res.status(500).json({ error: e?.message ?? "LLM query failed" });
     }
 }
