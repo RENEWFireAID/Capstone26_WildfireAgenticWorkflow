@@ -47,7 +47,11 @@ services:
     volumes:
       - ./ml_model/data:/app/data
       - ./ml_model:/app/ml_model_src
-     
+      # The RAG vector store. Without this it lives only in the container's
+      # writable layer, so any rebuild silently wipes the knowledge base and
+      # the Publication page starts returning "collection does not exist".
+      - ./llm-app/chroma_db:/app/chroma_db
+
   mongo:
     image: mongo:8.0
     container_name: mongo
