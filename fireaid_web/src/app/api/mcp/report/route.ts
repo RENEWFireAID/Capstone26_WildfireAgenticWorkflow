@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
+const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
+
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -45,7 +47,7 @@ Sample: ${fires.slice(0,5).map((r: any) => r.NAME).filter(Boolean).join(", ")}
 `;
 
     const res = await openai.chat.completions.create({
-      model: "google/gemini-flash-1.5",
+      model: MODEL,
       messages: [
         {
           role: "system",

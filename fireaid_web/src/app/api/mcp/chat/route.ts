@@ -7,10 +7,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
+const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
+
 // Step 1: LLM parses natural language into query spec
 async function parseQuerySpec(userInput: string): Promise<Record<string, any>> {
   const res = await openai.chat.completions.create({
-    model: "google/gemini-flash-1.5",
+    model: MODEL,
     messages: [
       {
         role: "system",
@@ -90,7 +92,7 @@ Results summary:
 `;
 
   const res = await openai.chat.completions.create({
-    model: "google/gemini-flash-1.5",
+    model: MODEL,
     messages: [
       {
         role: "system",

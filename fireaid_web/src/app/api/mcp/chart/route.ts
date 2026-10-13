@@ -4,6 +4,8 @@ import { MongoClient } from "mongodb";
 const MONGODB_URI = process.env.MONGODB_URI!;
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY!;
 
+const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
+
 const SYSTEM_PROMPT = `You are a wildfire data analyst AI for FireAID, an Alaska Wildfire Intelligence Platform.
 You have access to a MongoDB collection called "fire_points" with 33,596 Alaska wildfire records from 1939-2024.
 
@@ -57,7 +59,7 @@ export async function POST(req: NextRequest) {
         "X-Title": "FireAID Chart Generator",
       },
       body: JSON.stringify({
-        model: "anthropic/claude-3.5-haiku",
+        model: MODEL,
         temperature: 0,
         max_tokens: 1024,
         messages: [
