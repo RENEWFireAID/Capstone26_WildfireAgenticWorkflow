@@ -38,3 +38,11 @@ export async function listFireTools(): Promise<Array<{ name: string; description
   const { tools } = await client.listTools();
   return tools.map((t) => ({ name: t.name, description: t.description ?? "" }));
 }
+
+export type FireToolSchema = { name: string; description: string; inputSchema: Record<string, unknown> };
+
+export async function listFireToolSchemas(): Promise<FireToolSchema[]> {
+  const client = await getMcpClient();
+  const { tools } = await client.listTools();
+  return tools.map((t) => ({ name: t.name, description: t.description ?? "", inputSchema: t.inputSchema }));
+}
