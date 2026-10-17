@@ -10,6 +10,7 @@ const APPS = [
   { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Student · UAA Computer Science" },
   { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
   { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
+  { label: "Fire Risk Classifier", desc: "Rate conditions on the fire risk scale", icon: Flame, href: "/fire-risk",          accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Student · UAF Computer Science" },
 ];
 
 const VISUALS = [

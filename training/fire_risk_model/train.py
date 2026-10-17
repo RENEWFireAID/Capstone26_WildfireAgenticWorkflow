@@ -1,9 +1,11 @@
 # This trains the fire risk classifiers used by the FireMCP predict_fire_risk tool.
 
-# Saves one file per model in FireMCP/models/; the training CSV is not kept in the repo.
+# Saves one file per model in FireMCP/models/, plus feature_medians.json which the
+# tool uses to fill in features a caller leaves out. The training CSV is not kept in the repo.
 
 # python3 train.py <path to 2.training_data_OutputOfPrepareDataSet.csv>
 
+import json
 import sys
 from pathlib import Path
 
@@ -18,6 +20,8 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 
 RANDOM_STATE = 42
+# Months with fewer training fires than this fall back to the all-fires medians.
+MIN_FIRES_PER_MONTH = 50
 MODELS_DIR = Path(__file__).resolve().parents[2] / "FireMCP" / "models"
 TARGET = "WEATHER_RISK_CATEGORY"
 
@@ -78,6 +82,18 @@ def train_svm(X_train, y_train):
     model.fit(X_train, y_train)
     return model
 
+
+def feature_medians(df, features):
+    """Median of every feature across all fires, and for each discovery month
+    with at least MIN_FIRES_PER_MONTH fires."""
+    month = pd.to_datetime(df["DISCOVERYDATETIME"], format="mixed").dt.month
+    by_month = {
+        str(int(m)): group[features].median().round(4).to_dict()
+        for m, group in df.groupby(month)
+        if len(group) >= MIN_FIRES_PER_MONTH
+    }
+    return {"all": df[features].median().round(4).to_dict(), "by_month": by_month}
+
 if len(sys.argv) != 2:
     sys.exit(
         "usage: python3 train.py <path to 2.training_data_OutputOfPrepareDataSet.csv>"
@@ -116,3 +132,7 @@ for name, model in models.items():
         f"{name}: accuracy {accuracy:.4f} -> {out_path} "
         f"({out_path.stat().st_size / 1e6:.1f} MB)"
     )
+
+medians_path = MODELS_DIR / "feature_medians.json"
+medians_path.write_text(json.dumps(feature_medians(df, features), indent=2))
+print(f"medians -> {medians_path}")
