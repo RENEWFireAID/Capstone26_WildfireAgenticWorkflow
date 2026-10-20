@@ -2,6 +2,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 from tools.mongo_fire_tools import search_fire_points, count_fire_points
 from tools.fire_risk_model import predict_risk
+from tools.fire_danger import forecast_for
 from typing import Optional
 
 mcp = FastMCP(
@@ -87,6 +88,21 @@ def predict_fire_risk(
     SLOPE_WIND_SCORE, slope % up to: 25 2, 40 4, 55 6, 75 8, higher 10, unknown 3.
     """
     return predict_risk(features, model, month)
+
+
+@mcp.tool()
+def fire_danger_forecast(
+    place: Optional[str] = None,
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
+    date: Optional[str] = None,
+) -> dict:
+    """5-day Alaska fire danger (Low to Extreme) from date (YYYY-MM-DD, default today).
+
+    Pass an Alaska place name or latitude/longitude. Rated Apr 1-Sep 30 only; dates
+    before today use observed weather. Weather is in F, mph and inches.
+    """
+    return forecast_for(place, latitude, longitude, date)
 
 
 if __name__ == "__main__":
