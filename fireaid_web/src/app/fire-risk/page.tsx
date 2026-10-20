@@ -38,19 +38,12 @@ export default function FireRiskPage() {
           </div>
 
           {/* Both tabs stay mounted so switching keeps the classifier's inputs. */}
-          <div hidden={tab !== "forecast"}>
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 shadow-sm">
-              Fire danger forecast coming next.
-            </div>
-          </div>
+          <div hidden={tab !== "forecast"} />
           <div hidden={tab !== "classifier"}>
             <FireRiskClassifier />
           </div>
 
           <FireRiskChat />
-
-          <div className="flex items-start gap-2 px-1 text-[11px] text-slate-400">
-          </div>
         </div>
       </main>
     </div>
