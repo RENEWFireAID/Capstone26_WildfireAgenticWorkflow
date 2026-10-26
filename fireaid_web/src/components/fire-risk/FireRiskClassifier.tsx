@@ -251,11 +251,11 @@ export default function FireRiskClassifier() {
             <div key={name} className="flex items-baseline justify-between rounded-xl bg-slate-50 px-3 py-2">
               <span className="text-xs text-slate-600">
                 {SCORE_LABELS[name]}
-                {name === "SPREAD_RATE_SCORE" && <span className="text-slate-400"> (typical for month)</span>}
+                {name === "SPREAD_RATE_SCORE" && <span className="text-slate-500"> (typical for month)</span>}
               </span>
               <span className="text-sm tabular-nums text-slate-900">
                 {scores?.[name] ?? "-"}
-                <span className="text-slate-400"> / {SCORE_LIMITS[name]}</span>
+                <span className="text-slate-500"> / {SCORE_LIMITS[name]}</span>
               </span>
             </div>
           ))}
@@ -283,7 +283,7 @@ export default function FireRiskClassifier() {
                 onChange={(e) => set(f.key)(e.target.value)}
                 className={INPUT_CLASS}
               />
-              <span className="text-[11px] text-slate-400">{f.unit}</span>
+              <span className="text-[11px] text-slate-500">{f.unit}</span>
             </label>
           ))}
         </Column>

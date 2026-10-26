@@ -2,7 +2,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 from tools.mongo_fire_tools import search_fire_points, count_fire_points
 from tools.fire_risk_model import predict_risk
-from tools.fire_danger import forecast_for
+from tools.fire_danger import forecast_for, map_for
 from typing import Optional
 
 mcp = FastMCP(
@@ -105,8 +105,22 @@ def fire_danger_forecast(
     return forecast_for(place, latitude, longitude, date)
 
 
+@mcp.tool()
+def fire_danger_map(date: Optional[str] = None) -> dict:
+    """Statewide Alaska fire danger for one date (YYYY-MM-DD, default today) on a ~110 km grid.
+
+    Each cell has lat, lon, rating (Low to Extreme) and status. A new date can take ~20 s.
+    """
+    return map_for(date)
+
+
 if __name__ == "__main__":
+    import threading
+
     import uvicorn
+
+    # Build the page's example-day map in the background so the demo loads instantly.
+    threading.Thread(target=map_for, args=("2022-06-15",), daemon=True).start()
 
     app = mcp.streamable_http_app()
     uvicorn.run(app, host="0.0.0.0", port=8081)
