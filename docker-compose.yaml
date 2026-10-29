@@ -34,6 +34,10 @@ services:
       # vegetation trends tool in development. Harmless if the directory does
       # not exist; production uses EE_SERVICE_ACCOUNT/EE_KEY_FILE instead.
       - ~/.config/earthengine:/root/.config/earthengine:ro
+      # Service account key for production, written by the deploy workflow from
+      # the EE_KEY_B64 secret. The directory sits outside every build context,
+      # so `COPY . /app` cannot bake the key into an image.
+      - ./secrets:/run/secrets:ro
 
   rag-service:
     build:

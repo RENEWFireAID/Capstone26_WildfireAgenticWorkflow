@@ -24,3 +24,4 @@ service-account*.json
 .config/earthengine/
 **/.config/earthengine/
 earthengine-credentials*
+secrets/
