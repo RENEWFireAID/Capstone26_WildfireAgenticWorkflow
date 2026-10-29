@@ -10,6 +10,7 @@ llm-app/chroma_db/
 llm-app/data/
 *.csv
 ml_model/data/
+__pycache__/
 
 
 __pycache__/

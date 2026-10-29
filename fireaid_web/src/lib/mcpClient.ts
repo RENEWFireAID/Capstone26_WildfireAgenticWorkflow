@@ -25,9 +25,13 @@ export async function getMcpClient(): Promise<Client> {
   return _connecting;
 }
 
-export async function callFireTool(toolName: string, args: Record<string, unknown> = {}): Promise<any> {
+export async function callFireTool(
+  toolName: string,
+  args: Record<string, unknown> = {},
+  options?: { timeoutMs?: number },
+): Promise<any> {
   const client = await getMcpClient();
-  const result = await client.callTool({ name: toolName, arguments: args });
+  const result = await client.callTool({ name: toolName, arguments: args }, undefined, { timeout: options?.timeoutMs });
   const content = result.content as any[]; const textBlock = content?.find((c: any) => c.type === "text");
   if (!textBlock) throw new Error("No text content from MCP");
   try { return JSON.parse(textBlock.text); } catch { return textBlock.text; }
@@ -37,4 +41,12 @@ export async function listFireTools(): Promise<Array<{ name: string; description
   const client = await getMcpClient();
   const { tools } = await client.listTools();
   return tools.map((t) => ({ name: t.name, description: t.description ?? "" }));
+}
+
+export type FireToolSchema = { name: string; description: string; inputSchema: Record<string, unknown> };
+
+export async function listFireToolSchemas(): Promise<FireToolSchema[]> {
+  const client = await getMcpClient();
+  const { tools } = await client.listTools();
+  return tools.map((t) => ({ name: t.name, description: t.description ?? "", inputSchema: t.inputSchema }));
 }
