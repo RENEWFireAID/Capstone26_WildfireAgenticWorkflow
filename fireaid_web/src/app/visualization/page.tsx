@@ -1,10 +1,5 @@
 "use client";
 
-<<<<<<< IS/changes
-export default function VisualizationPage() {
-  return (
-    <div className="flex w-full min-h-screen bg-slate-50" />
-=======
 import Link from "next/link";
 import { BarChart3, Search, TrendingUp, FileText } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
@@ -87,6 +82,5 @@ export default function VisualizationPage() {
         </div>
       </main>
     </div>
->>>>>>> main
   );
 }
