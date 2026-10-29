@@ -63,7 +63,7 @@ export default function ChatChart({ chart }: { chart: ChatChartSpec }) {
               cx="50%"
               cy="50%"
               outerRadius={80}
-              label={({ percent }) => (percent > 0.06 ? `${(percent * 100).toFixed(0)}%` : "")}
+              label={({ percent }) => ((percent ?? 0) > 0.06 ? `${((percent ?? 0) * 100).toFixed(0)}%` : "")}
               labelLine={false}
             >
               {data.map((_, i) => (

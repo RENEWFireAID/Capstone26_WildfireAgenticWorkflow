@@ -145,9 +145,9 @@ export default function VegetationRecoveryPanel({
               color: "white",
               fontSize: 11,
             }}
-            formatter={(v: any, name: string) => [
+            formatter={(v: any, name?: string) => [
               typeof v === "number" ? v.toFixed(4) : "no data",
-              name,
+              name ?? "",
             ]}
           />
           <Legend wrapperStyle={{ fontSize: 9 }} />
