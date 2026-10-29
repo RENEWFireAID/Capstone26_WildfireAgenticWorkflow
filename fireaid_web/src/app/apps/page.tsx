@@ -11,7 +11,7 @@ const APPS = [
   { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
   { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
   { label: "Alaska Fire Risk",     desc: "Fire danger forecast, map & risk classifier", icon: TriangleAlert, href: "/fire-risk", accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Forest Trends",      desc: "Post-fire vegetation recovery",      icon: Sprout,     href: "/forest-trends",       accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600" },
+  { label: "Forest Trends",      desc: "Post-fire vegetation recovery",      icon: Sprout,     href: "/forest-trends",       accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600", developer: "Sumana Sahoo", role: "Original author · Forest Trend Mapper" },
 ];
 
 const VISUALS = [
