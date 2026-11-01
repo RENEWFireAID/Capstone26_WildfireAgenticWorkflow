@@ -62,7 +62,12 @@ services:
     restart: always
     command: --port 27018
     ports:
-      - "27018:27018" 
+      # Loopback only. The repo is public and the root password is in plain
+      # text in this file's env_file, SETUP.md and the deploy workflow, so a
+      # published port put the whole database on the open internet. Containers
+      # reach Mongo as mongo:27018 over the compose network, which this does
+      # not affect, and the workflow's mongosh step runs on the host.
+      - "127.0.0.1:27018:27018"
     env_file:
       - .env
     volumes:
