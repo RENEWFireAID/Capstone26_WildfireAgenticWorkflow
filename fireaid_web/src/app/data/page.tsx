@@ -38,7 +38,7 @@ const DATA_ITEMS = [
     label: "History",
     desc: "Historical fire records",
     icon: Flame,
-    href: "/mcp-tools",
+    href: "/fire-history",
     accent: "#ea580c",
     bg: "bg-orange-50",
     iconColor: "text-orange-500",
@@ -52,15 +52,7 @@ const DATA_ITEMS = [
     bg: "bg-amber-50",
     iconColor: "text-amber-500",
   },
-  {
-    label: "Fire Location",
-    desc: "Active fire map & locations",
-    icon: MapPin,
-    href: "/fire-location",
-    accent: "#16a34a",
-    bg: "bg-green-50",
-    iconColor: "text-green-600",
-  },
+
   {
     label: "Permafrost",
     desc: "Permafrost data & monitoring",

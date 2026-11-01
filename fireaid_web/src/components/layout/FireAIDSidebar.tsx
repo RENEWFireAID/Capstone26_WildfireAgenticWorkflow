@@ -6,6 +6,7 @@ import { LayoutGrid, Database, Terminal } from "lucide-react";
 const SIDEBAR_ITEMS = [
   { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
   { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
+  { key: "prompt",        label: "PROMPT", icon: Terminal,   href: "/prompt" },
 ];
 
 export default function FireAIDSidebar() {

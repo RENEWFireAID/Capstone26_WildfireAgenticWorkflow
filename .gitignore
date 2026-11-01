@@ -25,3 +25,9 @@ service-account*.json
 **/.config/earthengine/
 earthengine-credentials*
 secrets/
+
+# Local virtualenvs and caches
+scripts/.venv/
+mcp_server/.venv/
+ml_model/__pycache__/
+nohup.out
