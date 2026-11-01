@@ -23,7 +23,7 @@ export default function FireHistoryPage() {
             {FILES.map((file) => (
               <a
                 key={file.filename}
-                href={"/downloads/" + file.filename}
+                href={"/fire-history/" + file.filename}
                 download
                 className="group flex items-center justify-between bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200"
               >
