@@ -78,7 +78,7 @@ function assertSafePipeline(pipeline: unknown): asserts pipeline is Record<strin
 const MAX_PIE_SLICES = 12;
 const MAX_POINTS = 40;
 
-function clampData(
+export function clampData(
   type: string,
   data: { label: string; value: number }[],
   description: string
@@ -103,6 +103,26 @@ function clampData(
   }
 
   return { data, description };
+}
+
+/**
+ * Map aggregation rows to chart points, falling back to _id and count. A null
+ * group is a field left blank in the records, so it is labelled as such rather
+ * than "Unknown", which reads like a real cause category.
+ */
+export function toChartData(
+  results: Record<string, any>[],
+  labelField: string,
+  valueField: string
+): { label: string; value: number }[] {
+  return results.map((row) => {
+    const rawLabel = row[labelField] ?? row._id ?? "Not recorded";
+    const label =
+      typeof rawLabel === "object" && rawLabel !== null
+        ? Object.values(rawLabel).join(" / ")
+        : String(rawLabel);
+    return { label, value: Number(row[valueField] ?? row.count ?? 0) };
+  });
 }
 
 /**
@@ -155,15 +175,7 @@ export async function buildChart(message: string): Promise<BuiltChart> {
     return { summary: summary ?? "No data found for that query.", chart: null };
   }
 
-  const data = results.map((row: any) => {
-    const rawLabel = row[labelField] ?? row._id ?? "Unknown";
-    const label =
-      typeof rawLabel === "object" && rawLabel !== null
-        ? Object.values(rawLabel).join(" / ")
-        : String(rawLabel);
-    return { label, value: Number(row[valueField] ?? row.count ?? 0) };
-  });
-
+  const data = toChartData(results, labelField, valueField);
   const clamped = clampData(chartType, data, description ?? "");
 
   return {

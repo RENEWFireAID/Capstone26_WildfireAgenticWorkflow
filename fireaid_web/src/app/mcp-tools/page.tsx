@@ -7,6 +7,18 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
 import FireDashboard from "@/components/mcp/FireDashboard";
 import ModelBadge from "@/components/ui/ModelBadge";
+import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
+import ReactMarkdown from "react-markdown";
+
+// Sized for the narrow Ask AI panel, where answers are set in text-xs.
+const ANSWER_MARKDOWN = {
+  h1: (props: any) => <div className="mb-1 mt-2 text-sm font-semibold text-slate-900 first:mt-0">{props.children}</div>,
+  h2: (props: any) => <div className="mb-1 mt-2 text-[13px] font-semibold text-slate-900 first:mt-0">{props.children}</div>,
+  h3: (props: any) => <div className="mb-1 mt-2 font-semibold text-slate-900 first:mt-0">{props.children}</div>,
+  p: (props: any) => <p className="mb-1.5 last:mb-0">{props.children}</p>,
+  ul: (props: any) => <ul className="mb-1.5 list-disc pl-4">{props.children}</ul>,
+  ol: (props: any) => <ol className="mb-1.5 list-decimal pl-4">{props.children}</ol>,
+};
 
 // map app
 const FireMap = dynamic(() => import("@/components/map/FireMap"), { ssr: false });
@@ -48,7 +60,7 @@ export default function McpToolsPage() {
   const [runErr, setRunErr] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("points");
   const [llmInput, setLlmInput] = useState("");
-  const [llmMessages, setLlmMessages] = useState<{role:"user"|"ai", text:string, toolsUsed?: {name:string, recordCount:number}[]}[]>([]);
+  const [llmMessages, setLlmMessages] = useState<{role:"user"|"ai", text:string, toolsUsed?: {name:string, recordCount:number}[], chart?: ChatChartSpec}[]>([]);
   const [llmLoading, setLlmLoading] = useState(false);
 
   async function askLlm() {
@@ -75,7 +87,7 @@ export default function McpToolsPage() {
       const reply = toolsUsed.length === 0
         ? "⚠️ I could not verify this answer from the database. Please rephrase your question to ask about fire counts, acres, causes, or years — data that exists in our Alaska wildfire records."
         : data?.reply ?? "No response.";
-      setLlmMessages([...next, { role: "ai" as const, text: reply, toolsUsed }]);
+      setLlmMessages([...next, { role: "ai" as const, text: reply, toolsUsed, chart: toolsUsed.length > 0 ? data?.chart ?? undefined : undefined }]);
     } catch (e: any) {
       setLlmMessages([...next, { role: "ai" as const, text: "Error: " + e.message }]);
     } finally {
@@ -223,17 +235,20 @@ export default function McpToolsPage() {
               <button className="text-[11px] text-slate-400 hover:text-slate-600" onClick={() => setLlmMessages([])}>Clear</button>
             )}
           </div>
-          <div className="flex flex-col gap-2 max-h-[360px] overflow-y-auto">
+          <div className="flex flex-col gap-2 max-h-[560px] overflow-y-auto">
             {llmMessages.length === 0 && (
-              <div className="text-xs text-slate-400 text-center py-4">Ask anything about the wildfire data...</div>
+              <div className="text-xs text-slate-400 text-center py-4">Ask anything about the wildfire data, or ask for a chart...</div>
             )}
             {llmMessages.map((m, i) => (
-              <div key={i} className={`rounded-xl px-3 py-2 text-xs whitespace-pre-wrap ${
+              <div key={i} className={`rounded-xl px-3 py-2 text-xs ${
                 m.role === "user"
                   ? "bg-slate-900 text-white self-end max-w-[85%] ml-auto"
-                  : "bg-emerald-50 border border-emerald-100 text-slate-700 self-start max-w-[95%]"
+                  : `bg-emerald-50 border border-emerald-100 text-slate-700 self-start ${m.chart ? "w-full" : "max-w-[95%]"}`
               }`}>
-                {m.text}
+                {m.role === "ai"
+                  ? <ReactMarkdown components={ANSWER_MARKDOWN}>{m.text}</ReactMarkdown>
+                  : <div className="whitespace-pre-wrap">{m.text}</div>}
+                {m.chart && <ChatChart chart={m.chart} />}
                 {m.role === "ai" && m.toolsUsed && m.toolsUsed.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {m.toolsUsed.map((t, j) => (
@@ -259,7 +274,7 @@ export default function McpToolsPage() {
           <div className="flex gap-2">
             <input
               className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none focus:border-slate-400"
-              placeholder="Ask about the wildfire data..."
+              placeholder="e.g. Chart acres burned per year since 2000"
               value={llmInput}
               onChange={(e) => setLlmInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); askLlm(); }}}
