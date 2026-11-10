@@ -12,3 +12,22 @@ llm-app/data/
 ml_model/data/
 __pycache__/
 
+
+__pycache__/
+*.pyc
+
+# Google Earth Engine credentials — never commit
+*-key.json
+*-credentials.json
+gee-key*.json
+service-account*.json
+.config/earthengine/
+**/.config/earthengine/
+earthengine-credentials*
+secrets/
+
+# Local virtualenvs and caches
+scripts/.venv/
+mcp_server/.venv/
+ml_model/__pycache__/
+nohup.out

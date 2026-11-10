@@ -19,6 +19,8 @@ import { NextResponse } from "next/server";
 import { callFireTool } from "@/lib/mcpClient";
 import OpenAI from "openai";
 
+const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
+
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -112,7 +114,7 @@ export async function POST(req: Request) {
 
     if (message.trim()) {
       const parseRes = await openai.chat.completions.create({
-        model: "google/gemini-2.0-flash-001",
+        model: MODEL,
         messages: [
           {
             role: "system",
@@ -243,7 +245,7 @@ Historical wildfire data (Alaska, 1939-2024):
 `;
 
     const aiRes = await openai.chat.completions.create({
-      model: "google/gemini-2.0-flash-001",
+      model: MODEL,
       messages: [
         {
           role: "system",

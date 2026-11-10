@@ -1,66 +1,124 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import { BarChart3, BookOpen, FileText, Flame, Search, TrendingUp, TriangleAlert } from "lucide-react";
+import PageHeader from "@/components/layout/PageHeader";
+import { ArrowUpRight, BookOpen, FileText, Flame, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
 
 const APPS = [
-  { label: "Terminology",        desc: "Browse wildfire terms & definitions", icon: BookOpen,   href: "/library",             accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600",  developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Student · UAA Computer Science" },
-  { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
-  { label: "Alaska Fire Risk",     desc: "Fire danger forecast, map & risk classifier", icon: TriangleAlert, href: "/fire-risk", accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Student · UAF Computer Science" },
-];
-
-const VISUALS = [
-  { label: "Search",     desc: "Search historical fire records",   icon: Search,     href: "/search",     accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600" },
-  { label: "Charts",     desc: "Visualize fire data & trends",     icon: BarChart3,  href: "/charts",     accent: "#7c3aed", bg: "bg-violet-50", iconColor: "text-violet-600" },
-  { label: "Prediction", desc: "AI-powered fire prediction",       icon: TrendingUp, href: "/prediction", accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500" },
-  { label: "Reports",    desc: "Generate & export reports",        icon: FileText,   href: "/reports",    accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600" },
+  {
+    label: "Fire History",
+    kind: "Historical records",
+    desc: "Map, filter and chart every recorded Alaska fire since 1939, or ask questions about them in plain English.",
+    data: "Alaska Fire Service records · 33,596 fires, 1939–2024",
+    icon: Flame,
+    href: "/mcp-tools",
+    developer: "Ivy Swenson",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
+  {
+    label: "Alaska Fire Risk",
+    kind: "Forecast",
+    desc: "Daily fire danger for any place in Alaska, a statewide danger map, and a classifier that rates the risk of a fire.",
+    data: "Canadian Fire Weather Index with AICC ratings · Open-Meteo weather",
+    icon: TriangleAlert,
+    href: "/fire-risk",
+    developer: "Noah Bush",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
+  {
+    label: "Wildfire Prediction",
+    kind: "Machine learning",
+    desc: "Fire probability for each grid cell around Fairbanks from an XGBoost model.",
+    data: "Gridded temperature, humidity, wind and soil moisture · fire seasons 2000–2007",
+    icon: TrendingUp,
+    href: "/wildfire-prediction",
+    developer: "Yara Hassan",
+    role: "Undergraduate Researcher · UAA Electrical Engineering",
+  },
+  {
+    label: "Forest Trends",
+    kind: "Remote sensing",
+    desc: "Follow how vegetation recovers after a fire, year by year, from satellite greenness and burn severity.",
+    data: "Landsat summer NDVI and NBR · Google Earth Engine",
+    icon: Sprout,
+    href: "/forest-trends",
+    developer: "Sumana Sahoo",
+    role: "PhD Student · UAF Natural Resources and Sustainability",
+  },
+  {
+    label: "Publication",
+    kind: "Research literature",
+    desc: "Find research by meaning rather than keywords across a library of fire, climate and ecology abstracts.",
+    data: "101,856 paper abstracts · semantic search",
+    icon: FileText,
+    href: "/publication",
+    developer: "Utsav Dutta",
+    role: "Undergraduate Researcher · UAA Computer Science",
+  },
+  {
+    label: "Terminology",
+    kind: "Reference",
+    desc: "Look up the wildfire terms used across the apps, from fuel types to fire behavior.",
+    data: "FireAID wildfire glossary",
+    icon: BookOpen,
+    href: "/library",
+    developer: "Jenae Matson",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
 ];
 
 export default function AppsPage() {
   return (
-    <div className="flex w-full min-h-screen">
-      <FireAIDSidebar/>
+    <div className="flex min-h-screen w-full">
+      <FireAIDSidebar />
 
-      <main className="flex-1 flex flex-col">
-        <div className="bg-slate-50 px-12 py-8 border-b border-slate-200">
-          <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">FireAID</p>
-          <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Apps</h1>
-        </div>
+      <main className="flex min-w-0 flex-1 flex-col">
+        <PageHeader
+          eyebrow="FireAID"
+          title="Apps"
+          description="Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab."
+        />
 
-        <div className="flex-1 bg-slate-50 px-12 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent }) => (
-  <Link key={label} href={href}
-    className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200">
-    <div className="h-1.5 w-full" style={{ background: accent }} />
-    <div className="p-6 flex flex-col gap-4">
-      <div className={`w-14 h-14 rounded-2xl ${bg} flex items-center justify-center`}>
-        <Icon size={28} className={iconColor} strokeWidth={1.5} />
-      </div>
-      <div>
-        <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">{label}</div>
-        <div className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</div>
-      </div>
-      {/* {developer && (
-        <div className="border-t border-slate-100 pt-3 flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-[#003366] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-            {developer.split(" ").map((n: string) => n[0]).join("")}
-          </div>
-          <div>
-            <div className="text-[11px] font-semibold text-slate-700">{developer}</div>
-            <div className="text-[10px] text-slate-400">{role}</div>
-          </div>
-        </div>
-      )} */}
-      <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">Open →</div>
-    </div>
-  </Link>
-))}
-          </div>
+        <div className="flex-1 px-6 py-8 md:px-10">
+          <ul className="grid max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {APPS.map(({ label, kind, desc, data, icon: Icon, href, developer, role }) => (
+              <li key={label} className="min-w-0">
+                <Link
+                  href={href}
+                  className="group flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition hover:border-navy/40 hover:shadow-[0_6px_24px_-12px_rgba(0,51,102,0.35)]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-soft text-navy">
+                      <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
+                    </span>
+                    <ArrowUpRight
+                      size={18}
+                      className="text-slate-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-navy"
+                      aria-hidden="true"
+                    />
+                  </div>
+
+                  <p className="mt-4 font-mono text-[10.5px] font-medium uppercase tracking-[0.12em] text-slate-500">{kind}</p>
+                  <h2 className="mt-1 text-lg font-bold tracking-tight text-navy-deep">{label}</h2>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{desc}</p>
+
+                  <div className="flex-1" />
+                  <dl className="mt-5 grid gap-2 border-t border-slate-100 pt-4 text-xs">
+                    <div className="grid grid-cols-[64px_minmax(0,1fr)] gap-2">
+                      <dt className="text-slate-500">Data</dt>
+                      <dd className="text-slate-700">{data}</dd>
+                    </div>
+                    <div className="grid grid-cols-[64px_minmax(0,1fr)] gap-2">
+                      <dt className="text-slate-500">Built by</dt>
+                      <dd className="min-w-0">
+                        <span className="font-semibold text-slate-800">{developer}</span>
+                        <span className="block text-slate-500">{role}</span>
+                      </dd>
+                    </div>
+                  </dl>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
     </div>

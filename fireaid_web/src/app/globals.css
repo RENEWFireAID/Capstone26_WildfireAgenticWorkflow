@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
+/*
+  FireAID design tokens. The site reads as a field instrument from an agency
+  lab: UAF navy and gold carry the identity, fire orange is reserved for fire
+  and hazard, and everything else is a cool neutral.
+*/
+@theme {
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --color-navy: #003366;
+  --color-navy-deep: #0a1f3d;
+  --color-navy-soft: #e8eef6;
+  --color-gold: #ffcc33;
+  --color-fire: #e4572e;
+
+  /* Secondary text was set in slate-400 across the site and read too faint on white. */
+  --color-slate-400: oklch(0.6 0.035 257);
+
+  /* Quieter corners than Tailwind's defaults, so cards read as panels, not pills. */
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.75rem;
+  --radius-3xl: 1rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f6f8fb;
+  --foreground: #0f1b2d;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Numbers that sit in columns or update live line up. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
 }

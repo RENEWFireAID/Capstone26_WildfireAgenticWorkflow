@@ -1,21 +1,26 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import uafLogo from "./assets/uaf-logo.png";
 import argonneLogo from "./assets/argonne.jpg";
 import doeLogo from "./assets/doe-logo.png";
 
+const NAV_ITEMS = [
+  { label: "Home", href: "/" },
+  { label: "Chat", href: "/portal" },
+  { label: "Apps", href: "/apps" },
+  { label: "Data", href: "/data" },
+  { label: "Prompt", href: "/prompt" },
+  { label: "Team", href: "/team" },
+];
+
 export default function Topbar() {
-  const navItems = [
-    { label: "Home", href: "/" },
-    { label: "Chat", href: "/portal" },
-    { label: "Apps", href: "/apps" },
-    { label: "Data", href: "/data" },
-    { label: "Team", href: "/team" },
-  ];
+  const pathname = usePathname() ?? "/";
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
-    <header className="border-b border-slate-200 bg-[#003366]">
+    <header className="bg-navy">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 py-3 md:px-6 xl:grid-cols-[320px_minmax(0,1fr)_430px]">
         {/* Left: UAF Logo + FireAID */}
         <div className="flex items-center gap-4">
@@ -42,12 +47,17 @@ export default function Topbar() {
         </div>
 
         {/* Middle: Nav */}
-        <nav className="hidden items-center justify-center gap-8 text-sm font-semibold text-slate-200 md:flex">
-          {navItems.map(({ label, href }) => (
+        <nav className="hidden items-center justify-center gap-7 text-sm font-semibold md:flex">
+          {NAV_ITEMS.map(({ label, href }) => (
             <Link
               key={label}
               href={href}
-              className="border-b-2 border-transparent pb-1 transition hover:border-[#FFCC33] hover:text-white"
+              aria-current={isActive(href) ? "page" : undefined}
+              className={`border-b-2 pb-1 transition ${
+                isActive(href)
+                  ? "border-gold text-white"
+                  : "border-transparent text-slate-300 hover:border-gold/60 hover:text-white"
+              }`}
             >
               {label}
             </Link>
@@ -99,7 +109,7 @@ export default function Topbar() {
       </div>
 
       {/* Bottom line */}
-      <div className="h-1 w-full bg-[#FFCC33]" />
+      <div className="h-1 w-full bg-gold" />
     </header>
   );
 }

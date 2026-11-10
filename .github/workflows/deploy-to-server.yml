@@ -25,7 +25,23 @@ jobs:
                 echo "MCP_HTTP_BASE=http://137.229.25.190:8081" >> .env
                 echo "MCP_ALLOWED_HOSTS=137.229.25.190,localhost,0.0.0.0" >> .env
                 echo "RAG_API_URL=http://137.229.25.190:8000/api/retrieve" >> .env
-                
+                echo "EE_PROJECT=fireaid-gee" >> .env
+                echo "EE_SERVICE_ACCOUNT=${{ secrets.EE_SERVICE_ACCOUNT }}" >> .env
+                echo "EE_KEY_FILE=/run/secrets/ee-key.json" >> .env
+
+            - name: Write the Earth Engine service account key
+              env:
+                EE_KEY_B64: ${{ secrets.EE_KEY_B64 }}
+              run: |
+                mkdir -p secrets
+                if [ -n "$EE_KEY_B64" ]; then
+                  printf '%s' "$EE_KEY_B64" | base64 -d > secrets/ee-key.json
+                  chmod 600 secrets/ee-key.json
+                else
+                  echo "::warning::EE_KEY_B64 is unset; Forest Trends will report that Earth Engine is not configured."
+                  : > secrets/ee-key.json
+                fi
+
             - name: Copy chroma_db into working dir
               run: |
                 cp -r /home/fireaid/chromadb/chroma_db ./llm-app/

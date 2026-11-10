@@ -1,121 +1,88 @@
 "use client";
 
 import Link from "next/link";
-import {
-  LayoutGrid,
-  BarChart3,
-  Database,
-  Terminal,
-  BookOpen,
-  FileText,
-  Flame,
-  CloudSun,
-  MapPin,
-  Snowflake,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, CloudSun, FileText, Flame, Snowflake } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import PageHeader from "@/components/layout/PageHeader";
 
 const DATA_ITEMS = [
   {
-    label: "Terminology",
-    desc: "Browse wildfire terms",
-    icon: BookOpen,
-    href: "/library",
-    accent: "#003366",
-    bg: "bg-blue-50",
-    iconColor: "text-blue-600",
+    label: "Fire history",
+    desc: "Every fire recorded by the Alaska Fire Service, with location, size, cause and agency.",
+    detail: "33,596 fires · 1939–2024",
+    icon: Flame,
+    href: "/fire-history",
   },
   {
-    label: "Publication",
-    desc: "Research papers & reports",
+    label: "Research literature",
+    desc: "Abstracts of papers on fire, climate and ecology, with title, authors, year and field.",
+    detail: "101,856 abstracts",
     icon: FileText,
     href: "/publication",
-    accent: "#64748b",
-    bg: "bg-slate-100",
-    iconColor: "text-slate-500",
   },
   {
-    label: "History",
-    desc: "Historical fire records",
-    icon: Flame,
-    href: "/mcp-tools",
-    accent: "#ea580c",
-    bg: "bg-orange-50",
-    iconColor: "text-orange-500",
+    label: "Wildfire terminology",
+    desc: "Definitions of the fire science and fire management terms used across FireAID.",
+    detail: "Glossary",
+    icon: BookOpen,
+    href: "/library",
   },
   {
     label: "Weather",
-    desc: "Live weather & fire risk",
+    desc: "Current weather conditions and the fire risk they imply.",
+    detail: "Live",
     icon: CloudSun,
     href: "/weather",
-    accent: "#d97706",
-    bg: "bg-amber-50",
-    iconColor: "text-amber-500",
-  },
-  {
-    label: "Fire Location",
-    desc: "Active fire map & locations",
-    icon: MapPin,
-    href: "/fire-location",
-    accent: "#16a34a",
-    bg: "bg-green-50",
-    iconColor: "text-green-600",
   },
   {
     label: "Permafrost",
-    desc: "Permafrost data & monitoring",
+    desc: "Active layer thickness from the Circumpolar Active Layer Monitoring network.",
+    detail: "External · CALM, George Washington University",
     icon: Snowflake,
     href: "https://www2.gwu.edu/~calm/data/north.htm",
-    accent: "#0d9488",
-    bg: "bg-teal-50",
-    iconColor: "text-teal-500",
     external: true,
   },
 ];
 
 export default function DataPage() {
   return (
-    <div className="flex w-full min-h-screen">
-      <FireAIDSidebar/>
+    <div className="flex min-h-screen w-full">
+      <FireAIDSidebar />
 
-      <main className="flex-1 flex flex-col">
-      <div className="bg-slate-50 px-12 py-10 border-b border-slate-200">
-          <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">FireAID</p>
-            <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Data</h1>
-          <p className="text-slate-400 text-sm mt-1">Explore datasets and data sources</p>
-      </div>
-        <div className="flex-1 bg-slate-50 px-12 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-            {DATA_ITEMS.map(
-              ({ label, desc, icon: Icon, href, bg, iconColor, accent, external }) => (
+      <main className="flex min-w-0 flex-1 flex-col">
+        <PageHeader
+          eyebrow="FireAID"
+          title="Data"
+          description="The datasets behind the apps and the assistant. Open one to browse or download it."
+        />
+
+        <div className="flex-1 px-6 py-8 md:px-10">
+          <ul className="max-w-4xl divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            {DATA_ITEMS.map(({ label, desc, detail, icon: Icon, href, external }) => (
+              <li key={label}>
                 <Link
-                  key={label}
                   href={href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
-                  className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200"
+                  className="group flex items-center gap-4 px-5 py-4 transition hover:bg-slate-50"
                 >
-                  <div className="h-1.5 w-full" style={{ background: accent }} />
-                  <div className="p-6 flex flex-col gap-4">
-                    <div className={`w-14 h-14 rounded-2xl ${bg} flex items-center justify-center`}>
-                      <Icon size={28} className={iconColor} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">
-                        {label}
-                      </div>
-                      <div className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        {desc}
-                      </div>
-                    </div>
-                    <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                      Open →
-                    </div>
-                  </div>
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-soft text-navy">
+                    <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold text-slate-900 group-hover:text-navy">{label}</span>
+                    <span className="mt-0.5 block text-sm leading-snug text-slate-600">{desc}</span>
+                    <span className="mt-1 block font-mono text-[11px] text-slate-500">{detail}</span>
+                  </span>
+                  {external ? (
+                    <ArrowUpRight size={18} className="shrink-0 text-slate-400 group-hover:text-navy" aria-label="Opens in a new tab" />
+                  ) : (
+                    <ArrowRight size={18} className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-navy" aria-hidden="true" />
+                  )}
                 </Link>
-              )
-            )}
-          </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
     </div>

@@ -29,6 +29,15 @@ services:
     restart: always
     ports:
       - "8081:8081"
+    volumes:
+      # Read-only host credentials from `earthengine authenticate`, for the
+      # vegetation trends tool in development. Harmless if the directory does
+      # not exist; production uses EE_SERVICE_ACCOUNT/EE_KEY_FILE instead.
+      - ~/.config/earthengine:/root/.config/earthengine:ro
+      # Service account key for production, written by the deploy workflow from
+      # the EE_KEY_B64 secret. The directory sits outside every build context,
+      # so `COPY . /app` cannot bake the key into an image.
+      - ./secrets:/run/secrets:ro
 
   rag-service:
     build:
@@ -42,14 +51,23 @@ services:
     volumes:
       - ./ml_model/data:/app/data
       - ./ml_model:/app/ml_model_src
-     
+      # The RAG vector store. Without this it lives only in the container's
+      # writable layer, so any rebuild silently wipes the knowledge base and
+      # the Publication page starts returning "collection does not exist".
+      - ./llm-app/chroma_db:/app/chroma_db
+
   mongo:
     image: mongo:8.0
     container_name: mongo
     restart: always
     command: --port 27018
     ports:
-      - "27018:27018" 
+      # Loopback only. The repo is public and the root password is in plain
+      # text in this file's env_file, SETUP.md and the deploy workflow, so a
+      # published port put the whole database on the open internet. Containers
+      # reach Mongo as mongo:27018 over the compose network, which this does
+      # not affect, and the workflow's mongosh step runs on the host.
+      - "127.0.0.1:27018:27018"
     env_file:
       - .env
     volumes:

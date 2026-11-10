@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 import { Bot, Send } from "lucide-react";
+import ModelBadge from "@/components/ui/ModelBadge";
 
 type Message = { role: "user" | "assistant"; content: string; error?: boolean };
 
@@ -67,6 +68,7 @@ export default function FireRiskChat() {
         <div>
           <div className="text-sm font-semibold text-slate-900">Ask about fire risk</div>
           <div className="text-xs text-slate-600">Fire history, risk predictions and fire danger forecasts</div>
+          <ModelBadge feature="fireRisk" className="mt-0.5" />
         </div>
       </div>
 

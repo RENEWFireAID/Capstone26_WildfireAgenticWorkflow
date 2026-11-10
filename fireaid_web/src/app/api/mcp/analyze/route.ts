@@ -4,20 +4,44 @@
 // 3. Internal API call -> Executes the pipeline against MongoDB and returns real data 
 // 4. Claude (2nd call) -> Analyzes the real data and answers the user's question in plain English
 // 5. Return the final answer to the frontend, along with any relevant metadata about the tools used (e.g. record count)
+//    and, when the results suit one, a chart drawn from the same rows the answer was written from
 // * Note: MongoDB aggregation pipelines: Raw Data -> $match ->$group -> $sort -> $limit -> Final Results
 
 import { NextResponse } from "next/server";
+import { MODELS } from "@/lib/models";
+import { clampData, toChartData, type ChartSpec } from "@/lib/chartBuilder";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const MODEL = "anthropic/claude-3.5-sonnet";
+const MODEL = MODELS.fireHistory;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
-async function queryDatabase(userMessage: string): Promise<string> {
+type ChartPlan = { type: ChartSpec["type"]; labelField: string; valueField: string; title: string };
+
+const CHART_TYPES = ["bar", "line", "pie", "scatter"];
+
+// Draw the chart from every row the query returned, not just the 50 the model reads.
+function buildChart(plan: ChartPlan | null, results: Record<string, any>[]): ChartSpec | null {
+  if (!plan || !CHART_TYPES.includes(plan.type) || results.length < 2) return null;
+  const data = toChartData(results, plan.labelField, plan.valueField);
+  if (data.some((d) => !Number.isFinite(d.value))) return null;
+  const clamped = clampData(plan.type, data, "");
+  return {
+    type: plan.type,
+    title: plan.title,
+    description: clamped.description.trim(),
+    data: clamped.data,
+    xKey: "label",
+    yKey: "value",
+  };
+}
+
+async function queryDatabase(userMessage: string): Promise<{ dbResults: string; chart: ChartSpec | null }> {
 
   // ============================================================
   // PART 2 — Claude (1st Call): Natural Language → MongoDB Pipeline
   // Ask Claude to generate a MongoDB aggregation pipeline based
-  // on the user's question. Returns ONLY a raw JSON array.
+  // on the user's question, plus a chart plan when a chart would
+  // help. Returns ONLY a raw JSON object.
   // ============================================================
   const planRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
@@ -27,7 +51,7 @@ async function queryDatabase(userMessage: string): Promise<string> {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 512,
+      max_tokens: 768,
       messages: [
         {
           role: "system",
@@ -35,11 +59,16 @@ async function queryDatabase(userMessage: string): Promise<string> {
 Collection: fire_points
 Fields: year (number), NAME (string), GENERALCAUSE (string), SPECIFICCAUSE (string), ESTIMATEDTOTALACRES (number), LATITUDE (number), LONGITUDE (number), PRESCRIBEDFIRE (string Y/N), MGMTORGID (string), ORIGINFUELTYPE (string), PRIMARYFUELTYPE (string), OWNERKIND (string), FIRESEASON (string).
 
-Given a user question, return ONLY a valid JSON MongoDB aggregation pipeline array. No explanation, no markdown, just the raw JSON array.
+Given a user question, return ONLY a JSON object, no explanation, no markdown:
+{"pipeline": [...MongoDB aggregation pipeline...], "chart": null or {"type": "bar"|"line"|"pie"|"scatter", "labelField": "...", "valueField": "...", "title": "..."}}
+
+Set "chart" when the user asks for a chart, graph, plot, trend or breakdown, or when the result is a series of several labelled numbers (counts or acres by year, cause, agency...). Use "line" for values over years, "bar" to compare categories, "pie" for shares of a whole. labelField and valueField must be fields in the pipeline output. Set "chart" to null for a single number or a list of individual fires.
+
 Examples:
-- "how many fires in 2004" -> [{"$match":{"year":2004}},{"$count":"total"}]
-- "fires by cause" -> [{"$group":{"_id":"$GENERALCAUSE","count":{"$sum":1}}},{"$sort":{"count":-1}}]
-- "largest fires" -> [{"$sort":{"ESTIMATEDTOTALACRES":-1}},{"$limit":10},{"$project":{"NAME":1,"ESTIMATEDTOTALACRES":1,"year":1,"GENERALCAUSE":1}}]`,
+- "how many fires in 2004" -> {"pipeline":[{"$match":{"year":2004}},{"$count":"total"}],"chart":null}
+- "fires by cause" -> {"pipeline":[{"$group":{"_id":"$GENERALCAUSE","count":{"$sum":1}}},{"$sort":{"count":-1}}],"chart":{"type":"bar","labelField":"_id","valueField":"count","title":"Fires by general cause"}}
+- "acres burned per year since 2000" -> {"pipeline":[{"$match":{"year":{"$gte":2000}}},{"$group":{"_id":"$year","acres":{"$sum":"$ESTIMATEDTOTALACRES"}}},{"$sort":{"_id":1}}],"chart":{"type":"line","labelField":"_id","valueField":"acres","title":"Acres burned per year, 2000 onward"}}
+- "largest fires" -> {"pipeline":[{"$sort":{"ESTIMATEDTOTALACRES":-1}},{"$limit":10},{"$project":{"NAME":1,"ESTIMATEDTOTALACRES":1,"year":1,"GENERALCAUSE":1}}],"chart":null}`,
         },
         { role: "user", content: userMessage },
       ],
@@ -47,15 +76,17 @@ Examples:
   });
 
   const planData = await planRes.json();
-  const pipelineText = planData?.choices?.[0]?.message?.content ?? "[]";
+  const planText = planData?.choices?.[0]?.message?.content ?? "[]";
 
-  // Parse Claude's response
+  // Parse Claude's response. A bare array is still accepted as a pipeline with no chart.
   let pipeline;
+  let chartPlan: ChartPlan | null = null;
   try {
-    const clean = pipelineText.replace(/```json|```/g, "").trim();
-    pipeline = JSON.parse(clean);
+    const plan = JSON.parse(planText.replace(/```json|```/g, "").trim());
+    pipeline = Array.isArray(plan) ? plan : plan.pipeline;
+    chartPlan = Array.isArray(plan) ? null : plan.chart ?? null;
   } catch {
-    return "[]";
+    return { dbResults: "[]", chart: null };
   }
 
   // ============================================================
@@ -71,8 +102,11 @@ Examples:
   });
 
   const dbData = await dbRes.json();
-  if (!dbData.ok) return JSON.stringify({ error: dbData.error });
-  return JSON.stringify({ count: dbData.count, results: dbData.results.slice(0, 50) });
+  if (!dbData.ok) return { dbResults: JSON.stringify({ error: dbData.error }), chart: null };
+  return {
+    dbResults: JSON.stringify({ count: dbData.count, results: dbData.results.slice(0, 50) }),
+    chart: buildChart(chartPlan, dbData.results),
+  };
 }
 
 export async function POST(req: Request) {
@@ -89,7 +123,7 @@ export async function POST(req: Request) {
     const history: { role: string; content: string }[] = body.history ?? [];
 
     // Step 1: Query the database
-    const dbResults = await queryDatabase(userMessage);
+    const { dbResults, chart } = await queryDatabase(userMessage);
     const parsed = JSON.parse(dbResults);
     const hasData = parsed?.count > 0 || (Array.isArray(parsed?.results) && parsed.results.length > 0);
 
@@ -115,7 +149,8 @@ export async function POST(req: Request) {
 You will be given REAL data from our Alaska wildfire database (33,596 records, 1939-2024).
 Analyze the data and answer the user's question concisely in plain English.
 Cite specific numbers from the data. Do not make up any numbers not in the data.
-If the data is empty or insufficient, say so honestly.`,
+If the data is empty or insufficient, say so honestly.${chart ? `
+A ${chart.type} chart titled "${chart.title}" of these results is shown below your answer, so summarise the main pattern and highlights instead of listing every value.` : ""}`,
           },
           ...history,
           {
@@ -132,6 +167,7 @@ If the data is empty or insufficient, say so honestly.`,
     return NextResponse.json({
       ok: true,
       reply,
+      chart: hasData ? chart : null,
       toolsUsed: hasData ? [{ name: "aggregate_fire_data", recordCount: parsed?.count ?? parsed?.results?.length ?? 0 }] : [],
     });
 
