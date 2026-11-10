@@ -6,6 +6,26 @@ import L from "leaflet";
 
 const ARCGIS_URL = "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USA_Wildfires_v1/FeatureServer/0/query";
 
+// Alaska from the Aleutians to the panhandle. The map cannot be dragged far
+// past it, and cannot zoom out further than the view that shows all of it.
+const ALASKA = L.latLngBounds([51, -179], [71.6, -129]);
+
+function LockToAlaska() {
+  const map = useMap();
+
+  useEffect(() => {
+    // The zoom that fits Alaska depends on the window size, so recompute it on resize.
+    const fit = () => map.setMinZoom(map.getBoundsZoom(ALASKA));
+    fit();
+    map.on("resize", fit);
+    return () => {
+      map.off("resize", fit);
+    };
+  }, [map]);
+
+  return null;
+}
+
 function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
   const map = useMap();
   const layerRef = useRef<L.LayerGroup | null>(null);
@@ -216,9 +236,12 @@ export default function LiveFireMap({ onFireCount }: { onFireCount?: (n: number)
         style={{ width: "100%", height: "100%", background: "#0a0400" }}
         center={[64, -153]}
         zoom={5}
+        maxBounds={ALASKA.pad(0.15)}
+        maxBoundsViscosity={1}
         scrollWheelZoom
         zoomControl={false}
       >
+        <LockToAlaska />
         {/* CARTO basemaps now require an API key and stamp unauthenticated
             tiles with an "API KEY REQUIRED" watermark. Esri's dark canvas is
             keyless and matches the dark theme. Note the {z}/{y}/{x} order. */}
