@@ -197,12 +197,12 @@ export default function McpToolsPage() {
   
         
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
+    <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[auto_minmax(0,1.4fr)_minmax(0,0.9fr)] xl:pr-6">
       {/* Left */}
       <FireAIDSidebar/>
 
       {/* Center */}
-      <div className="min-w-0 space-y-4">
+      <div className="min-w-0 space-y-4 px-6 py-6 xl:px-0">
         <WorkbenchHeader
           title="Wildfire Analytics Dashboard"
           subtitle="Alaska Wildfire Historical Records · 1939–2024"
@@ -223,7 +223,7 @@ export default function McpToolsPage() {
       </div> {/* Center */}
 
       {/* Right */}
-      <div className="min-w-0 space-y-4">
+      <div className="min-w-0 space-y-4 px-6 pb-6 xl:px-0 xl:py-6">
         {/* LLM Natural Language Query */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
           <div className="flex items-center justify-between">
@@ -242,8 +242,8 @@ export default function McpToolsPage() {
             {llmMessages.map((m, i) => (
               <div key={i} className={`rounded-xl px-3 py-2 text-xs ${
                 m.role === "user"
-                  ? "bg-slate-900 text-white self-end max-w-[85%] ml-auto"
-                  : `bg-emerald-50 border border-emerald-100 text-slate-700 self-start ${m.chart ? "w-full" : "max-w-[95%]"}`
+                  ? "bg-navy-soft text-slate-800 self-end max-w-[85%] ml-auto"
+                  : `bg-white border border-slate-200 text-slate-700 self-start ${m.chart ? "w-full" : "max-w-[95%]"}`
               }`}>
                 {m.role === "ai"
                   ? <ReactMarkdown components={ANSWER_MARKDOWN}>{m.text}</ReactMarkdown>

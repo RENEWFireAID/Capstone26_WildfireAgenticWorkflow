@@ -182,7 +182,7 @@ export default function PredictionFireMap() {
             onClick={() => handleDataModeChange(m)}
             className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition ${
               dataMode === m
-                ? "bg-orange-500 text-white"
+                ? "bg-navy text-white"
                 : "text-slate-500 hover:bg-slate-100"
             }`}
           >
@@ -205,7 +205,7 @@ export default function PredictionFireMap() {
           </label>
           {dataMode === "historical" ? (
             <select
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-navy"
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
             >
@@ -220,7 +220,7 @@ export default function PredictionFireMap() {
               max={2100}
               value={futureYear}
               onChange={(e) => setFutureYear(Number(e.target.value))}
-              className="w-24 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
+              className="w-24 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-navy"
             />
           )}
         </div>
@@ -230,7 +230,7 @@ export default function PredictionFireMap() {
             Month
           </label>
           <select
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-orange-400"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-navy"
             value={month}
             onChange={(e) => setMonth(Number(e.target.value))}
           >
@@ -243,7 +243,7 @@ export default function PredictionFireMap() {
         <button
           onClick={() => fetchPoints(activeYear, month, dataMode)}
           disabled={loading}
-          className="rounded-lg bg-orange-500 px-4 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+          className="rounded-lg bg-navy px-4 py-1.5 text-sm font-semibold text-white hover:bg-navy-deep disabled:opacity-50"
         >
           {loading ? "Loading…" : "Load Map"}
         </button>
@@ -255,7 +255,7 @@ export default function PredictionFireMap() {
               onClick={() => setViewMode(m)}
               className={`rounded-lg px-3 py-1 text-xs font-semibold transition ${
                 viewMode === m
-                  ? "bg-orange-500 text-white"
+                  ? "bg-navy text-white"
                   : "text-slate-500 hover:bg-slate-100"
               }`}
             >

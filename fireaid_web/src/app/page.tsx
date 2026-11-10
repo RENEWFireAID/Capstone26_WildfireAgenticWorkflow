@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { CalendarRange, Database, Flame, Satellite, Thermometer, Wind, type LucideIcon } from "lucide-react";
 
 const LiveFireMap = dynamic(() => import("@/components/map/LiveFireMap"), { ssr: false });
 
@@ -16,8 +17,8 @@ const CSS = `
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.0), 0 8px 24px rgba(0,0,0,0.35); }
-    50%       { box-shadow: 0 0 28px 2px rgba(249,115,22,0.45), 0 8px 24px rgba(0,0,0,0.35); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,204,51,0.0), 0 8px 24px rgba(0,0,0,0.35); }
+    50%       { box-shadow: 0 0 28px 2px rgba(255,204,51,0.4), 0 8px 24px rgba(0,0,0,0.35); }
   }
   @keyframes blink {
     0%, 100% { opacity: 1; }
@@ -197,10 +198,6 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-5xl leading-none"
-                style={{ filter: "drop-shadow(0 0 10px rgba(255,120,30,0.55))", animation: "fade-slide-up 0.6s ease both" }}>
-                🔥
-              </span>
               <span className="text-6xl font-extrabold tracking-tight text-white leading-none" style={{
                 textShadow: "0 0 32px rgba(125,211,252,0.28), 0 2px 12px rgba(2,6,23,0.6)",
                 minWidth: "7.2ch",
@@ -224,7 +221,7 @@ export default function HomePage() {
             </p>
 
             <Link href="/portal"
-              className="enter-btn mt-4 self-start rounded-2xl bg-orange-500 px-8 py-4 text-sm font-bold text-white hover:bg-orange-600 transition flex items-center gap-2"
+              className="enter-btn mt-4 self-start rounded-lg bg-gold px-7 py-3.5 text-sm font-bold text-navy-deep hover:bg-[#ffd966] transition flex items-center gap-2"
               style={{ animation: "fade-slide-up 0.8s ease 1s both, pulse-glow 2.5s ease-in-out 2s infinite" }}
             >
               Enter FireAID →
@@ -237,14 +234,14 @@ export default function HomePage() {
           <div className="flex min-w-0 flex-wrap gap-3">
             {statsVisible && (
               <>
-                <StatBadge icon="🛰️" label="Live fire detections" value={fireCount !== null ? `${displayCount} active` : "Loading…"} delay={0} />
-                <StatBadge icon="📊" label="Historical records" value="33,596 fires" delay={100} />
-                <StatBadge icon="📅" label="Data range" value="1939 – 2024" delay={200} />
+                <StatBadge icon={Satellite} label="Live fire detections" value={fireCount !== null ? `${displayCount} active` : "Loading…"} delay={0} />
+                <StatBadge icon={Database} label="Historical records" value="33,596 fires" delay={100} />
+                <StatBadge icon={CalendarRange} label="Data range" value="1939 – 2024" delay={200} />
                 {weather && (
                   <>
-                    <StatBadge icon="🌡️" label="Fairbanks" value={`${weather.temp}°F`} delay={300} />
+                    <StatBadge icon={Thermometer} label="Fairbanks" value={`${weather.temp}°F`} delay={300} />
                     <StatBadge
-                      icon="🔥" label="Fire risk" value={weather.risk} delay={400}
+                      icon={Flame} label="Fire risk" value={weather.risk} delay={400}
                       highlight={
                         weather.risk === "EXTREME" ? "extreme" :
                         weather.risk === "VERY HIGH" ? "veryhigh" :
@@ -256,7 +253,7 @@ export default function HomePage() {
                 )}
                 {aqi && (
                   <StatBadge
-                    icon="💨" label="PM2.5 · AQI" delay={500}
+                    icon={Wind} label="PM2.5 · AQI" delay={500}
                     value={`${aqi.pm25} μg/m³ · ${aqi.aqi}`}
                     highlight={aqi.aqi <= 50 ? "green" : aqi.aqi <= 100 ? "orange" : aqi.aqi <= 150 ? "red" : "extreme"}
                   />
@@ -274,8 +271,8 @@ export default function HomePage() {
   );
 }
 
-function StatBadge({ icon, label, value, highlight, delay = 0 }: {
-  icon: string; label: string; value: string; highlight?: string; delay?: number;
+function StatBadge({ icon: Icon, label, value, highlight, delay = 0 }: {
+  icon: LucideIcon; label: string; value: string; highlight?: string; delay?: number;
 }) {
   const color =
     highlight === "extreme"  ? "text-purple-400" :
@@ -286,8 +283,11 @@ function StatBadge({ icon, label, value, highlight, delay = 0 }: {
   return (
     <div className="stat-badge rounded-xl border border-white/10 bg-slate-950/55 backdrop-blur px-4 py-2 text-white shadow-lg"
       style={{ animationDelay: `${delay}ms` }}>
-      <div className="text-[10px] text-slate-400">{icon} {label}</div>
-      <div className={`text-sm font-bold ${color}`}>{value}</div>
+      <div className="flex items-center gap-1.5 text-[10.5px] text-slate-300">
+        <Icon size={12} strokeWidth={2} aria-hidden="true" />
+        {label}
+      </div>
+      <div className={`mt-0.5 font-mono text-sm font-semibold tabular ${color}`}>{value}</div>
     </div>
   );
 }
