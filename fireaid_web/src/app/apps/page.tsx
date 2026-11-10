@@ -6,12 +6,12 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { BarChart3, BookOpen, FileText, Flame, Search, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
 
 const APPS = [
-  { label: "Terminology",        desc: "Browse wildfire terms & definitions", icon: BookOpen,   href: "/library",             accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600",  developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Student · UAA Computer Science" },
-  { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
-  { label: "Alaska Fire Risk",     desc: "Fire danger forecast, map & risk classifier", icon: TriangleAlert, href: "/fire-risk", accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Forest Trends",      desc: "Post-fire vegetation recovery",      icon: Sprout,     href: "/forest-trends",       accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600", developer: "Sumana Sahoo", role: "Original author · Forest Trend Mapper" },
+  { label: "Terminology",        desc: "Browse wildfire terms & definitions", icon: BookOpen,   href: "/library",             accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600",  developer: "Jenae Matson", role: "Undergraduate Researcher · UAF Computer Science" },
+  { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Researcher · UAA Computer Science" },
+  { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Researcher · UAF Computer Science" },
+  { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500",    developer: "Yara Hassan",  role: "Undergraduate Researcher · UAA Electrical Engineering" },
+  { label: "Alaska Fire Risk",     desc: "Fire danger forecast, map & risk classifier", icon: TriangleAlert, href: "/fire-risk", accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Researcher · UAF Computer Science" },
+  { label: "Forest Trends",      desc: "Post-fire vegetation recovery",      icon: Sprout,     href: "/forest-trends",       accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600", developer: "Sumana Sahoo", role: "PhD Student · UAF Natural Resources and Sustainability" },
 ];
 
 const VISUALS = [
@@ -34,7 +34,7 @@ export default function AppsPage() {
 
         <div className="flex-1 bg-slate-50 px-12 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent }) => (
+          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent, developer, role }) => (
   <Link key={label} href={href}
     className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200">
     <div className="h-1.5 w-full" style={{ background: accent }} />
@@ -46,7 +46,7 @@ export default function AppsPage() {
         <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">{label}</div>
         <div className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</div>
       </div>
-      {/* {developer && (
+      {developer && (
         <div className="border-t border-slate-100 pt-3 flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-[#003366] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
             {developer.split(" ").map((n: string) => n[0]).join("")}
@@ -56,7 +56,7 @@ export default function AppsPage() {
             <div className="text-[10px] text-slate-400">{role}</div>
           </div>
         </div>
-      )} */}
+      )}
       <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">Open →</div>
     </div>
   </Link>

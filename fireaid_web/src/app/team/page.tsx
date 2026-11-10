@@ -6,14 +6,16 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 
 const TEAM = [
     
-        { name: "Elliott Lewandowski", role: "UAF Undergraduate Student", initials: "EL", color: "bg-blue-100 text-blue-700" },
-        { name: "Ivy Swenson",         role: "UAF Undergraduate Student", initials: "IS", color: "bg-orange-100 text-orange-700" },
-        { name: "Andrew Winford",      role: "UAF Undergraduate Student", initials: "AW", color: "bg-green-100 text-green-700" },
-        { name: "Jenae Matson",        role: "UAF Undergraduate Student", initials: "JM", color: "bg-purple-100 text-purple-700" },
-        { name: "Daniel Kim",          role: "UAF Undergraduate Student", initials: "DK", color: "bg-teal-100 text-teal-700" },
-        { name: "Utsav Dutta",         role: "UAA Undergraduate Student", initials: "UD", color: "bg-rose-100 text-rose-700" },
-        { name: "Yara Hassan",         role: "UAA Undergraduate Student", initials: "YH", color: "bg-red-100 text-red-700" },
-        { name: "Malachi Retherford",  role: "UAA Undergraduate Student", initials: "MR", color: "bg-indigo-100 text-indigo-700" },
+        { name: "Ivy Swenson",         role: "UAF · Framework Lead",          initials: "IS", color: "bg-orange-100 text-orange-700" },
+        { name: "Noah Bush",           role: "UAF · Framework Lead",          initials: "NB", color: "bg-amber-100 text-amber-700" },
+        { name: "Sumana Sahoo",        role: "UAF PhD Student · Natural Resources and Sustainability", initials: "SS", color: "bg-emerald-100 text-emerald-700" },
+        { name: "Elliott Lewandowski", role: "UAF Undergraduate Researcher", initials: "EL", color: "bg-blue-100 text-blue-700" },
+        { name: "Andrew Winford",      role: "UAF Undergraduate Researcher", initials: "AW", color: "bg-green-100 text-green-700" },
+        { name: "Jenae Matson",        role: "UAF Undergraduate Researcher", initials: "JM", color: "bg-purple-100 text-purple-700" },
+        { name: "Daniel Kim",          role: "UAF Undergraduate Researcher", initials: "DK", color: "bg-teal-100 text-teal-700" },
+        { name: "Utsav Dutta",         role: "UAA Undergraduate Researcher", initials: "UD", color: "bg-rose-100 text-rose-700" },
+        { name: "Yara Hassan",         role: "UAA Undergraduate Researcher", initials: "YH", color: "bg-red-100 text-red-700" },
+        { name: "Malachi Retherford",  role: "UAA Undergraduate Researcher", initials: "MR", color: "bg-indigo-100 text-indigo-700" },
 ];
 
 const PIS = [
