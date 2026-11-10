@@ -7,9 +7,10 @@
 // * Note: MongoDB aggregation pipelines: Raw Data -> $match ->$group -> $sort -> $limit -> Final Results
 
 import { NextResponse } from "next/server";
+import { MODELS } from "@/lib/models";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5";
+const MODEL = MODELS.fireHistory;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 async function queryDatabase(userMessage: string): Promise<string> {

@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
 import FireDashboard from "@/components/mcp/FireDashboard";
+import ModelBadge from "@/components/ui/ModelBadge";
 
 // map app
 const FireMap = dynamic(() => import("@/components/map/FireMap"), { ssr: false });
@@ -214,7 +215,10 @@ export default function McpToolsPage() {
         {/* LLM Natural Language Query */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold text-slate-900">Ask AI about this data</div>
+            <div>
+              <div className="text-sm font-semibold text-slate-900">Ask AI about this data</div>
+              <ModelBadge feature="fireHistory" className="mt-0.5" />
+            </div>
             {llmMessages.length > 0 && (
               <button className="text-[11px] text-slate-400 hover:text-slate-600" onClick={() => setLlmMessages([])}>Clear</button>
             )}

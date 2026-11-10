@@ -13,6 +13,7 @@ import {
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import ReactMarkdown from "react-markdown";
 import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
+import ModelBadge from "@/components/ui/ModelBadge";
 
 type Message = { role: "user" | "assistant"; content: string; time: string; charts?: ChatChartSpec[] };
 
@@ -122,6 +123,7 @@ export default function PortalPage() {
                   </h1>
                 </div>
                 <p className="text-slate-400 text-sm">Ask me anything about Alaska wildfire data</p>
+                <ModelBadge feature="agent" className="mt-2 justify-center" />
               </div>
 
               <div className="w-full max-w-2xl">
@@ -162,7 +164,8 @@ export default function PortalPage() {
             </div>
           ) : (
             <div className="flex-1 flex flex-col">
-              <div className="flex justify-end px-6 py-3 border-b border-slate-100">
+              <div className="flex items-center justify-between gap-4 px-6 py-3 border-b border-slate-100">
+                <ModelBadge feature="agent" />
                 <button
                   className="text-xs text-slate-400 hover:text-slate-600 transition"
                   onClick={() => setMessages([])}
