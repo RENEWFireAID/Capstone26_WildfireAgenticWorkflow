@@ -5,9 +5,10 @@ import { Tool, ResponseFunctionToolCall, ResponseInput } from "openai/resources/
 
 import { getWildfireTerm } from "./terminology_tool/handle_get_wildfire_term";
 import { query_fire_points } from "./historic_wildfires_tool/handle_historic_fires";
-import { retrieveRagContext } from "./rag_tool/handle_rag_search";
+import { retrieveRagChunks } from "./rag_tool/handle_rag_search";
 import { generateChart } from "./chart_tool/handle_generate_chart";
 import type { ChartSpec } from "@/lib/chartBuilder";
+import { shortAuthors, type AnswerSource } from "@/lib/answerSources";
 
 
 // **** TOOL DEFINITIONS *****
@@ -130,14 +131,24 @@ export const query_tools = [
 
 // ***** HANDLE TOOL CALLS *****
 
-export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]) {
+/**
+ * Run the requested tools. Besides the outputs for the model, return what each
+ * tool found as AnswerSources so the chat can show the evidence. Papers are
+ * numbered from firstPaper so citations stay unique across several rounds.
+ */
+export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[], firstPaper = 1) {
     var tool_output = [] as ResponseInput;
     const charts: ChartSpec[] = [];
+    const sources: AnswerSource[] = [];
+    let nextPaper = firstPaper;
 
     for (const item of tool_call_list) {
 
         if (item.name == "get_wildfire_term") {
-            const def = await getWildfireTerm(JSON.parse(item.arguments).term)
+            const term = JSON.parse(item.arguments).term;
+            const def = await getWildfireTerm(term)
+            const found = def !== "No term found" && def !== "None Found";
+            sources.push({ kind: "term", term, definition: found ? def : null });
             tool_output.push(item);
 
             tool_output.push({
@@ -150,6 +161,23 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
         if(item.name == "query_fire_points") {
             const args = JSON.parse(item.arguments);
             const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
+            sources.push({
+                kind: "fire_records",
+                filters: {
+                    yearStart: args["year_start"] ?? null,
+                    yearEnd: args["year_end"] ?? null,
+                    // query_fire_points falls back to non-prescribed fires when none is given.
+                    prescribed: args["prescribed"] ?? "N",
+                    limit: args["limit"] ?? null,
+                },
+                total: data.total,
+                preview: data.results.slice(0, 5).map((r: any) => ({
+                    name: String(r.NAME ?? r.name ?? "Unnamed"),
+                    year: String(r.FIRESEASON ?? r.year ?? ""),
+                    acres: r.ESTIMATEDTOTALACRES != null ? Number(r.ESTIMATEDTOTALACRES).toLocaleString("en-US") : "",
+                    cause: String(r.GENERALCAUSE ?? "Not recorded"),
+                })),
+            });
             tool_output.push(item);
           
             tool_output.push({
@@ -160,8 +188,10 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
         }
           
         if (item.name == "generate_chart") {
-            const result = await generateChart(JSON.parse(item.arguments).request);
+            const request = JSON.parse(item.arguments).request;
+            const result = await generateChart(request);
             if (result.chart) charts.push(result.chart);
+            sources.push({ kind: "chart", request, title: result.chart?.title ?? null, points: result.chart?.data.length ?? 0 });
             tool_output.push(item);
 
             tool_output.push({
@@ -172,16 +202,31 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
         }
 
         if (item.name == "retrieve_rag_context") {
-            const context = await retrieveRagContext(JSON.parse(item.arguments).query)
+            const query = JSON.parse(item.arguments).query;
+            const chunks = await retrieveRagChunks(query);
+            const papers = (chunks ?? []).map((c) => ({
+                n: nextPaper++,
+                title: String(c.metadata?.title ?? "Untitled"),
+                authors: shortAuthors(c.metadata?.authors),
+                // The literature index stores every year as 0, so treat 0 as unknown.
+                year: [String(c.metadata?.year ?? "").split(".")[0]].filter((y) => y && y !== "0")[0] ?? "",
+                text: c.text,
+            }));
+            if (papers.length) sources.push({ kind: "papers", query, papers });
             tool_output.push(item)
 
+            // Numbered so the answer can cite [n] and the chat can list the same papers.
             tool_output.push({
                 type: "function_call_output",
                 call_id: item.call_id,
-                output: context
+                output: chunks === null
+                    ? "The research library could not be reached."
+                    : papers.length === 0
+                        ? "No papers matched."
+                        : papers.map((p) => `[${p.n}] ${p.title} — ${p.authors}${p.year ? ` (${p.year})` : ""}\n${p.text}`).join("\n\n"),
             })
         }
     };
 
-    return { tool_output, charts };
+    return { tool_output, charts, sources };
 }

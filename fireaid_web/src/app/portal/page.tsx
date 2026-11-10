@@ -19,8 +19,11 @@ import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import ReactMarkdown from "react-markdown";
 import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
 import ModelBadge from "@/components/ui/ModelBadge";
+import AnswerSources from "@/components/chat/AnswerSources";
+import type { AnswerSource } from "@/lib/answerSources";
 
-type Message = { role: "user" | "assistant"; content: string; time: string; charts?: ChatChartSpec[] };
+// sources is set on real answers only, so error replies show no evidence block.
+type Message = { role: "user" | "assistant"; content: string; time: string; charts?: ChatChartSpec[]; sources?: AnswerSource[] };
 
 const SUGGESTED = [
   "How many fires were there in Alaska in 2022?",
@@ -105,6 +108,7 @@ export default function PortalPage() {
         content: reply,
         time: new Date().toLocaleTimeString(),
         charts: data?.charts?.length ? data.charts : undefined,
+        sources: data?.error ? undefined : data?.sources ?? [],
       }]);
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Error: failed to get response.", time: new Date().toLocaleTimeString() }]);
@@ -229,6 +233,8 @@ export default function PortalPage() {
                       </div>
 
                       {msg.charts?.map((c, j) => <ChatChart key={j} chart={c} />)}
+
+                      {msg.role === "assistant" && msg.sources && <AnswerSources sources={msg.sources} />}
 
                       <div className="mt-1 text-[10px] text-slate-400">{msg.time}</div>
                     </div>
