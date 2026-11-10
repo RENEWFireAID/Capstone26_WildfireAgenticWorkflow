@@ -104,35 +104,34 @@ function FireLayer({ onFireCount }: { onFireCount?: (n: number) => void }) {
         /*************** Info of fire spots *************** */
           core.bindPopup(`
             <div style="
-              background:#0d0d0d;
-              border:1px solid #ff4400;
-              border-radius:8px;
-              padding:12px;
-              font-family:monospace;
+              background:rgba(8,15,30,0.94);
+              border:1px solid rgba(148,197,255,0.22);
+              border-radius:10px;
+              padding:12px 14px;
+              font-family:ui-sans-serif,system-ui,sans-serif;
               font-size:11px;
-              color:#fff;
+              color:#e2e8f0;
               min-width:200px;
-              box-shadow:0 0 20px rgba(255,60,0,0.4);
+              box-shadow:0 8px 28px rgba(0,0,0,0.5);
             ">
-              <div style="color:#ff4400;font-weight:700;font-size:13px;margin-bottom:8px;letter-spacing:1px">
-                🔥 ${name.toUpperCase()}
+              <div style="color:#fb923c;font-weight:700;font-size:13px;margin-bottom:8px">
+                ${name}
               </div>
-              <div style="color:#888;margin-bottom:4px">───────────────</div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                <span style="color:#666">STATE</span>
-                <span style="color:#ff9900">${state}</span>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="color:#94a3b8">State</span>
+                <span>${state}</span>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                <span style="color:#666">ACRES</span>
-                <span style="color:#ff6600;font-weight:700">${acres.toLocaleString()}</span>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="color:#94a3b8">Acres</span>
+                <span style="color:#fdba74;font-weight:600">${acres.toLocaleString()}</span>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                <span style="color:#666">CONTAINED</span>
-                <span style="color:${pct === 100 ? '#00ff88' : '#ff4400'}">${pct}%</span>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="color:#94a3b8">Contained</span>
+                <span style="color:${pct === 100 ? '#6ee7b7' : '#fdba74'}">${pct}%</span>
               </div>
               <div style="display:flex;justify-content:space-between">
-                <span style="color:#666">CAUSE</span>
-                <span style="color:#ffbb00">${cause}</span>
+                <span style="color:#94a3b8">Cause</span>
+                <span>${cause}</span>
               </div>
             </div>
           `);
@@ -185,38 +184,22 @@ export default function LiveFireMap({ onFireCount }: { onFireCount?: (n: number)
 
 
       <style>{`
-        /* CartoDB dark tile — boost coastline glow */
+        /* Arctic night: tint Esri's grey canvas toward deep blue, so the
+           fires are the only warm colour on the map. */
         .fire-map-dark .leaflet-tile {
-          filter: brightness(1.1) saturate(1.2) contrast(1.1) sepia(0.15) hue-rotate(5deg);
+          filter: sepia(1) hue-rotate(178deg) saturate(2.4) brightness(0.72) contrast(1.12);
         }
-        /* Corner vignette — black to deep red from all 4 corners */
+        /* A faint aurora along the top edge and a dark vignette at the sides. */
         .fire-map-dark::before {
           content: '';
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(ellipse 80% 80% at 0% 0%,   rgba(120,0,0,0.7) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 80% at 100% 0%,  rgba(120,0,0,0.7) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 80% at 0% 100%,  rgba(120,0,0,0.7) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 80% at 100% 100%,rgba(120,0,0,0.7) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 60% at 50% 50%,  transparent 40%, rgba(0,0,0,0.5) 100%);
+            radial-gradient(ellipse 70% 38% at 62% -6%, rgba(52,211,153,0.26) 0%, transparent 70%),
+            radial-gradient(ellipse 55% 30% at 28% -4%, rgba(56,189,248,0.18) 0%, transparent 70%),
+            radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(2,6,16,0.7) 100%);
           pointer-events: none;
           z-index: 500;
-        }
-        /* Scan lines tech effect */
-        .fire-map-dark::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0,0,0,0.12) 3px,
-            rgba(0,0,0,0.12) 4px
-          );
-          pointer-events: none;
-          z-index: 501;
         }
         .fire-map-dark .leaflet-popup-content-wrapper {
           background: transparent !important;
@@ -225,17 +208,16 @@ export default function LiveFireMap({ onFireCount }: { onFireCount?: (n: number)
           padding: 0 !important;
         }
         .fire-map-dark .leaflet-popup-tip {
-          background: #ff4400 !important;
+          background: rgba(8,15,30,0.94) !important;
         }
         .fire-map-dark .leaflet-popup-close-button {
-          color: #ff4400 !important;
+          color: #94a3b8 !important;
         }
       `}</style>
       <MapContainer
         className="fire-map-dark h-full w-full"
-        style={{ width: "100%", height: "100%", background: "#0a0400" }}
-        center={[64, -153]}
-        zoom={5}
+        style={{ width: "100%", height: "100%", background: "#050b18" }}
+        bounds={ALASKA}
         maxBounds={ALASKA.pad(0.15)}
         maxBoundsViscosity={1}
         scrollWheelZoom
