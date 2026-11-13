@@ -18,7 +18,7 @@ const COLORS = [
   "#0891b2", "#be185d", "#65a30d", "#ea580c", "#4f46e5",
 ];
 
-export default function ChatChart({ chart }: { chart: ChatChartSpec }) {
+export default function ChatChart({ chart, source = "the Alaska fire records" }: { chart: ChatChartSpec; source?: string }) {
   const { type, title, description, data } = chart;
 
   return (
@@ -77,7 +77,7 @@ export default function ChatChart({ chart }: { chart: ChatChartSpec }) {
       </ResponsiveContainer>
 
       <div className="mt-1 text-[10px] text-slate-400">
-        {data.length} data points · from the Alaska fire records
+        {data.length} data points · from {source}
       </div>
     </div>
   );
