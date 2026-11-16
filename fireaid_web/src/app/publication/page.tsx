@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { AppPage, FIELD, Panel, Placeholder, SHADOW, buttonClass } from "@/components/ui/app";
 import { FileText, Search, Loader2, ExternalLink } from "lucide-react";
 
 function parseAuthors(authorString: string): string {
@@ -58,126 +58,115 @@ export default function PublicationPage() {
     };
 
     return (
-        <div className="flex min-h-screen w-full min-w-0">
-            <FireAIDSidebar />
-
-            <div className="min-w-0 max-w-6xl flex-1 space-y-4 px-6 py-6 md:px-10">
-                {/* Header Section */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-soft text-navy">
-                            <FileText size={18} />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <div className="text-xl font-bold text-slate-900">Publications Search</div>
-                                <Image
-                                    src="/arxiv-logo.svg"
-                                    alt="ArXiv Logo"
-                                    width={60}
-                                    height={24}
-                                    className="opacity-80"
-                                />
-                            </div>
-                            <div className="text-xs text-slate-500">Search through research papers and reports</div>
-                        </div>
-                    </div>
-
-                    {/* Search input */}
-                    <div className="mt-6 flex gap-2">
-                        <div className="relative flex-1">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search size={16} className="text-slate-400" />
-                            </div>
-                            <input
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-100 placeholder:text-slate-400 text-slate-800"
-                                placeholder="Search publications (e.g. recent findings, mitigation strategies)..."
-                                value={input}
-                                onChange={(e: any) => setInput(e.target.value)}
-                                onKeyDown={(e: any) => e.key === "Enter" && handleSearch()}
-                            />
-                        </div>
-                        <button
-                            onClick={handleSearch}
-                            className="rounded-xl bg-slate-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition disabled:opacity-50 flex items-center gap-2"
-                            disabled={!input.trim() || loading}
-                        >
-                            {loading ? <Loader2 size={16} className="animate-spin" /> : "Search"}
-                        </button>
-                    </div>
+        <AppPage
+            eyebrow="Apps · Research literature"
+            title="Publications Search"
+            description="Search through research papers and reports"
+            meta={["101,856 paper abstracts", "Semantic search, 10 closest passages"]}
+            actions={
+                <div className="flex items-center gap-2.5">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">Source</span>
+                    <Image src="/arxiv-logo.svg" alt="ArXiv Logo" width={60} height={27} />
                 </div>
-
-                {/* Results Area */}
-                {loading && (
-                    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center shadow-sm">
-                        <Loader2 size={32} className="mx-auto text-blue-500 mb-3 animate-spin" />
-                        <div className="text-sm font-semibold text-slate-500">Searching publications</div>
-                        <div className="text-xs text-slate-400 mt-1">Retrieving the most relevant academic sources...</div>
+            }
+        >
+            {/* Search input */}
+            <Panel accent>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                    <div className="relative min-w-0 flex-1">
+                        <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                        <input
+                            className={`${FIELD} h-10 pl-9`}
+                            placeholder="Search publications (e.g. recent findings, mitigation strategies)..."
+                            value={input}
+                            onChange={(e: any) => setInput(e.target.value)}
+                            onKeyDown={(e: any) => e.key === "Enter" && handleSearch()}
+                        />
                     </div>
-                )}
+                    <button
+                        onClick={handleSearch}
+                        className={buttonClass("primary", "h-10 min-w-[7.5rem] px-6")}
+                        disabled={!input.trim() || loading}
+                    >
+                        {loading ? <Loader2 size={16} className="animate-spin" /> : "Search"}
+                    </button>
+                </div>
+            </Panel>
 
-                {!loading && hasSearched && results.length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center shadow-sm">
-                        <FileText size={32} className="mx-auto text-slate-300 mb-3" />
-                        <div className="text-sm font-semibold text-slate-500">No search results</div>
-                        <div className="text-xs text-slate-400 mt-1">Try adjusting your query or keywords</div>
-                    </div>
-                )}
+            {/* Results Area */}
+            {loading && (
+                <Placeholder height="py-12">
+                    <Loader2 size={28} className="mx-auto mb-3 animate-spin text-navy" aria-hidden="true" />
+                    <div className="font-semibold text-slate-600">Searching publications</div>
+                    <div className="mt-1 text-xs text-slate-500">Retrieving the most relevant academic sources...</div>
+                </Placeholder>
+            )}
 
-                {!loading && !hasSearched && (
-                    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center shadow-sm">
-                        <FileText size={32} className="mx-auto text-slate-300 mb-3" />
-                        <div className="text-sm font-semibold text-slate-500">Ready to search</div>
-                        <div className="text-xs text-slate-400 mt-1">Enter a query above to find publications</div>
-                    </div>
-                )}
+            {!loading && hasSearched && results.length === 0 && (
+                <Placeholder height="py-12">
+                    <FileText size={28} className="mx-auto mb-3 text-slate-300" aria-hidden="true" />
+                    <div className="font-semibold text-slate-600">No search results</div>
+                    <div className="mt-1 text-xs text-slate-500">Try adjusting your query or keywords</div>
+                </Placeholder>
+            )}
 
-                {!loading && results.map((chunk: any, i: number) => {
-                    const title = chunk.metadata?.title || chunk.metadata?.filename || "Unknown Title";
-                    const authors = parseAuthors(chunk.metadata?.authors);
-                    const year = chunk.metadata?.year || "N/A";
-                    const textExcerpt = chunk.text || "";
+            {!loading && !hasSearched && (
+                <Placeholder height="py-12">
+                    <FileText size={28} className="mx-auto mb-3 text-slate-300" aria-hidden="true" />
+                    <div className="font-semibold text-slate-600">Ready to search</div>
+                    <div className="mt-1 text-xs text-slate-500">Enter a query above to find publications</div>
+                </Placeholder>
+            )}
 
-                    return (
-                        <div key={i} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex gap-4 transition hover:shadow-md">
-                            {/* Icon Container */}
-                            <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 border border-blue-100">
-                                <FileText size={20} strokeWidth={1.5} />
-                            </div>
+            {!loading && results.length > 0 && (
+                <div className="space-y-4">
+                    {results.map((chunk: any, i: number) => {
+                        const title = chunk.metadata?.title || chunk.metadata?.filename || "Unknown Title";
+                        const authors = parseAuthors(chunk.metadata?.authors);
+                        const year = chunk.metadata?.year || "N/A";
+                        const textExcerpt = chunk.text || "";
 
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                                <h2 className="text-xl font-bold text-slate-900 leading-tight mb-1 group/title" style={{ color: "#1e293b" }}>
-                                    <a
-                                        href={`https://scholar.google.com/scholar?hl=en&as_sdt=0%2C2&q=${encodeURIComponent(title)}&btnG=`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="hover:text-blue-700 transition-all cursor-pointer inline-flex items-baseline gap-2 group-hover/title:underline decoration-blue-300 underline-offset-4"
-                                    >
-                                        <span>{title}</span>
-                                        <ExternalLink size={14} className="text-slate-400 group-hover/title:text-blue-600 transition-colors shrink-0 relative top-[1px]" />
-                                    </a>
-                                </h2>
-                                <div className="flex items-center gap-2 mb-3 text-[#64748b] text-sm">
-                                    <span className="truncate">{authors}</span>
-                                    {year !== "N/A" && (
-                                        <>
-                                            <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0"></span>
-                                            <span className="bg-[#eff6ff] text-[#2563eb] px-2 py-0.5 rounded-md text-xs font-semibold whitespace-nowrap">
-                                                {year}
-                                            </span>
-                                        </>
-                                    )}
+                        return (
+                            <article key={i} className={`flex min-w-0 gap-4 bg-white p-5 ${SHADOW}`}>
+                                {/* Icon Container */}
+                                <div className="hidden h-10 w-10 shrink-0 items-center justify-center bg-navy-soft text-navy sm:flex">
+                                    <FileText size={18} strokeWidth={1.75} aria-hidden="true" />
                                 </div>
 
-                                <p className="text-slate-600 leading-relaxed text-[14px]">
-                                    {textExcerpt}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
+                                {/* Content */}
+                                <div className="min-w-0 flex-1">
+                                    <h2 className="mb-1 text-lg font-bold leading-snug text-navy-deep">
+                                        <a
+                                            href={`https://scholar.google.com/scholar?hl=en&as_sdt=0%2C2&q=${encodeURIComponent(title)}&btnG=`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="group/title inline decoration-navy/40 underline-offset-4 transition hover:text-navy hover:underline"
+                                        >
+                                            <span className="break-words">{title}</span>
+                                            <ExternalLink size={14} className="ml-1.5 inline -translate-y-0.5 text-slate-400 transition-colors group-hover/title:text-navy" aria-hidden="true" />
+                                        </a>
+                                    </h2>
+                                    <div className="mb-3 flex min-w-0 items-center gap-2 text-sm text-slate-500">
+                                        <span className="truncate">{authors}</span>
+                                        {year !== "N/A" && (
+                                            <>
+                                                <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" aria-hidden="true"></span>
+                                                <span className="whitespace-nowrap bg-navy-soft px-2 py-0.5 font-mono text-xs font-semibold text-navy">
+                                                    {year}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <p className="text-sm leading-relaxed text-slate-700">
+                                        {textExcerpt}
+                                    </p>
+                                </div>
+                            </article>
+                        );
+                    })}
+                </div>
+            )}
+        </AppPage>
     );
 }

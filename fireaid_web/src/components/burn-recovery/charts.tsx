@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { TOOLTIP_STYLE } from "@/components/ui/app";
 import { SEVERITY_COLORS, colorAt, gradientCss } from "./data";
 
 type Stop = [number, string];
@@ -10,7 +11,7 @@ export type Scale = { stops: Stop[]; low: number; high: number; title: string; d
 export function ColorBar({ scale }: { scale: { stops: Stop[]; low: number; high: number; title: string } }) {
   return (
     <div className="mx-auto w-full max-w-md text-xs text-slate-600">
-      <div className="h-3 rounded-sm" style={{ background: gradientCss(scale.stops) }} />
+      <div className="h-3" style={{ background: gradientCss(scale.stops) }} />
       <div className="mt-1 flex justify-between font-mono tabular">
         <span>{scale.low}</span>
         <span className="font-sans">{scale.title}</span>
@@ -59,7 +60,7 @@ export function SampleMap({ x, y, values, scale, selected, onSelect }: {
 
   return (
     <div className="min-w-0">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full rounded-lg border border-slate-200 bg-white" role="img"
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full border border-slate-200 bg-white" role="img"
         aria-label="Sampled locations coloured by the selected value; select a point to see its greenness over time">
         {ticks(xr[0], xr[1]).map((t) => (
           <g key={`x${t}`}>
@@ -110,14 +111,14 @@ export function TrajectoryChart({ years, trajectory, selected }: {
     return row;
   });
   return (
-    <div className="h-[400px] w-full min-w-0 rounded-lg border border-slate-200 bg-white p-2">
+    <div className="h-[400px] w-full min-w-0 border border-slate-200 bg-white p-2">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={rows} margin={{ top: 12, right: 16, left: 0, bottom: 4 }}>
           <CartesianGrid stroke="#eef1f4" />
           <XAxis dataKey="year" tick={{ fontSize: 11 }} label={{ value: "Summer", position: "insideBottom", offset: -2, fontSize: 11 }} height={36} />
           <YAxis domain={[-0.2, 1]} ticks={[-0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]} tick={{ fontSize: 11 }}
             label={{ value: "NDVI", angle: -90, position: "insideLeft", offset: 14, fontSize: 11 }} />
-          <Tooltip formatter={(v) => (typeof v === "number" ? v.toFixed(3) : v)} labelFormatter={(l) => `Summer ${l}`} />
+          <Tooltip contentStyle={TOOLTIP_STYLE} itemStyle={{ color: "white" }} formatter={(v) => (typeof v === "number" ? v.toFixed(3) : v)} labelFormatter={(l) => `Summer ${l}`} />
           <Legend wrapperStyle={{ fontSize: 11, paddingTop: 14 }} />
           {trajectory.map((t) => (
             <Line key={t.severity} dataKey={`g${t.severity}`} name={`dNBR ${t.label} (n=${t.n})`}
@@ -140,7 +141,7 @@ export function ObservedPredicted({ observed, predicted }: { observed: number[];
   const px = (v: number) => M + (v - lo) * k;
   const py = (v: number) => S - M + P - (v - lo) * k - P;
   return (
-    <svg viewBox={`0 0 ${S} ${S}`} className="h-auto w-full rounded-lg border border-slate-200 bg-white" role="img"
+    <svg viewBox={`0 0 ${S} ${S}`} className="h-auto w-full border border-slate-200 bg-white" role="img"
       aria-label="Observed against predicted NDVI slopes for the held-out fire">
       {ticks(lo, hi, 6).map((t) => (
         <g key={t}>
@@ -153,7 +154,7 @@ export function ObservedPredicted({ observed, predicted }: { observed: number[];
       {observed.map((o, i) => (
         <circle key={i} cx={px(o)} cy={py(predicted[i])} r={2.4} fill="#236192" fillOpacity={0.35} />
       ))}
-      <line x1={px(lo)} y1={py(lo)} x2={px(hi)} y2={py(hi)} stroke="#e4572e" strokeDasharray="5 4" strokeWidth={1.5} />
+      <line x1={px(lo)} y1={py(lo)} x2={px(hi)} y2={py(hi)} stroke="#111c4e" strokeDasharray="5 4" strokeWidth={1.5} />
       <text x={(M + S - P) / 2} y={S - 12} textAnchor="middle" fontSize="11" fill="#475569">Observed slope (NDVI/year)</text>
       <text transform={`translate(13 ${(P + S - M) / 2}) rotate(-90)`} textAnchor="middle" fontSize="11" fill="#475569">Predicted slope (NDVI/year)</text>
     </svg>
@@ -165,15 +166,15 @@ export function RmseBars({ model, baseline }: { model: number; baseline: number 
   const max = Math.max(model, baseline) * 1.1;
   const rows: [string, number, string][] = [["Selected model", model, "bg-navy"], ["Training-mean baseline", baseline, "bg-slate-400"]];
   return (
-    <div className="flex h-full flex-col justify-center gap-4 rounded-lg border border-slate-200 bg-white p-5">
-      <p className="text-xs font-semibold text-slate-600">RMSE (NDVI/year), lower is better</p>
+    <div className="flex h-full flex-col justify-center gap-4 border border-slate-200 bg-white p-5">
+      <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500">RMSE (NDVI/year), lower is better</p>
       {rows.map(([label, value, color]) => (
         <div key={label} className="grid grid-cols-[150px_minmax(0,1fr)_64px] items-center gap-3 text-sm">
           <span className="text-slate-700">{label}</span>
-          <div className="h-5 rounded-sm bg-slate-100">
-            <div className={`h-full rounded-sm ${color}`} style={{ width: `${(100 * value) / max}%` }} />
+          <div className="h-5 bg-slate-100">
+            <div className={`h-full ${color}`} style={{ width: `${(100 * value) / max}%` }} />
           </div>
-          <span className="text-right font-mono tabular text-slate-800">{value.toFixed(4)}</span>
+          <span className="text-right font-mono font-semibold tabular text-navy-deep">{value.toFixed(4)}</span>
         </div>
       ))}
     </div>

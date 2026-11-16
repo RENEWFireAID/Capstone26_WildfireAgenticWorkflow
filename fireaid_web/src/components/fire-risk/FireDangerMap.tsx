@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CircleMarker, MapContainer, Rectangle, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import { RefreshCw } from "lucide-react";
+import { Panel } from "@/components/ui/app";
 
 type Cell = { lat: number; lon: number; status: string; rating: string | null };
 type DangerMap = { date: string; cell_deg: { lat: number; lon: number }; cells: Cell[] };
@@ -97,23 +98,19 @@ export default function FireDangerMap({
   const allUnrated = map !== null && map.cells.every((c) => !c.rating);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="text-sm font-semibold text-slate-900">Statewide fire danger</div>
-          <div className="text-xs text-slate-600">Click anywhere on the map to see that spot&apos;s forecast above.</div>
-        </div>
-        <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-700">
+    <Panel title="Statewide fire danger" subtitle={<>Click anywhere on the map to see that spot&apos;s forecast above.</>}>
+      <div className="mb-3">
+        <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-700" aria-label="Fire danger legend">
           {[...Object.entries(RATING_COLOR), ["Not rated", UNRATED_COLOR]].map(([label, color]) => (
             <li key={label} className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-sm" style={{ backgroundColor: color }} aria-hidden />
+              <span className="h-3 w-3" style={{ backgroundColor: color }} aria-hidden />
               {label}
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="relative h-[460px] overflow-hidden rounded-xl">
+      <div className="relative h-[460px] overflow-hidden border border-slate-200">
         <MapContainer
           bounds={ALASKA_BOUNDS}
           minZoom={3}
@@ -157,8 +154,8 @@ export default function FireDangerMap({
           <div className="pointer-events-none absolute inset-x-0 top-3 z-[1000] flex justify-center px-3">
             <div
               role={error ? "alert" : "status"}
-              className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm shadow-md ${
-                error ? "bg-red-50 text-red-700" : "bg-white text-slate-700"
+              className={`flex items-center gap-2 border px-4 py-2 text-sm shadow-md ${
+                error ? "border-red-200 bg-red-50 text-red-900" : "border-slate-200 bg-white text-slate-700"
               }`}
             >
               {error ? (
@@ -175,6 +172,6 @@ export default function FireDangerMap({
           </div>
         )}
       </div>
-    </div>
+    </Panel>
   );
 }

@@ -359,27 +359,25 @@ function DrawBoxLayer() {
   return null;
 }
 
+function LegendRamp({ title, gradient, low, high }: { title: string; gradient: string; low: string; high: string }) {
+  return (
+    <>
+      <div className="font-mono text-xs font-semibold uppercase tracking-wide text-navy-deep">{title}</div>
+      <div className="mt-1 h-2.5 border border-slate-300" style={{ background: `linear-gradient(to right, ${gradient})` }} />
+      <div className="mt-0.5 flex justify-between font-mono text-[11px] text-slate-600">
+        <span>{low}</span>
+        <span>{high}</span>
+      </div>
+    </>
+  );
+}
+
 function MapLegend({ viewMode }: { viewMode: ViewMode }) {
   return (
-    <div style={{
-      position: "absolute", bottom: 32, left: 12, zIndex: 1000,
-      background: "rgba(255,255,255,0.95)", borderRadius: 10,
-      border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-      padding: "8px 12px", fontSize: 10, minWidth: 180,
-    }}>
+    <div className="w-[200px] max-w-[calc(100vw-5rem)] bg-white/95 px-3 py-2 text-[11px] leading-relaxed shadow-[0_8px_20px_-12px_rgba(0,0,0,0.6)]">
       {viewMode === "heat" && (<>
-        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
-          Fire Incident Density
-        </div>
-        <div style={{
-          height: 10, borderRadius: 5, marginBottom: 4,
-          background: "linear-gradient(to right, #0000ff, #00ff00, #ffff00, #ff0000)",
-        }} />
-        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
-          <span>Few fires</span>
-          <span>Many fires</span>
-        </div>
-        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+        <LegendRamp title="Fire Incident Density" gradient="#0000ff, #00ff00, #ffff00, #ff0000" low="Few fires" high="Many fires" />
+        <div className="mt-1.5 text-slate-500">
           Color = fire incident count per area<br />
           Not intensity or temperature<br />
           Source: MongoDB · 33,596 records
@@ -387,18 +385,8 @@ function MapLegend({ viewMode }: { viewMode: ViewMode }) {
       </>)}
 
       {viewMode === "smoke" && (<>
-        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
-          PM2.5 Air Quality
-        </div>
-        <div style={{
-          height: 10, borderRadius: 5, marginBottom: 4,
-          background: "linear-gradient(to right, #00e400, #ffff00, #ff7e00, #ff0000, #8f3f97)",
-        }} />
-        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
-          <span>Good</span>
-          <span>Hazardous</span>
-        </div>
-        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+        <LegendRamp title="PM2.5 Air Quality" gradient="#00e400, #ffff00, #ff7e00, #ff0000, #8f3f97" low="Good" high="Hazardous" />
+        <div className="mt-1.5 text-slate-500">
           Source: Open-Meteo · NOAA GFS<br />
           Updates hourly<br />
           Grid: 1.5°lat × 2.5°lon<br />
@@ -411,24 +399,19 @@ function MapLegend({ viewMode }: { viewMode: ViewMode }) {
       </>)}
 
       {(viewMode === "points" || viewMode === "cluster") && (<>
-        <div style={{ fontWeight: 700, color: "#334155", marginBottom: 4, fontSize: 11 }}>
-          {viewMode === "cluster" ? "Fire Count (Clustered)" : "Fire Size (Acres)"}
-        </div>
-        <div style={{
-          height: 10, borderRadius: 5, marginBottom: 4,
-          background: "linear-gradient(to right, #3b82f6, #22c55e, #eab308, #ea580c, #dc2626)",
-        }} />
-        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", marginBottom: 6 }}>
-          <span>&lt; 10 ac</span>
-          <span>≥ 10K ac</span>
-        </div>
+        <LegendRamp
+          title={viewMode === "cluster" ? "Fire Count (Clustered)" : "Fire Size (Acres)"}
+          gradient="#3b82f6, #22c55e, #eab308, #ea580c, #dc2626"
+          low="< 10 ac"
+          high="≥ 10K ac"
+        />
         {viewMode === "cluster" && (
-          <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+          <div className="mt-1.5 text-slate-500">
             Number = fires in area<br />
             Expands at zoom 11
           </div>
         )}
-        <div style={{ color: "#94a3b8", lineHeight: 1.6 }}>
+        <div className={`${viewMode === "cluster" ? "" : "mt-1.5"} text-slate-500`}>
           Source: MongoDB · 33,596 records
         </div>
       </>)}
@@ -536,7 +519,7 @@ export default function FireMap({ viewMode = "points" }: { viewMode?: ViewMode }
       </MapContainer>
 
       {/* Legend overlay — outside MapContainer so React renders it normally */}
-      <div className="absolute bottom-6 left-2 z-[1000] pointer-events-none">
+      <div className="pointer-events-none absolute bottom-7 left-2.5 z-[1000]">
         <MapLegend viewMode={viewMode} />
       </div>
     </div>
