@@ -20,6 +20,7 @@ export async function POST(req: Request) {
     const args: Record<string, unknown> = { lat, lon };
     if (body?.startYear != null) args.start_year = Number(body.startYear);
     if (body?.endYear   != null) args.end_year   = Number(body.endYear);
+    if (body?.reducer) args.reducer = String(body.reducer);
 
     const result = await callFireTool("get_vegetation_timeseries", args);
 

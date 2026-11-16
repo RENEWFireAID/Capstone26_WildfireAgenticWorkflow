@@ -32,8 +32,8 @@ const APPS = [
   {
     label: "Forest Trends",
     kind: "Remote sensing",
-    desc: "Follow how vegetation recovers after a fire, year by year, from satellite greenness and burn severity.",
-    data: "Landsat summer NDVI and NBR · Google Earth Engine",
+    desc: "Map where the forest has been greening or browning since 2000, and follow any point's recovery after fire and its link to climate.",
+    data: "Landsat NDVI, NBR, NDMI · TerraClimate · Google Earth Engine",
     icon: Sprout,
     href: "/forest-trends",
     developer: "Sumana Sahoo",
