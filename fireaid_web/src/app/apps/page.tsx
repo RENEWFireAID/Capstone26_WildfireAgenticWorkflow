@@ -1,7 +1,7 @@
 import Link from "next/link";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import PageHeader from "@/components/layout/PageHeader";
-import { ArrowUpRight, BookOpen, FileText, Flame, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, BookOpen, FileText, Flame, Satellite, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
 
 const APPS = [
   {
@@ -45,6 +45,16 @@ const APPS = [
     role: "PhD Student · UAF Natural Resources and Sustainability",
   },
   {
+    label: "Burn Severity Recovery",
+    kind: "Fire effects research",
+    desc: "Compare burn severity and post-fire greenness across three 2019 Alaska fires, and test whether recovery on one fire can be predicted from the other two.",
+    data: "NASA HLS imagery, MTBS and field CBI · 3 fires, 2018–2024",
+    icon: Satellite,
+    href: "/burn-recovery",
+    developer: "Muhammad Saffiullah",
+    role: "Undergraduate Researcher · UAA Computer Science",
+  },
+  {
     label: "Publication",
     kind: "Research literature",
     desc: "Find research by meaning rather than keywords across a library of fire, climate and ecology abstracts.",
@@ -75,7 +85,7 @@ export default function AppsPage() {
         <PageHeader
           eyebrow="FireAID"
           title="Apps"
-          description="Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab."
+          description="Seven tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab."
         />
 
         <div className="flex-1 px-6 py-8 md:px-10">

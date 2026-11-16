@@ -26,6 +26,7 @@ const STUDENTS: Person[] = [
   { name: "Noah Bush",           role: "UAF Undergraduate Researcher", lead: true, app: { label: "Alaska Fire Risk", href: "/fire-risk" } },
   { name: "Sumana Sahoo",        role: "UAF PhD Student · Natural Resources and Sustainability", app: { label: "Forest Trends", href: "/forest-trends" } },
   { name: "Yara Hassan",         role: "UAA Undergraduate Researcher", app: { label: "Wildfire Prediction", href: "/wildfire-prediction" } },
+  { name: "Muhammad Saffiullah", role: "UAA Undergraduate Researcher", app: { label: "Burn Severity Recovery", href: "/burn-recovery" } },
   { name: "Utsav Dutta",         role: "UAA Undergraduate Researcher", app: { label: "Publication", href: "/publication" } },
   { name: "Jenae Matson",        role: "UAF Undergraduate Researcher", app: { label: "Terminology", href: "/library" } },
   { name: "Elliott Lewandowski", role: "UAF Undergraduate Researcher" },
