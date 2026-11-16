@@ -16,6 +16,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 import ReactMarkdown from "react-markdown";
 import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
 import ModelBadge from "@/components/ui/ModelBadge";
@@ -40,6 +41,10 @@ const SOURCES = [
   { icon: BarChart3, label: "Charts",              detail: "Drawn from the fire records" },
 ];
 
+// uaf.edu's square white card and its gold condensed button.
+const CARD = "bg-white shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]";
+const GOLD_BUTTON =
+  "flex items-center gap-2 bg-gold px-5 py-2 font-mono text-sm font-semibold uppercase tracking-wide text-navy-deep transition hover:bg-[#ffd94d] disabled:opacity-40";
 
 export default function PortalPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -130,80 +135,79 @@ export default function PortalPage() {
         {/* MAIN */}
         <main className="flex min-w-0 flex-1 flex-col bg-[var(--background)]">
           {isEmpty ? (
-            <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-              <div className="w-full max-w-2xl">
-                <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID Assistant</p>
-                <h1 className="mt-1 text-3xl font-bold tracking-tight text-navy-deep text-balance">Ask about Alaska wildfires</h1>
-                <p className="mt-2 text-[15px] leading-relaxed text-slate-600">
-                  Answers are drawn from FireAID&apos;s own data and cite where each fact came from.
-                </p>
-                <ModelBadge feature="agent" className="mt-2" />
+            <>
+              {/* uaf.edu's dark hero: navy with contour lines, holding the question box. */}
+              <section className="px-6 py-14 md:px-10" style={{ backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS }}>
+                <div className="mx-auto w-full max-w-3xl">
+                  <p className="font-mono text-sm font-semibold uppercase tracking-[0.14em] text-uaf-sky">FireAID Assistant</p>
+                  <h1 className="mt-1 text-4xl font-bold leading-tight text-white text-balance md:text-5xl">Ask about Alaska wildfires</h1>
+                  <p className="mt-3 text-base leading-relaxed text-slate-200">
+                    Answers are drawn from FireAID&apos;s own data and cite where each fact came from.
+                  </p>
+                  <ModelBadge feature="agent" className="mt-3" onDark />
 
-                <div className="mt-6 flex flex-col gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 shadow-sm focus-within:border-navy">
-                  <label htmlFor="portal-question" className="sr-only">Your question</label>
-                  <textarea
-                    id="portal-question"
-                    rows={3}
-                    className="w-full resize-none bg-transparent text-[15px] text-slate-800 outline-none placeholder:text-slate-400"
-                    placeholder="Ask a question about Alaska wildfires…"
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-                    disabled={loading}
-                  />
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-slate-500">Enter to send · Shift+Enter for a new line</span>
-                    <button
-                      className="flex items-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-navy-deep disabled:opacity-40"
-                      onClick={() => send()}
-                      disabled={loading || !input.trim()}
-                    >
-                      <Send size={14} />
-                      Send
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mt-5">
-                  <p className="text-xs font-semibold text-slate-500">Try</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {SUGGESTED.map(q => (
-                      <button
-                        key={q}
-                        type="button"
-                        onClick={() => send(q)}
-                        className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 transition hover:border-navy hover:text-navy"
-                      >
-                        {q}
+                  <div className={`mt-7 flex flex-col gap-3 border-t-4 border-gold px-5 py-4 ${CARD}`}>
+                    <label htmlFor="portal-question" className="sr-only">Your question</label>
+                    <textarea
+                      id="portal-question"
+                      rows={3}
+                      className="w-full resize-none bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400"
+                      placeholder="Ask a question about Alaska wildfires…"
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+                      disabled={loading}
+                    />
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-slate-500">Enter to send · Shift+Enter for a new line</span>
+                      <button className={GOLD_BUTTON} onClick={() => send()} disabled={loading || !input.trim()}>
+                        <Send size={14} aria-hidden="true" />
+                        Send
                       </button>
-                    ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-7">
+                    <p className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Try asking</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {SUGGESTED.map(q => (
+                        <button
+                          key={q}
+                          type="button"
+                          onClick={() => send(q)}
+                          className="border border-white/50 px-3.5 py-2 text-left text-sm text-white transition hover:border-gold hover:bg-gold hover:text-navy-deep"
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              </section>
 
-                <div className="mt-8 border-t border-slate-200 pt-5">
-                  <p className="text-xs font-semibold text-slate-500">What it can look up</p>
-                  <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {/* uaf.edu's icon blocks on UAF Blue, filling down to the bottom of the page. */}
+              <section className="flex-1 px-6 py-14 md:px-10" style={{ backgroundColor: "var(--color-navy)", backgroundImage: PEAKS }}>
+                <div className="mx-auto w-full max-w-5xl">
+                  <h2 className="text-3xl font-bold text-white">What it can look up</h2>
+                  <p className="mt-1 text-sm text-slate-200">The assistant answers from these sources and names the one it used.</p>
+                  <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
                     {SOURCES.map(({ icon: Icon, label, detail }) => (
-                      <li key={label} className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-navy-soft text-navy">
-                          <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
-                        </span>
-                        <span className="min-w-0 text-sm">
-                          <span className="font-semibold text-slate-800">{label}</span>
-                          <span className="block font-mono text-[11px] text-slate-500">{detail}</span>
-                        </span>
+                      <li key={label} className="flex flex-col items-center text-center text-white">
+                        <Icon size={52} strokeWidth={1.25} aria-hidden="true" />
+                        <h3 className="mt-4 text-2xl font-bold">{label}</h3>
+                        <p className="mt-2 font-mono text-sm font-semibold uppercase tracking-wide text-uaf-sky">{detail}</p>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
+              </section>
+            </>
           ) : (
             <div className="flex-1 flex flex-col">
-              <div className="flex items-center justify-between gap-4 px-6 py-3 border-b border-slate-100">
+              <div className="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-3">
                 <ModelBadge feature="agent" />
                 <button
-                  className="text-xs text-slate-400 hover:text-slate-600 transition"
+                  className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 underline-offset-2 transition hover:text-navy hover:underline"
                   onClick={() => setMessages([])}
                 >
                   Clear chat
@@ -213,14 +217,14 @@ export default function PortalPage() {
               <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 max-w-3xl mx-auto w-full">
                 {messages.map((msg, i) => (
                   <div key={i} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs ${msg.role === "user" ? "bg-slate-200 text-slate-700" : "bg-navy text-white"}`}>
+                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center text-xs ${msg.role === "user" ? "bg-slate-200 text-slate-700" : "bg-navy text-white"}`}>
                       {msg.role === "user" ? <User size={14} /> : <Bot size={14} />}
                     </div>
 
-                    <div className={`${msg.charts?.length ? "max-w-[95%] w-full" : "max-w-[80%]"} rounded-xl px-4 py-3 text-sm leading-relaxed ${
+                    <div className={`${msg.charts?.length ? "max-w-[95%] w-full" : "max-w-[80%]"} px-4 py-3 text-sm leading-relaxed ${
                       msg.role === "user"
                         ? "bg-navy-soft text-slate-800"
-                        : "bg-white border border-slate-200 text-slate-800"
+                        : "border-l-4 border-navy bg-white text-slate-800 shadow-[0_8px_24px_-18px_rgba(0,0,0,0.5)]"
                     }`}>
                       <div>
                         <ReactMarkdown
@@ -242,10 +246,10 @@ export default function PortalPage() {
                 ))}
                 {loading && (
                   <div className="flex gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy text-white">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-navy text-white">
                       <Bot size={14} />
                     </div>
-                    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500">
+                    <div className="flex items-center gap-2 border-l-4 border-navy bg-white px-4 py-3 text-sm text-slate-500">
                       <RefreshCw size={14} className="animate-spin text-navy" />
                       Looking it up…
                     </div>
@@ -254,9 +258,9 @@ export default function PortalPage() {
                 <div ref={bottomRef} />
               </div>
 
-              <div className="border-t border-slate-100 px-6 py-4">
+              <div className="border-t border-slate-200 bg-white px-6 py-4">
                 <div className="max-w-3xl mx-auto">
-                  <div className="flex flex-col gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 shadow-sm focus-within:border-navy">
+                  <div className="flex flex-col gap-3 border border-slate-300 border-t-4 border-t-gold bg-white px-4 py-3 focus-within:border-navy focus-within:border-t-gold">
                     <textarea
                       rows={2}
                       className="w-full resize-none text-sm text-slate-700 placeholder:text-slate-400 outline-none bg-transparent"
@@ -271,14 +275,14 @@ export default function PortalPage() {
                         type="button"
                         onClick={saveChat}
                         disabled={isEmpty || isSaving}
-                        className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-navy hover:text-navy disabled:opacity-40"
+                        className="flex items-center gap-2 border border-navy bg-white px-4 py-2 font-mono text-sm font-semibold uppercase tracking-wide text-navy transition hover:bg-navy-soft disabled:opacity-40"
                       >
                         <Paperclip size={14} className="-rotate-45" />
                         {isSaving ? "Saving..." : "Save chat"}
                       </button>
                       {/* Send Button */}
                       <button
-                        className="flex items-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-navy-deep disabled:opacity-40"
+                        className={GOLD_BUTTON}
                         onClick={() => send()}
                         disabled={loading || !input.trim()}
                       >
@@ -299,7 +303,7 @@ export default function PortalPage() {
       {/* Feedback floating button */}
       <Link
         href="/feedback"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-navy px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-navy-deep"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-navy px-4 py-2.5 font-mono text-sm font-semibold uppercase tracking-wide text-white shadow-lg ring-1 ring-white/30 transition hover:bg-navy-deep"
       >
         <MessageSquare size={15} aria-hidden="true" />
         Feedback
