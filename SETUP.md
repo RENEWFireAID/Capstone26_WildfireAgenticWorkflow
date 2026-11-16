@@ -70,7 +70,7 @@ docker exec -it mongo mongoimport \
 | Chat | `/portal` | ✅ Yes | FireAID Assistant over fire records, literature and terms |
 | Fire History | `/mcp-tools` | ✅ Yes | Fire records map, query builder and Ask AI with charts |
 | Alaska Fire Risk | `/fire-risk` | ✅ Yes | Fire danger forecast, map, risk classifier and chat |
-| Forest Trends | `/forest-trends` | No | Post-fire vegetation recovery (needs Earth Engine) |
+| Forest Trends | `/forest-trends` | No | Vegetation trend maps and point time series, from Sumana Sahoo's Forest Trend Mapper (needs Earth Engine) |
 | Burn Severity Recovery | `/burn-recovery` | No | Saved three-fire burn severity study, served by FireMCP |
 | Publication | `/publication` | No | Semantic search of research abstracts (needs rag-service) |
 | Library | `/library` | No | Wildfire terminology dictionary |
