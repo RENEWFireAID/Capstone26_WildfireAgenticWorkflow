@@ -21,17 +21,17 @@ export default function Topbar() {
 
   return (
     <header className="bg-navy">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 py-3 md:px-6 xl:grid-cols-[320px_minmax(0,1fr)_430px]">
+      {/* One row on wide screens; below xl the links drop to a second row under the logos. */}
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-4 py-3 md:px-6">
         {/* Left: UAF Logo + FireAID */}
-        <div className="flex items-center gap-4">
-        <Image
+        <div className="order-1 flex items-center gap-4">
+          {/* The logo is UAF blue, which disappears on the navy bar, so show it reversed in white. */}
+          <Image
             src={uafLogo}
-            alt="UAF Logo"
+            alt="University of Alaska Fairbanks"
             priority
-            width={180}
-            height={88}
-          className="h-22 w-auto shrink-0 object-contain"
-/>
+            className="h-12 w-auto shrink-0 object-contain brightness-0 invert"
+          />
           <div className="h-10 w-px bg-white/20" />
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold tracking-wide text-[#FFCC33]">
@@ -47,7 +47,7 @@ export default function Topbar() {
         </div>
 
         {/* Middle: Nav */}
-        <nav className="hidden items-center justify-center gap-7 text-sm font-semibold md:flex">
+        <nav className="order-3 hidden w-full items-center justify-center gap-7 text-sm font-semibold md:flex xl:order-2 xl:w-auto xl:flex-1">
           {NAV_ITEMS.map(({ label, href }) => (
             <Link
               key={label}
@@ -65,22 +65,18 @@ export default function Topbar() {
         </nav>
 
         {/* Right: ANL + DOE logos */}
-        <div className="flex items-center justify-start gap-6 xl:justify-end">
+        <div className="order-2 flex items-center gap-6 xl:order-3">
           <div className="hidden h-8 w-px bg-white/20 xl:block" />
 
           <div className="flex items-center gap-2">
-            <Image
-              src={argonneLogo}
-              alt="Argonne National Laboratory"
-              width={36}
-              height={36}
-              className="h-9 w-9 shrink-0 object-contain"
-            />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm">
+              <Image src={argonneLogo} alt="Argonne National Laboratory" className="h-full w-full object-contain" />
+            </span>
             <div className="hidden min-w-0 sm:block">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/50">
                 Partner Lab
               </p>
-              <p className="text-xs font-semibold leading-tight text-white">
+              <p className="whitespace-nowrap text-xs font-semibold leading-tight text-white">
                 Argonne National Laboratory
               </p>
             </div>
@@ -89,18 +85,14 @@ export default function Topbar() {
           <div className="h-6 w-px bg-white/20" />
 
           <div className="flex items-center gap-2">
-            <Image
-              src={doeLogo}
-              alt="Department of Energy"
-              width={36}
-              height={36}
-              className="h-9 w-9 shrink-0 rounded-full object-contain"
-            />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm">
+              <Image src={doeLogo} alt="U.S. Department of Energy" className="h-full w-full object-contain" />
+            </span>
             <div className="hidden min-w-0 sm:block">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/50">
                 Federal Sponsor
               </p>
-              <p className="text-xs font-semibold leading-tight text-white">
+              <p className="whitespace-nowrap text-xs font-semibold leading-tight text-white">
                 U.S. Department of Energy
               </p>
             </div>
