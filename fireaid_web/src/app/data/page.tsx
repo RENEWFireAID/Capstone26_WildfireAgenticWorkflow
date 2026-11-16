@@ -41,8 +41,8 @@ const FIREAID_DATA: Dataset[] = [
 const OTHER_DATA: Dataset[] = [
   {
     label: "Weather",
-    desc: "Current weather conditions and the fire risk they imply.",
-    detail: "Live",
+    desc: "Daily temperature, precipitation, wind, humidity and sun across the Brooks Range, the weather behind the Fire Risk models.",
+    detail: "35 grid points · 1979–2014",
     icon: CloudSun,
     href: "/weather",
   },
