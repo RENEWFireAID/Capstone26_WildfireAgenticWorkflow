@@ -4,8 +4,7 @@ import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Download, Loader2, MousePointerClick, Pentagon, Square, Trash2 } from "lucide-react";
 
-import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import PageHeader from "@/components/layout/PageHeader";
+import { AppPage, Check, FIELD, Field, SHADOW, Stat, buttonClass } from "@/components/ui/app";
 import PointPanel from "@/components/forest-trends/PointPanel";
 import type { DrawMode, MapLayer } from "@/components/forest-trends/TrendMap";
 import {
@@ -20,28 +19,8 @@ const TrendMap = dynamic(() => import("@/components/forest-trends/TrendMap"), {
 });
 
 const THIS_YEAR = new Date().getFullYear();
-const GOLD_BUTTON =
-  "flex w-full items-center justify-center gap-2 bg-gold px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-wide text-navy-deep transition hover:bg-[#ffd94d] disabled:opacity-40";
-const FIELD = "h-9 w-full border border-slate-300 bg-white px-2 text-sm font-medium text-slate-800 outline-none focus:border-navy";
 
-function Label({ text, children }: { text: string; children: React.ReactNode }) {
-  return (
-    <label className="flex min-w-0 flex-col gap-1 text-xs font-semibold text-slate-600">
-      {text}
-      {children}
-    </label>
-  );
-}
 
-function Check({ label, checked, onChange, disabled }: { label: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
-  return (
-    <label className={`flex items-center gap-2 text-sm ${disabled ? "text-slate-400" : "text-slate-700"}`}>
-      <input type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 accent-[#236192]" />
-      {label}
-    </label>
-  );
-}
 
 function Legend({ title, palette, min, max }: { title: string; palette: string[]; min: number; max: number }) {
   return (
@@ -55,14 +34,6 @@ function Legend({ title, palette, min, max }: { title: string; palette: string[]
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border-t border-slate-200 pt-2">
-      <dt className="text-xs text-slate-500">{label}</dt>
-      <dd className="font-mono text-lg font-semibold text-navy-deep tabular">{value}</dd>
-    </div>
-  );
-}
 
 export default function ForestTrendsPage() {
   const [settings, setSettings] = useState<TrendSettings>({ startYear: 2000, endYear: 2024, index: "NDVI", reducer: "median" });
@@ -159,22 +130,16 @@ export default function ForestTrendsPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      <FireAIDSidebar />
-
-      <main className="flex min-w-0 flex-1 flex-col">
-        <PageHeader
+    <AppPage
           eyebrow="Apps · Vegetation change"
           title="Forest Trends"
           description="Where interior Alaska's boreal forest has been greening or browning, and how fire history and climate shape it. Draw an area to map its trends, or click any point for its year-by-year record."
           meta={["Landsat 5/7/8/9 summer composites", "TerraClimate", "MTBS and Alaska fire perimeters", "Google Earth Engine"]}
-        />
-
-        <div className="flex-1 space-y-6 bg-slate-50 px-6 py-6 md:px-10">
+        >
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
             {/* Controls */}
             <aside className="space-y-4">
-              <section className="space-y-4 border-t-4 border-gold bg-white p-5 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]">
+              <section className={`space-y-4 border-t-4 border-gold bg-white p-5 ${SHADOW}`}>
                 <div>
                   <h2 className="text-xl font-bold text-navy-deep">Map trends</h2>
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">
@@ -183,24 +148,24 @@ export default function ForestTrendsPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <Label text="Start year">
+                  <Field label="Start year">
                     <input type="number" min={1984} max={THIS_YEAR} value={settings.startYear} className={FIELD}
                       onChange={(e) => set({ startYear: Number(e.target.value) })} />
-                  </Label>
-                  <Label text="End year">
+                  </Field>
+                  <Field label="End year">
                     <input type="number" min={1984} max={THIS_YEAR} value={settings.endYear} className={FIELD}
                       onChange={(e) => set({ endYear: Number(e.target.value) })} />
-                  </Label>
-                  <Label text="Map index">
+                  </Field>
+                  <Field label="Map index">
                     <select value={settings.index} className={FIELD} onChange={(e) => set({ index: e.target.value as VegIndex })}>
                       {INDICES.map((i) => <option key={i} value={i}>{i}</option>)}
                     </select>
-                  </Label>
-                  <Label text="Composite">
+                  </Field>
+                  <Field label="Composite">
                     <select value={settings.reducer} className={FIELD} onChange={(e) => set({ reducer: e.target.value as Reducer })}>
                       {REDUCERS.map((r) => <option key={r} value={r}>{r}</option>)}
                     </select>
-                  </Label>
+                  </Field>
                 </div>
                 {!yearsValid && (
                   <p className="text-xs text-amber-800">Use years from 1984 to {THIS_YEAR}, at least five years apart.</p>
@@ -230,7 +195,7 @@ export default function ForestTrendsPage() {
 
                 {error && <p className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>}
 
-                <button type="button" className={GOLD_BUTTON} onClick={calculate}
+                <button type="button" className={buttonClass("primary", "w-full py-2.5")} onClick={calculate}
                   disabled={!ring || tooLarge || running || !yearsValid}>
                   {running ? <><Loader2 size={15} className="animate-spin" aria-hidden="true" /> Calculating…</> : "Calculate trends"}
                 </button>
@@ -240,7 +205,7 @@ export default function ForestTrendsPage() {
               </section>
 
               {result && (
-                <section className="space-y-3 bg-white p-5 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]">
+                <section className={`space-y-3 bg-white p-5 ${SHADOW}`}>
                   <div>
                     <h2 className="text-xl font-bold text-navy-deep">Region summary</h2>
                     <p className="mt-0.5 font-mono text-xs text-slate-500">
@@ -297,7 +262,7 @@ export default function ForestTrendsPage() {
             </aside>
 
             {/* Map */}
-            <section className="min-w-0 self-start bg-white shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]">
+            <section className={`min-w-0 self-start bg-white ${SHADOW}`}>
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-3 py-2">
                 <div className="flex flex-wrap items-center gap-1.5" role="toolbar" aria-label="Draw a region">
                   {([
@@ -380,7 +345,7 @@ export default function ForestTrendsPage() {
           )}
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <section className="bg-white p-6 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]">
+            <section className={`bg-white p-6 ${SHADOW}`}>
               <h2 className="text-xl font-bold text-navy-deep">About the method</h2>
               <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-700">
                 <p>Non-parametric statistics detect vegetation change, so results are robust against outliers and sensor noise.</p>
@@ -396,7 +361,7 @@ export default function ForestTrendsPage() {
               </div>
             </section>
 
-            <section className="bg-white p-6 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]">
+            <section className={`bg-white p-6 ${SHADOW}`}>
               <h2 className="text-xl font-bold text-navy-deep">Data sources and credit</h2>
               <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-slate-700">
                 <li><a className="font-semibold text-navy underline underline-offset-2" href="https://developers.google.com/earth-engine/datasets/catalog/landsat" target="_blank" rel="noopener noreferrer">Landsat Collection 2 surface reflectance</a> (USGS)</li>
@@ -422,8 +387,6 @@ export default function ForestTrendsPage() {
               </div>
             </section>
           </div>
-        </div>
-      </main>
-    </div>
+    </AppPage>
   );
 }
