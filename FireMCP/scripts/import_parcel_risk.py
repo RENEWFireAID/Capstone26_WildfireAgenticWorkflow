@@ -2,9 +2,12 @@
 
 """
 Import the parcel fire risk export (fnsb_parcel_risk.geojson) into MongoDB parcel_risk.
-Each GeoJSON feature is stored as-is: its properties, geometry and Earth Engine id.
+Only the fields the app uses are stored. The borough's parcel data also has owner
+names, mailing addresses and assessed values, which must stay out of the database.
 Replaces the collection, so rerun it with a fresh export when the notebook changes.
-Usage: python3 import_parcel_risk.py <path_to_geojson>
+Usage, inside the FireMCP container, which has MONGODB_URI and pymongo:
+    docker cp fnsb_parcel_risk.geojson firemcp:/tmp/
+    docker exec firemcp python scripts/import_parcel_risk.py /tmp/fnsb_parcel_risk.geojson
 """
 
 import json
@@ -17,6 +20,7 @@ MONGO_URI = os.getenv(
     "MONGODB_URI", "mongodb://root:password@localhost:27018/fireaid?authSource=admin"
 )
 DB_NAME = os.getenv("MONGODB_DB", "fireaid")
+FIELDS = ("PAN", "PARCEL_SUB", "PARCEL_BLO", "PARCEL_LOT", "PARCEL_TYP", "risk_score")
 
 
 def import_geojson(filepath: str):
@@ -24,7 +28,7 @@ def import_geojson(filepath: str):
         features = json.load(f)["features"]
 
     docs = [
-        {**feat["properties"], "ee_id": feat.get("id"), "geometry": feat.get("geometry")}
+        {**{k: v for k, v in feat["properties"].items() if k in FIELDS}, "geometry": feat.get("geometry")}
         for feat in features
     ]
     client = MongoClient(MONGO_URI)

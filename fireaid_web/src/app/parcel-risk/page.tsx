@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import { MapPin, Search } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
@@ -73,16 +73,24 @@ export default function ParcelRiskPage() {
       .catch((e) => setStatus(errorText(e)));
   }, []);
 
+  // Only the newest lookup may show its result; an older one can come back later.
+  const latestPick = useRef(0);
+  const latestSearch = useRef(0);
+
   async function pick(point: MapPoint) {
+    const id = ++latestPick.current;
     setSelected(point);
     setSpot("Looking up this spot…");
-    setSpot(await lookup({ lat: point.latitude, lon: point.longitude }).catch(errorText));
+    const result = await lookup({ lat: point.latitude, lon: point.longitude }).catch(errorText);
+    if (id === latestPick.current) setSpot(result);
   }
 
   async function search(e: FormEvent) {
     e.preventDefault();
+    const id = ++latestSearch.current;
     setFound("Searching…");
-    setFound(await lookup({ pan: parcelId.trim() }).then((d) => d.parcels, errorText));
+    const result = await lookup({ pan: parcelId.trim() }).then((d) => d.parcels, errorText);
+    if (id === latestSearch.current) setFound(result);
   }
 
   return (
