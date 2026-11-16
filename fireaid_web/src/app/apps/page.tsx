@@ -79,21 +79,19 @@ const APPS = [
 // Each card's cover is the colour scale its app uses for data, so the colour on
 // this page means what it means inside the app. The two reference apps have no
 // data scale and wear the UAF colours instead.
-type Cover = { colors: string[]; stepped?: boolean; scale?: string; accent: string };
+type Cover = { colors: string[]; scale?: string; accent: string };
 const COVERS: Record<string, Cover> = {
-  "Fire History": { colors: ["#22c55e", "#eab308", "#ea580c", "#dc2626"], stepped: true, scale: "Fire size: 10 to 10,000+ acres", accent: "#c2410c" },
-  "Alaska Fire Risk": { colors: ["#2563eb", "#15803d", "#facc15", "#f97316", "#dc2626"], stepped: true, scale: "AICC danger: Low to Extreme", accent: "#b45309" },
-  "Wildfire Prediction": { colors: ["#22c55e", "#eab308", "#f97316", "#dc2626"], stepped: true, scale: "Fire probability: <25% to ≥75%", accent: "#dc2626" },
+  "Fire History": { colors: ["#22c55e", "#eab308", "#ea580c", "#dc2626"], scale: "Fire size: 10 to 10,000+ acres", accent: "#c2410c" },
+  "Alaska Fire Risk": { colors: ["#2563eb", "#15803d", "#facc15", "#f97316", "#dc2626"], scale: "AICC danger: Low to Extreme", accent: "#b45309" },
+  "Wildfire Prediction": { colors: ["#22c55e", "#eab308", "#f97316", "#dc2626"], scale: "Fire probability: <25% to ≥75%", accent: "#dc2626" },
   "Forest Trends": { colors: ["#e5d7b3", "#aed581", "#1b5e20"], scale: "NDVI greenness", accent: "#15803d" },
   "Burn Severity Recovery": { colors: ["#006400", "#70a800", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026", "#7a0000"], scale: "dNBR burn severity", accent: "#bd0026" },
   "Publication": { colors: ["#0a1f3d", "#003366", "#2a78d6", "#8ec5f5"], accent: "#2a78d6" },
   "Terminology": { colors: ["#003366", "#1d4f80", "#ffcc33"], accent: "#a77b00" },
 };
 
-function coverBackground({ colors, stepped }: Cover) {
-  if (!stepped) return `linear-gradient(100deg, ${colors.join(", ")})`;
-  const w = 100 / colors.length;
-  return `linear-gradient(90deg, ${colors.map((c, i) => `${c} ${(i * w).toFixed(2)}% ${((i + 1) * w).toFixed(2)}%`).join(", ")})`;
+function coverBackground({ colors }: Cover) {
+  return `linear-gradient(100deg, ${colors.join(", ")})`;
 }
 
 // Reference tools sit apart from the apps that map and model fire data.
