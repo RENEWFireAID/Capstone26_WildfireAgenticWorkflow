@@ -1,7 +1,12 @@
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { Barlow_Condensed, Zilla_Slab } from "next/font/google";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import PageHeader from "@/components/layout/PageHeader";
-import { ArrowUpRight, BookOpen, FileText, Flame, Satellite, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
+import burnSeverityPreview from "./previews/burn-severity.jpg";
+import fireHistoryPreview from "./previews/fire-history.jpg";
+import fireRiskPreview from "./previews/fire-risk.jpg";
+import forestTrendsPreview from "./previews/forest-trends.jpg";
+import { ArrowRight, BookOpen, FileText, Flame, Satellite, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
 
 const APPS = [
   {
@@ -76,74 +81,61 @@ const APPS = [
   },
 ];
 
-// Each card's cover is the colour scale its app uses for data, so the colour on
-// this page means what it means inside the app. The two reference apps have no
-// data scale and wear the UAF colours instead.
-type Cover = { colors: string[]; scale?: string; accent: string };
-const COVERS: Record<string, Cover> = {
-  // The map's 100+ acre classes, ending on its largest-fire outline, so the band
-  // reads as embers rather than repeating the green-to-red of the next two cards.
-  "Fire History": { colors: ["#eab308", "#ea580c", "#dc2626", "#7f1d1d"], scale: "Fire size: 100 to 10,000+ acres", accent: "#c2410c" },
-  "Alaska Fire Risk": { colors: ["#2563eb", "#15803d", "#facc15", "#f97316", "#dc2626"], scale: "AICC danger: Low to Extreme", accent: "#b45309" },
-  // Inferno, a standard probability scale, keeps this card apart from the two
-  // above; the app's own map still uses green to red.
-  "Wildfire Prediction": { colors: ["#2d0a5b", "#7a1d6f", "#c2364e", "#f1701f", "#fcd34d"], scale: "Fire probability: low to high", accent: "#9d174d" },
-  "Forest Trends": { colors: ["#e5d7b3", "#aed581", "#1b5e20"], scale: "NDVI greenness", accent: "#15803d" },
-  "Burn Severity Recovery": { colors: ["#006400", "#70a800", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026", "#7a0000"], scale: "dNBR burn severity", accent: "#bd0026" },
-  "Publication": { colors: ["#0a1f3d", "#236192", "#2a78d6", "#8ec5f5"], accent: "#2a78d6" },
-  "Terminology": { colors: ["#236192", "#1d4f80", "#ffcd00"], accent: "#a77b00" },
+// uaf.edu's type: Zilla Slab headings and condensed capitals on its gold buttons.
+const zilla = Zilla_Slab({ subsets: ["latin"], weight: ["600", "700"] });
+const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ["600"] });
+
+// A screenshot of each app's main view with real data in it, captured from the
+// live site; apps with no map to show fall back to their icon on UAF Blue.
+const PREVIEWS: Record<string, StaticImageData> = {
+  "Fire History": fireHistoryPreview,
+  "Alaska Fire Risk": fireRiskPreview,
+  "Forest Trends": forestTrendsPreview,
+  "Burn Severity Recovery": burnSeverityPreview,
 };
 
-function coverBackground({ colors }: Cover) {
-  return `linear-gradient(100deg, ${colors.join(", ")})`;
-}
+// uaf.edu's backdrops: contour lines on navy and scattered peaks on UAF Blue.
+const CONTOURS = [
+  "repeating-radial-gradient(ellipse at 12% 20%, transparent 0 26px, rgba(135,209,230,0.07) 26px 27px)",
+  "repeating-radial-gradient(ellipse at 88% 85%, transparent 0 30px, rgba(135,209,230,0.06) 30px 31px)",
+].join(", ");
+const PEAKS = `url("data:image/svg+xml,${encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><g fill='#111c4e' fill-opacity='0.35'><path d='M30 40l8 13H22z'/><path d='M160 30l6 10h-12z'/><path d='M110 120l9 15H101z'/><path d='M190 170l7 11h-14z'/><path d='M50 180l6 10H44z'/></g></svg>",
+)}")`;
 
 // Reference tools sit apart from the apps that map and model fire data.
 const REFERENCE = new Set(["Publication", "Terminology"]);
 const SECTIONS = [
-  { title: "Fire and vegetation", apps: APPS.filter((a) => !REFERENCE.has(a.label)) },
-  { title: "Reference", apps: APPS.filter((a) => REFERENCE.has(a.label)) },
+  { title: "Fire and vegetation", note: "Map, forecast and model Alaska fire and its aftermath.", apps: APPS.filter((a) => !REFERENCE.has(a.label)), onBlue: false, backdrop: { backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS } },
+  { title: "Reference", note: "Look up the research and the terms behind the apps.", apps: APPS.filter((a) => REFERENCE.has(a.label)), onBlue: true, backdrop: { backgroundColor: "var(--color-navy)", backgroundImage: PEAKS } },
 ];
 
-function AppCard({ app }: { app: (typeof APPS)[number] }) {
+// onBlue: the card sits on the UAF Blue section, so its icon panel goes navy to stay distinct.
+function AppCard({ app, onBlue }: { app: (typeof APPS)[number]; onBlue: boolean }) {
   const { label, kind, desc, data, icon: Icon, href, developer, role } = app;
-  const cover = COVERS[label];
+  const preview = PREVIEWS[label];
   return (
-    <Link
-      href={href}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_10px_30px_-14px_rgba(0,51,102,0.45)]"
-    >
-      <div className="relative h-20 shrink-0" style={{ background: coverBackground(cover) }}>
-        {/* A soft top light so flat colour bands read as a surface. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent" aria-hidden="true" />
-        {cover.scale && (
-          <span className="absolute bottom-2 right-2 rounded bg-white/90 px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-700 shadow-sm">
-            {cover.scale}
-          </span>
+    <Link href={href} className="group flex h-full flex-col bg-white shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5">
+      <div className={`relative aspect-[2/1] overflow-hidden ${onBlue ? "bg-navy-deep" : "bg-navy"}`}>
+        {preview ? (
+          <Image src={preview} alt={`${label} with real data`}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]" />
+        ) : (
+          <div className="flex h-full items-center justify-center" style={{ backgroundImage: PEAKS }}>
+            <Icon size={64} strokeWidth={1.25} className="text-white" aria-hidden="true" />
+          </div>
         )}
       </div>
+      {/* uaf.edu's rule: UAF light blue through grey to UAF Gold. */}
+      <div className="h-1 bg-[linear-gradient(90deg,var(--color-uaf-sky)_0%,#c4cfda_50%,var(--color-gold)_100%)]" aria-hidden="true" />
 
-      <div className="flex flex-1 flex-col px-5 pb-5">
-        <div className="-mt-6 flex items-end justify-between">
-          <span
-            className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-[0_4px_12px_-4px_rgba(15,27,45,0.35)] ring-1 ring-slate-200"
-            style={{ color: cover.accent }}
-          >
-            <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
-          </span>
-          <ArrowUpRight
-            size={18}
-            className="text-slate-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-navy"
-            aria-hidden="true"
-          />
-        </div>
-
-        <p className="mt-4 font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em]" style={{ color: cover.accent }}>{kind}</p>
-        <h3 className="mt-1 text-lg font-bold tracking-tight text-navy-deep">{label}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{desc}</p>
+      <div className="flex flex-1 flex-col p-6">
+        <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-navy">{kind}</p>
+        <h3 className={`${zilla.className} mt-1 text-2xl font-bold leading-tight text-navy-deep`}>{label}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
 
         <div className="flex-1" />
-        <dl className="mt-5 grid gap-2 border-t border-slate-100 pt-4 text-xs">
+        <dl className="mt-5 grid gap-1.5 text-xs">
           <div className="grid grid-cols-[64px_minmax(0,1fr)] gap-2">
             <dt className="text-slate-500">Data</dt>
             <dd className="text-slate-700">{data}</dd>
@@ -156,6 +148,11 @@ function AppCard({ app }: { app: (typeof APPS)[number] }) {
             </dd>
           </div>
         </dl>
+
+        <span className={`${barlowCondensed.className} mt-5 inline-flex items-center justify-center gap-2 self-start bg-gold px-6 py-2.5 text-[15px] uppercase tracking-wide text-navy-deep transition group-hover:bg-[#ffd633]`}>
+          Open app
+          <ArrowRight size={16} aria-hidden="true" className="transition group-hover:translate-x-0.5" />
+        </span>
       </div>
     </Link>
   );
@@ -167,29 +164,29 @@ export default function AppsPage() {
       <FireAIDSidebar />
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <PageHeader
-          eyebrow="FireAID"
-          title="Apps"
-          description="Seven tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab."
-        />
+        <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-10">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
+          <h1 className={`${zilla.className} mt-1 text-4xl font-bold leading-tight text-navy-deep`}>Apps</h1>
+          <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
+            Seven tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
+          </p>
+        </header>
 
-        <div className="flex flex-1 flex-col gap-10 px-6 py-8 md:px-10">
-          {SECTIONS.map(({ title, apps }) => (
-            <section key={title} className="max-w-6xl">
-              <div className="mb-4 flex items-baseline gap-3 border-b border-slate-200 pb-2">
-                <h2 className="text-lg font-bold tracking-tight text-navy-deep">{title}</h2>
-                <span className="font-mono text-xs text-slate-500">{apps.length} apps</span>
-              </div>
-              <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {SECTIONS.map(({ title, note, apps, onBlue, backdrop }) => (
+          <section key={title} className="px-6 py-10 md:px-10" style={backdrop}>
+            <div className="max-w-6xl">
+              <h2 className={`${zilla.className} text-3xl font-bold text-white`}>{title}</h2>
+              <p className="mt-1 text-sm text-slate-200">{note}</p>
+              <ul className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {apps.map((app) => (
                   <li key={app.label} className="min-w-0">
-                    <AppCard app={app} />
+                    <AppCard app={app} onBlue={onBlue} />
                   </li>
                 ))}
               </ul>
-            </section>
-          ))}
-        </div>
+            </div>
+          </section>
+        ))}
       </main>
     </div>
   );
