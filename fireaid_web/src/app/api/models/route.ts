@@ -6,5 +6,6 @@ export async function GET() {
     agent: modelsFor("agent"),
     fireHistory: modelsFor("fireHistory"),
     fireRisk: modelsFor("fireRisk"),
+    parcelRisk: modelsFor("parcelRisk"),
   });
 }

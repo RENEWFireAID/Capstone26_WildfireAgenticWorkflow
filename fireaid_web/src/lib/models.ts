@@ -8,9 +8,11 @@ export const MODELS = {
   fireHistory: process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5",
   // Alaska Fire Risk chat (/fire-risk).
   fireRisk: process.env.FIRE_CHAT_MODEL || "anthropic/claude-sonnet-5.5",
+  // Parcel Fire Risk chat (/parcel-risk).
+  parcelRisk: process.env.PARCEL_CHAT_MODEL || "anthropic/claude-haiku-5.5",
 };
 
-export type ModelFeature = "agent" | "fireHistory" | "fireRisk";
+export type ModelFeature = "agent" | "fireHistory" | "fireRisk" | "parcelRisk";
 
 // What each page shows, in the order the models run.
 export function modelsFor(feature: ModelFeature): { id: string; task?: string }[] {

@@ -6,7 +6,8 @@ import burnSeverityPreview from "./previews/burn-severity.jpg";
 import fireHistoryPreview from "./previews/fire-history.jpg";
 import fireRiskPreview from "./previews/fire-risk.jpg";
 import forestTrendsPreview from "./previews/forest-trends.jpg";
-import { ArrowRight, BookOpen, FileText, Flame, Satellite, Sprout, TriangleAlert } from "lucide-react";
+import parcelRiskPreview from "./previews/parcel-risk.jpg";
+import { ArrowRight, BookOpen, FileText, Flame, MapPinned, Satellite, Sprout, TriangleAlert } from "lucide-react";
 
 const APPS = [
   {
@@ -50,6 +51,16 @@ const APPS = [
     role: "Undergraduate Researcher · UAA Computer Science",
   },
   {
+    label: "Parcel Fire Risk",
+    kind: "Property risk",
+    desc: "See the vegetation fire risk of any property in the Fairbanks North Star Borough: click the map or look up a parcel number for its 0-100 score.",
+    data: "FNSB vegetation map and tax parcels · 63,884 parcel records · Google Earth Engine",
+    icon: MapPinned,
+    href: "/parcel-risk",
+    developer: "Emma Heil and Darshan Nautiyal",
+    role: "Undergraduate Researchers · UAF Wildlife Biology and Conservation, UAF Computer Science",
+  },
+  {
     label: "Publication",
     kind: "Research literature",
     desc: "Find research by meaning rather than keywords across a library of fire, climate and ecology abstracts.",
@@ -78,6 +89,7 @@ const PREVIEWS: Record<string, StaticImageData> = {
   "Alaska Fire Risk": fireRiskPreview,
   "Forest Trends": forestTrendsPreview,
   "Burn Severity Recovery": burnSeverityPreview,
+  "Parcel Fire Risk": parcelRiskPreview,
 };
 
 // Reference tools sit apart from the apps that map and model fire data.
@@ -145,7 +157,7 @@ export default function AppsPage() {
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
           <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Apps</h1>
           <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
-            Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
+            Seven tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
           </p>
         </header>
 

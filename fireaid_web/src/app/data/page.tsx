@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, CloudSun, FileText, Flame, Snowflake, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, BookOpen, CloudSun, FileText, Flame, LandPlot, Snowflake, ThermometerSun, type LucideIcon } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 
@@ -52,6 +52,22 @@ const OTHER_DATA: Dataset[] = [
     detail: "External · CALM, George Washington University",
     icon: Snowflake,
     href: "https://www2.gwu.edu/~calm/data/north.htm",
+    external: true,
+  },
+  {
+    label: "FNSB parcels",
+    desc: "The borough's parcel boundaries with tax roll information, used unaltered by Parcel Fire Risk.",
+    detail: "External · Fairbanks North Star Borough",
+    icon: LandPlot,
+    href: "https://gis-data-fnsb.hub.arcgis.com/datasets/4af1635b48c1490784c5f9cb1e0a8a49_0/explore",
+    external: true,
+  },
+  {
+    label: "Fire weather",
+    desc: "Daily weather and Fire Weather Index values from stations across Alaska, including 17 around Fairbanks.",
+    detail: "External · Alaska Fire & Fuels, MesoWest",
+    icon: ThermometerSun,
+    href: "https://akff.mesowest.org/",
     external: true,
   },
 ];
@@ -126,10 +142,10 @@ export default function DataPage() {
         />
         <Section
           title="Other sources"
-          note="Live conditions and an outside dataset alongside FireAID's own."
+          note="Live conditions and outside datasets alongside FireAID's own."
           data={OTHER_DATA}
           backdrop={{ backgroundColor: "var(--color-navy)", backgroundImage: PEAKS }}
-          columns="md:grid-cols-2 md:max-w-3xl"
+          columns="md:grid-cols-2 xl:grid-cols-4"
           last
         />
       </main>
