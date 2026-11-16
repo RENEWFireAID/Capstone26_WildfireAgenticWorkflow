@@ -32,7 +32,6 @@ type QuerySpec = {
   yearStart?: number;
   yearEnd?: number;
   prescribed?: PrescribedMode;
-  state?: string;
   acresMin?: number;
   acresMax?: number;
   limit?: number;
@@ -49,7 +48,6 @@ export default function McpToolsPage() {
     yearStart: 2020,
     yearEnd: 2020,
     prescribed: "all",
-    state: "Alaska",
     acresMin: undefined,
     acresMax: undefined,
     limit: 200,
@@ -137,7 +135,6 @@ export default function McpToolsPage() {
         ? "wildfires"
         : "fires";
 
-    const statePart = spec.state ? `in ${spec.state}` : "";
     const limitPart = spec.limit ? `limit ${spec.limit}` : "";
 
     const acresPart =
@@ -145,7 +142,7 @@ export default function McpToolsPage() {
         ? `acres ${spec.acresMin ?? 0} to ${spec.acresMax ?? "max"}`
         : "";
 
-    return `Show ${prescribedPart} ${statePart} ${yearPart}. ${acresPart}. ${limitPart}`
+    return `Show ${prescribedPart} in Alaska ${yearPart}. ${acresPart}. ${limitPart}`
       .replace(/\s+/g, " ")
       .trim();
   }, [spec]);
@@ -162,7 +159,6 @@ export default function McpToolsPage() {
         yearStart: s.yearStart ?? 2020,
         yearEnd: s.yearEnd ?? s.yearStart ?? 2020,
         prescribed: s.prescribed === "all" ? null : s.prescribed === "yes" ? "Y" : "N",
-        state: s.state ?? undefined,
         acresMin: s.acresMin ?? undefined,
         acresMax: s.acresMax ?? undefined,
         bbox: s.bbox ?? null,
@@ -490,15 +486,6 @@ function QueryBuilderPanel({
           </div>
         </Field>
 
-        <Field label="State (UI only for now)">
-          <input
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
-            value={spec.state ?? ""}
-            onChange={(e) => set({ state: e.target.value || undefined })}
-            placeholder="e.g., Alaska"
-          />
-        </Field>
-
         <Field label="Acres">
           <div className="grid grid-cols-2 gap-2">
             <input
@@ -557,7 +544,6 @@ function QueryBuilderPanel({
               yearStart: 2020,
               yearEnd: 2020,
               prescribed: "all",
-              state: "Alaska",
               acresMin: undefined,
               acresMax: undefined,
               limit: 200,
