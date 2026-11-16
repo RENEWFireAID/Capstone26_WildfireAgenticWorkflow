@@ -27,7 +27,8 @@ export function modelName(id: string): string {
     .replace(/^GPT /, "GPT-");
 }
 
-export default function ModelBadge({ feature, className = "" }: { feature: ModelFeature; className?: string }) {
+// onDark lightens the text for use over a dark section.
+export default function ModelBadge({ feature, className = "", onDark = false }: { feature: ModelFeature; className?: string; onDark?: boolean }) {
   const [models, setModels] = useState<ModelInfo[] | null>(null);
 
   useEffect(() => {
@@ -45,14 +46,14 @@ export default function ModelBadge({ feature, className = "" }: { feature: Model
   if (!models?.length) return null;
 
   return (
-    <div className={`flex items-center gap-1.5 text-[11px] text-slate-400 ${className}`} title={models.map((m) => m.id).join(", ")}>
+    <div className={`flex items-center gap-1.5 text-[11px] ${onDark ? "text-slate-300" : "text-slate-400"} ${className}`} title={models.map((m) => m.id).join(", ")}>
       <Cpu size={12} aria-hidden="true" />
       <span>
         {models.length > 1 ? "Models: " : "Model: "}
         {models.map((m, i) => (
           <span key={m.id}>
             {i > 0 && ", "}
-            <span className="font-medium text-slate-500">{modelName(m.id)}</span>
+            <span className={`font-medium ${onDark ? "text-white" : "text-slate-500"}`}>{modelName(m.id)}</span>
             {m.task && ` (${m.task})`}
           </span>
         ))}

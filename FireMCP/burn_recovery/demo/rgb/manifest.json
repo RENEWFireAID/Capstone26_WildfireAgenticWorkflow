@@ -1,0 +1,495 @@
+{
+  "complete": true,
+  "generated_utc": "2026-10-04T05:39:32.586728+00:00",
+  "script_sha256": "c3c6db8dbed49b61c6dd9dcaf39555f2362323a19c74981d52dfea6b9112a337",
+  "source_sha256": {
+    "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+    "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5"
+  },
+  "method": "Pooled scalar 2nd/98th percentiles of RGB channel values, with equal sampled pixel counts from all nine fire/year images. One shared range and gamma for every image.",
+  "sampling": {
+    "scale_m": 30,
+    "requested_pixels_per_image": 5000,
+    "seed": 20261003,
+    "drop_null_rgb": true
+  },
+  "note": "Display only. Fresh renders from original HLS reflectance; dNBR, NDVI, masks, model inputs and results stay unchanged.",
+  "fires": {
+    "Shovel Creek": {
+      "original_manifest_sha256": "565ee94c4022bdcb43126b74395e348a66e76951dfaff1d30e07db80a19ba620",
+      "sample_manifest_sha256": "08e23278a70622624ae6b06fc180f091c4c3b4937853b061901064ac0d7a8911",
+      "crs": "EPSG:32606",
+      "projected_bounds": {
+        "geodesic": false,
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:32606"
+          }
+        },
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              428777.3291868532,
+              7203058.857505056
+            ],
+            [
+              448550.9451895743,
+              7203058.857505056
+            ],
+            [
+              448550.9451895743,
+              7212486.598741517
+            ],
+            [
+              428777.3291868532,
+              7212486.598741517
+            ],
+            [
+              428777.3291868532,
+              7203058.857505056
+            ]
+          ]
+        ]
+      },
+      "layers": {
+        "brighter_2018": {
+          "file": "brighter_2018.png",
+          "sha256": "0bc357ec208825e4d0431bd647e222173f4586fc667dac114741aa5848fc6df8",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2018": {
+          "file": "percentile_2018.png",
+          "sha256": "8d48b365bea4f7a9b1a4cc029c51d68e8ad69be7c395031eb929e438b580b620",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0704140828165633,
+          "sample_channel_fraction_above": 0.00026672001066880045
+        },
+        "brighter_2020": {
+          "file": "brighter_2020.png",
+          "sha256": "f6ece152e34c93abc5fafd0c22268866fd4e89cb64e379267788309daff48ab9",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2020": {
+          "file": "percentile_2020.png",
+          "sha256": "287a182c80bff7cf62edb402f6f4065ef28f58ff8f574c7281fd28c0658f5bec",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.012538348672802454,
+          "sample_channel_fraction_above": 0.0002667733760170735
+        },
+        "brighter_2024": {
+          "file": "brighter_2024.png",
+          "sha256": "00e5d2dbbdaec86681521a25124ed43932a14ce03570073feb485fab09408ed2",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2024": {
+          "file": "percentile_2024.png",
+          "sha256": "18aeeb4c299f0619a87c4424ddacedc3ee7bc5db38ef0cab3670cfa0e59e7783",
+          "width": 900,
+          "height": 430,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0008668400346736014,
+          "sample_channel_fraction_above": 0.00626792025071681
+        }
+      }
+    },
+    "Swan Lake": {
+      "original_manifest_sha256": "adc2e3333fbc74444210bcf7ab7c0a2fc99c128f341e848c6bf9dc8a0fb425f0",
+      "sample_manifest_sha256": "e3f09c24a7d21023c0f52e3e2c2ecfceeaa2508f72c6b77212bc51294dc8dffa",
+      "crs": "EPSG:32605",
+      "projected_bounds": {
+        "geodesic": false,
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:32605"
+          }
+        },
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              635522.0943622425,
+              6702731.444479361
+            ],
+            [
+              672468.8011669128,
+              6702731.444479361
+            ],
+            [
+              672468.8011669128,
+              6736147.281286448
+            ],
+            [
+              635522.0943622425,
+              6736147.281286448
+            ],
+            [
+              635522.0943622425,
+              6702731.444479361
+            ]
+          ]
+        ]
+      },
+      "layers": {
+        "brighter_2018": {
+          "file": "brighter_2018.png",
+          "sha256": "598a2ee062b0f21e901f652810a9133acf41372ee38ea4c6747b0c14bb8ee338",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0016093341380004024
+        },
+        "percentile_2018": {
+          "file": "percentile_2018.png",
+          "sha256": "a6eb56168687d368631bcfc35bd1e74c6bac7b4741276e93314ee1cd4311412a",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.023335345001005835,
+          "sample_channel_fraction_above": 0.03741701870850935
+        },
+        "brighter_2020": {
+          "file": "brighter_2020.png",
+          "sha256": "06b781fa0fbc16c9ac73006ff94bba83769dc195483d29038748871f2a4eface",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.00020048115477145148
+        },
+        "percentile_2020": {
+          "file": "percentile_2020.png",
+          "sha256": "c996a2c1eba6138acdcc2ab5af9a7a3aef43d83e6856da25fae02db9e1764cce",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.004878374766105319,
+          "sample_channel_fraction_above": 0.03334669874365143
+        },
+        "brighter_2024": {
+          "file": "brighter_2024.png",
+          "sha256": "fd51a25f42a2f9580ec742cef49c7ac3c22a59abd814502efe3ab10c321b6327",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0002007226013649137,
+          "sample_channel_fraction_above": 0.0024086712163789645
+        },
+        "percentile_2024": {
+          "file": "percentile_2024.png",
+          "sha256": "5348c10c80d6386c10b8f3b4e78dcfc7b10f07223e42cc1a09731e1a3d478171",
+          "width": 900,
+          "height": 814,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0028101164191087916,
+          "sample_channel_fraction_above": 0.0807573932824836
+        }
+      }
+    },
+    "Nugget Creek": {
+      "original_manifest_sha256": "16857faae180a8954885abce277d3ffa0f458950bf9dae5502fa796951801567",
+      "sample_manifest_sha256": "1eb388d88d401a5569e4cc1695d914764dc536f5b47eec4e14a46ed3292e24af",
+      "crs": "EPSG:32606",
+      "projected_bounds": {
+        "geodesic": false,
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:32606"
+          }
+        },
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              516008.4640789292,
+              7188193.6537655555
+            ],
+            [
+              528986.638126992,
+              7188193.6537655555
+            ],
+            [
+              528986.638126992,
+              7197482.078363734
+            ],
+            [
+              516008.4640789292,
+              7197482.078363734
+            ],
+            [
+              516008.4640789292,
+              7188193.6537655555
+            ]
+          ]
+        ]
+      },
+      "layers": {
+        "brighter_2018": {
+          "file": "brighter_2018.png",
+          "sha256": "fdd9ed117b7d5b96b3583d19ff82d505407fe2274b03869f0a81e0d55c79a9e7",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 6.738090425173506e-05,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2018": {
+          "file": "percentile_2018.png",
+          "sha256": "755d27ac3dcb12090b10681819eb79b9bf2d3e13d1ff46dc3ceef15c2b023f4d",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2018 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.06104709925207196,
+          "sample_channel_fraction_above": 0.00026952361700694025
+        },
+        "brighter_2020": {
+          "file": "brighter_2020.png",
+          "sha256": "9c56bf4acb1b8b2ca95de20dacdc59bf2050e2c9d19cac2ffa83de80449150ae",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2020": {
+          "file": "percentile_2020.png",
+          "sha256": "4fd4c2d46211899fc2a773af63f8131c8fe40c5e146dfe29cfb6837257f61894",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2020 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0020222446916076846,
+          "sample_channel_fraction_above": 0.003302999662959218
+        },
+        "brighter_2024": {
+          "file": "brighter_2024.png",
+          "sha256": "27c9b73f103b70371d1872457c722d9febc18ec844844327de99485286037981",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0,
+            "max": 0.15,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Brighter fixed stretch; reflectance 0.0000 to 0.1500, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0,
+          "sample_channel_fraction_above": 0.0
+        },
+        "percentile_2024": {
+          "file": "percentile_2024.png",
+          "sha256": "7710066602d6464dedd7e71c24538809f89b12ec80477212903ef592e9fe9ff7",
+          "width": 900,
+          "height": 645,
+          "visualization": {
+            "bands": [
+              "Red",
+              "Green",
+              "Blue"
+            ],
+            "min": 0.012700000000000001,
+            "max": 0.06430000000000001,
+            "gamma": 1.3
+          },
+          "description": "2024 summer median-reflectance natural color. Shared 2-98% sample stretch; reflectance 0.0127 to 0.0643, gamma 1.3. Identical range across all fires and years. Display only.",
+          "sample_channel_fraction_below": 0.0006064281382656155,
+          "sample_channel_fraction_above": 0.016710464254430294
+        }
+      }
+    }
+  },
+  "sample_sha256": "c62fcf0f3a57afa10caece163b176d16b7e94aafd4d833e3ae01a2e5f647b5a3",
+  "shared_limits": {
+    "min": 0.012700000000000001,
+    "max": 0.06430000000000001,
+    "equal_pixels_per_image": 4945,
+    "channel_values": 133515,
+    "percentiles": [
+      2,
+      98
+    ]
+  }
+}

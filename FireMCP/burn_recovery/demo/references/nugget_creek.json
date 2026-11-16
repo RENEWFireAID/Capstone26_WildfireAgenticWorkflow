@@ -1,0 +1,115 @@
+{
+  "fire": "Nugget Creek",
+  "event_id": "AK6487414655520190621",
+  "crs": "EPSG:32606",
+  "scale_m": 30,
+  "generated_utc": "2026-09-27T20:22:09.449087+00:00",
+  "source_sha256": {
+    "auth.py": "4fbe29bb89860df798fb4b6e93a23c483f4b774fda5a6053a58375c653cff6b1",
+    "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+    "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+    "landcover.py": "bc78261b2ce70cbd414ff08a7c28a56dce31f9e2d7fcb65f75deda673c46b493",
+    "modeling.py": "3b051a69a1947fafadb4d9619f6b253581ca6493e2883882935dfb9619a67eaa",
+    "severity.py": "e18a959cac6851f47e3201b71f3a2f1a34111ee76613409fbede9cb62f649b8a",
+    "terrain.py": "19bef7a9cdfb0c41394c92b7e0a2ebff666a392825d0a713cb399849a6bb62fb",
+    "timeseries.py": "8ffe51ab74e17d17dca9344941bcb478139eaf7e238171e3fafe0171877b7348",
+    "__init__.py": "dd36dca0b29d19e2a503a7492cda9af0168759aec673dce6e348de3310109ba6"
+  },
+  "script_sha256": "d1d3af45262931a3306c1653e32922e9b622e8560e13b70851b495826baa1f43",
+  "reference_asset": "USFS/GTAC/MTBS/annual_burn_severity_mosaics/v1/mtbs_AK_2019",
+  "metadata": {
+    "Asmnt_Type": "Extended",
+    "BurnBndAc": 17125,
+    "BurnBndLat": "64.859",
+    "BurnBndLon": "-146.526",
+    "Comment": "",
+    "Event_ID": "AK6487414655520190621",
+    "High_T": 615,
+    "Ig_Date": 1561100400000,
+    "IncGreen_T": -150,
+    "Incid_Name": "NUGGET CREEK",
+    "Incid_Type": "Wildfire",
+    "Low_T": 10,
+    "Map_ID": 10016667,
+    "Map_Prog": "MTBS",
+    "Mod_T": 360,
+    "NoData_T": -970,
+    "Perim_ID": "",
+    "Post_ID": "806801520200817",
+    "Pre_ID": "806801520180929",
+    "dNBR_offst": 20,
+    "dNBR_stdDv": 26,
+    "irwinID": "B178F7A8-013B-4E67-89E8-90EACEBEC4FA"
+  },
+  "dates": {
+    "Pre_ID": [
+      "2018-09-29",
+      "2018-09-30"
+    ],
+    "Post_ID": [
+      "2020-08-17",
+      "2020-08-18"
+    ]
+  },
+  "support": {
+    "common_m2": 60627372.355643466,
+    "date_paired_m2": 60628273.067740634,
+    "intersection_m2": 67994921.20489885,
+    "mtbs_mapped_m2": 67740971.39570215,
+    "summer_paired_m2": 67724419.52211769
+  },
+  "comparisons": [
+    {
+      "method": "summer_2018_2020",
+      "threshold": 615,
+      "neither_m2": 51326346.41599672,
+      "hls_only_m2": 2656172.865811217,
+      "mtbs_only_m2": 2484249.314751599,
+      "both_high_m2": 4160603.7590839462,
+      "paired_m2": 60627372.35564349,
+      "agreement": 0.9152128489024921,
+      "high_iou": 0.4473274008783121
+    },
+    {
+      "method": "summer_2018_2020",
+      "threshold": 660,
+      "neither_m2": 52871946.78467659,
+      "hls_only_m2": 1110572.4971313477,
+      "mtbs_only_m2": 3834646.0218946273,
+      "both_high_m2": 2810207.051879883,
+      "paired_m2": 60627372.355582446,
+      "agreement": 0.9184325771200832,
+      "high_iou": 0.3623536872589239
+    },
+    {
+      "method": "MTBS_calendar_dates",
+      "threshold": 615,
+      "neither_m2": 52073988.71863536,
+      "hls_only_m2": 1908530.5631725835,
+      "mtbs_only_m2": 1395195.106628418,
+      "both_high_m2": 5249657.967207127,
+      "paired_m2": 60627372.35564349,
+      "agreement": 0.9455076883355398,
+      "high_iou": 0.6137521932832881
+    },
+    {
+      "method": "MTBS_calendar_dates",
+      "threshold": 660,
+      "neither_m2": 53428583.32593636,
+      "hls_only_m2": 553935.955871582,
+      "mtbs_only_m2": 2879818.233122463,
+      "both_high_m2": 3765034.8406520467,
+      "paired_m2": 60627372.35558245,
+      "agreement": 0.9433629719451652,
+      "high_iou": 0.5230094707799965
+    }
+  ],
+  "limitations": [
+    "Reference-product agreement, not independent ground accuracy.",
+    "Calendar-date HLS composites are not an exact replication of MTBS imagery or processing.",
+    "MTBS classes 0 and 6 excluded; nearest-neighbor categorical sampling on explicit 30 m UTM grid.",
+    "Shared support may exclude difficult areas; report it alongside agreement.",
+    "Swan Lake reference baseline is 2017; the pipeline baseline remains 2018."
+  ],
+  "complete": true
+}

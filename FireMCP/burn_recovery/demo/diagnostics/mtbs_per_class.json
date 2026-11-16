@@ -1,0 +1,332 @@
+{
+  "metadata": {
+    "Asmnt_Type": "Extended",
+    "BurnBndAc": 22128,
+    "BurnBndLat": "64.988",
+    "BurnBndLon": "-148.3",
+    "Comment": "",
+    "Event_ID": "AK6498714841520190621",
+    "High_T": 700,
+    "Ig_Date": 1561100400000,
+    "IncGreen_T": -150,
+    "Incid_Name": "SHOVEL CREEK",
+    "Incid_Type": "Wildfire",
+    "Low_T": 80,
+    "Map_ID": 10016695,
+    "Map_Prog": "MTBS",
+    "Mod_T": 378,
+    "NoData_T": -970,
+    "Perim_ID": "",
+    "Post_ID": "B06WVT20200609_30m",
+    "Pre_ID": "A06WVT20180722_30m",
+    "dNBR_offst": 14,
+    "dNBR_stdDv": 18,
+    "irwinID": "9155A802-F466-4D32-AFA3-F0B2D823B2EB"
+  },
+  "threshold_convention": "class5: dNBR < -150; class1: -150 <= dNBR <= 80; class2: 80 < dNBR <= 378; class3: 378 < dNBR <= 700; class4: dNBR > 700; no offset applied",
+  "reference_classes": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "comparisons": [
+    {
+      "method": "summer_event_thresholds",
+      "common_m2": 79906486.20071733,
+      "overall_multiclass_agreement": 0.5627981771270989,
+      "confusion_matrix_m2": [
+        [
+          5161421.991351678,
+          933089.3548358993,
+          99727.0908095416,
+          900.6210327148438,
+          0.0
+        ],
+        [
+          3501928.269463273,
+          7837097.942160449,
+          1998466.5242153993,
+          52236.829528808594,
+          0.0
+        ],
+        [
+          409177.9967069737,
+          7596427.473304177,
+          19163910.338869102,
+          1653560.1513061523,
+          0.0
+        ],
+        [
+          13898.005796425015,
+          1362237.2775711357,
+          17312711.200464822,
+          12808794.50201416,
+          0.0
+        ],
+        [
+          0.0,
+          900.6312866210938,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "method": "matched_event_thresholds",
+      "common_m2": 79906486.20077838,
+      "overall_multiclass_agreement": 0.7553669813069754,
+      "confusion_matrix_m2": [
+        [
+          4295216.470365158,
+          1771826.9630981446,
+          127194.98839709711,
+          900.6361694335938,
+          0.0
+        ],
+        [
+          727615.9064627853,
+          8770917.13160113,
+          3650355.2691255463,
+          240841.25823950674,
+          0.0
+        ],
+        [
+          39038.11332074334,
+          2217824.688665652,
+          17723124.64633645,
+          8843088.511924595,
+          0.0
+        ],
+        [
+          0.0,
+          145684.28282039866,
+          1782493.6829383997,
+          29569463.020026714,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          900.6312866210938,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "method": "summer_provisional_merged",
+      "common_m2": 79906486.20059815,
+      "overall_multiclass_agreement": 0.6152963743772166,
+      "confusion_matrix_m2": [
+        [
+          5330568.127326516,
+          631655.6805082434,
+          227355.98072318282,
+          1801.2415771484375,
+          3758.0278947418815
+        ],
+        [
+          4149670.894998707,
+          5012864.568362247,
+          4124521.555745204,
+          100871.23400878906,
+          1801.3121948242188
+        ],
+        [
+          545753.2386536842,
+          2890846.5613685763,
+          22328552.63723503,
+          3057923.522990148,
+          0.0
+        ],
+        [
+          23603.694862515316,
+          279801.63829393574,
+          14700049.73704068,
+          16494185.915527344,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          900.6312866210938,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  ],
+  "per_class": [
+    {
+      "method": "summer_event_thresholds",
+      "severity_class": 1,
+      "intersection_m2": 5161421.991351678,
+      "reference_m2": 6195139.058029834,
+      "hls_m2": 9086426.26331835,
+      "union_m2": 10120143.329996508,
+      "iou": 0.5100147125439437,
+      "recall": 0.8331406192830647,
+      "precision": 0.5680365241270041
+    },
+    {
+      "method": "summer_event_thresholds",
+      "severity_class": 2,
+      "intersection_m2": 7837097.942160449,
+      "reference_m2": 13389729.56536793,
+      "hls_m2": 17729752.67915828,
+      "union_m2": 23282384.30236576,
+      "iou": 0.33661062545746695,
+      "recall": 0.5853066638799659,
+      "precision": 0.44203086664447
+    },
+    {
+      "method": "summer_event_thresholds",
+      "severity_class": 3,
+      "intersection_m2": 19163910.338869102,
+      "reference_m2": 28823075.960186407,
+      "hls_m2": 38574815.154358864,
+      "union_m2": 48233980.77567617,
+      "iou": 0.3973113981198342,
+      "recall": 0.6648808185961969,
+      "precision": 0.49679850084009086
+    },
+    {
+      "method": "summer_event_thresholds",
+      "severity_class": 4,
+      "intersection_m2": 12808794.50201416,
+      "reference_m2": 31497640.98584654,
+      "hls_m2": 14515492.103881836,
+      "union_m2": 33204338.587714218,
+      "iou": 0.3857566524982215,
+      "recall": 0.40665885130158763,
+      "precision": 0.8824223395491181
+    },
+    {
+      "method": "summer_event_thresholds",
+      "severity_class": 5,
+      "intersection_m2": 0.0,
+      "reference_m2": 900.6312866210938,
+      "hls_m2": 0.0,
+      "union_m2": 900.6312866210938,
+      "iou": 0.0,
+      "recall": 0.0,
+      "precision": null
+    },
+    {
+      "method": "matched_event_thresholds",
+      "severity_class": 1,
+      "intersection_m2": 4295216.470365158,
+      "reference_m2": 6195139.058029834,
+      "hls_m2": 5061870.490148688,
+      "union_m2": 6961793.077813364,
+      "iou": 0.6169698556617036,
+      "recall": 0.6933204291512892,
+      "precision": 0.8485433356551543
+    },
+    {
+      "method": "matched_event_thresholds",
+      "severity_class": 2,
+      "intersection_m2": 8770917.13160113,
+      "reference_m2": 13389729.565428969,
+      "hls_m2": 12906253.066185325,
+      "union_m2": 17525065.500013165,
+      "iou": 0.5004784222686381,
+      "recall": 0.6550481164494031,
+      "precision": 0.6795866380910454
+    },
+    {
+      "method": "matched_event_thresholds",
+      "severity_class": 3,
+      "intersection_m2": 17723124.64633645,
+      "reference_m2": 28823075.960247442,
+      "hls_m2": 23284069.218084116,
+      "union_m2": 34384020.5319951,
+      "iou": 0.5154465467423941,
+      "recall": 0.6148935898021448,
+      "precision": 0.7611695567616408
+    },
+    {
+      "method": "matched_event_thresholds",
+      "severity_class": 4,
+      "intersection_m2": 29569463.020026714,
+      "reference_m2": 31497640.98578551,
+      "hls_m2": 38654293.42636025,
+      "union_m2": 40582471.39211905,
+      "iou": 0.7286264735904916,
+      "recall": 0.938783416617487,
+      "precision": 0.7649722811867996
+    },
+    {
+      "method": "matched_event_thresholds",
+      "severity_class": 5,
+      "intersection_m2": 0.0,
+      "reference_m2": 900.6312866210938,
+      "hls_m2": 0.0,
+      "union_m2": 900.6312866210938,
+      "iou": 0.0,
+      "recall": 0.0,
+      "precision": null
+    },
+    {
+      "method": "summer_provisional_merged",
+      "severity_class": 1,
+      "intersection_m2": 5330568.127326516,
+      "reference_m2": 6195139.058029832,
+      "hls_m2": 10049595.955841422,
+      "union_m2": 10914166.886544738,
+      "iou": 0.4884081563658492,
+      "recall": 0.8604436603270912,
+      "precision": 0.5304261137213256
+    },
+    {
+      "method": "summer_provisional_merged",
+      "severity_class": 2,
+      "intersection_m2": 5012864.568362247,
+      "reference_m2": 13389729.56530977,
+      "hls_m2": 8815168.448533,
+      "union_m2": 17192033.44548052,
+      "iou": 0.2915806663742874,
+      "recall": 0.37438131546357895,
+      "precision": 0.5686635028734449
+    },
+    {
+      "method": "summer_provisional_merged",
+      "severity_class": 3,
+      "intersection_m2": 22328552.63723503,
+      "reference_m2": 28823075.96024744,
+      "hls_m2": 41381380.54203072,
+      "union_m2": 47875903.86504313,
+      "iou": 0.4663839391978216,
+      "recall": 0.774676258287991,
+      "precision": 0.5395796936875054
+    },
+    {
+      "method": "summer_provisional_merged",
+      "severity_class": 4,
+      "intersection_m2": 16494185.915527344,
+      "reference_m2": 31497640.985724475,
+      "hls_m2": 19654781.91410343,
+      "union_m2": 34658236.98430056,
+      "iou": 0.4759095485150862,
+      "recall": 0.5236641665641857,
+      "precision": 0.8391945526341262
+    },
+    {
+      "method": "summer_provisional_merged",
+      "severity_class": 5,
+      "intersection_m2": 0.0,
+      "reference_m2": 900.6312866210938,
+      "hls_m2": 5559.3400895661,
+      "union_m2": 6459.9713761871935,
+      "iou": 0.0,
+      "recall": 0.0,
+      "precision": 0.0
+    }
+  ],
+  "overlapping_2019_mtbs_events": [
+    "AK6498714841520190621"
+  ]
+}

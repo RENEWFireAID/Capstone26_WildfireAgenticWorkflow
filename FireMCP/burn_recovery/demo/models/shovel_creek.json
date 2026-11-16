@@ -1,0 +1,103 @@
+{
+  "recipe": {
+    "fire": {
+      "ACREAGEMET": "",
+      "ACRES": 22487.47,
+      "ADDNUMBER": "21309",
+      "AFSNUMBER": "MBS4",
+      "AGENCYACRE": 0,
+      "COMMENTS": "Perimeter submitted by IMT",
+      "DOFNUMBER": "911319",
+      "FIREID": 51181,
+      "FIRESEASON": "2010 - 2019",
+      "FIREYEAR": "2019",
+      "FPOUTDATE": 1569826800000,
+      "IRWINID": "{9155A802-F466-4D32-AFA3-F0B2D823B2EB}",
+      "LATESTPERI": "Yes",
+      "NAME": "Shovel Creek",
+      "PERIMETERD": 1564470000000,
+      "PRESCRIBED": "N",
+      "RECORDNUMB": "319",
+      "SOURCE": "Mixed Methods",
+      "SOURCECLAS": "",
+      "SOURCEMETH": "",
+      "Shape_Area": 91003568.53,
+      "Shape_Leng": 114689.347772,
+      "UPDATETIME": 1564556400000,
+      "USEDONFINA": "",
+      "USFSNUMBER": "PNMBS4"
+    },
+    "mtbs": {
+      "Asmnt_Type": "Extended",
+      "BurnBndAc": 22128,
+      "BurnBndLat": "64.988",
+      "BurnBndLon": "-148.3",
+      "Comment": "",
+      "Event_ID": "AK6498714841520190621",
+      "High_T": 700,
+      "Ig_Date": 1561100400000,
+      "IncGreen_T": -150,
+      "Incid_Name": "SHOVEL CREEK",
+      "Incid_Type": "Wildfire",
+      "Low_T": 80,
+      "Map_ID": 10016695,
+      "Map_Prog": "MTBS",
+      "Mod_T": 378,
+      "NoData_T": -970,
+      "Perim_ID": "",
+      "Post_ID": "B06WVT20200609_30m",
+      "Pre_ID": "A06WVT20180722_30m",
+      "dNBR_offst": 14,
+      "dNBR_stdDv": 18,
+      "irwinID": "9155A802-F466-4D32-AFA3-F0B2D823B2EB"
+    },
+    "case": {
+      "event_id": "AK6498714841520190621",
+      "crs": "EPSG:32606"
+    },
+    "assets": {
+      "mtbs": "USFS/GTAC/MTBS/burned_area_boundaries/v1",
+      "ak_fire_history": "projects/ee-ssahoo2/assets/AK_fire_history",
+      "hls_l30": "NASA/HLS/HLSL30/v002",
+      "hls_s30": "NASA/HLS/HLSS30/v002",
+      "landsat8": "LANDSAT/LC08/C02/T1_L2",
+      "landsat7": "LANDSAT/LE07/C02/T1_L2",
+      "landsat5": "LANDSAT/LT05/C02/T1_L2",
+      "dynamic_world": "GOOGLE/DYNAMICWORLD/V1",
+      "dem": "USGS/3DEP/10m_collection",
+      "dem_fallback": "COPERNICUS/DEM/GLO30_2024_1",
+      "terraclimate": "IDAHO_EPSCOR/TERRACLIMATE"
+    },
+    "source_sha256": {
+      "auth.py": "4fbe29bb89860df798fb4b6e93a23c483f4b774fda5a6053a58375c653cff6b1",
+      "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+      "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+      "landcover.py": "bc78261b2ce70cbd414ff08a7c28a56dce31f9e2d7fcb65f75deda673c46b493",
+      "modeling.py": "3b051a69a1947fafadb4d9619f6b253581ca6493e2883882935dfb9619a67eaa",
+      "severity.py": "e18a959cac6851f47e3201b71f3a2f1a34111ee76613409fbede9cb62f649b8a",
+      "terrain.py": "19bef7a9cdfb0c41394c92b7e0a2ebff666a392825d0a713cb399849a6bb62fb",
+      "timeseries.py": "8ffe51ab74e17d17dca9344941bcb478139eaf7e238171e3fafe0171877b7348",
+      "__init__.py": "dd36dca0b29d19e2a503a7492cda9af0168759aec673dce6e348de3310109ba6"
+    },
+    "acquisition_sha256": "9a75cf928ff245d9698776c830f845e8c314652bda80d79ff20a2c502c025f94",
+    "sample_scale_m": 200,
+    "analysis_scale_m": 30,
+    "target_points": 2000,
+    "seed": 0,
+    "tile_scale": 4,
+    "pre_year": 2018,
+    "recovery_years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ]
+  },
+  "acquired_utc": "2026-09-22T04:35:43.065567+00:00",
+  "support_30m": {
+    "total_m2": 90999321.66026115,
+    "valid_m2": 90423298.03983015
+  },
+  "sample_sha256": "5d063d5239fd361f3fdf21f60cb2511ebc43a62782a89113196a9805d114bd14"
+}

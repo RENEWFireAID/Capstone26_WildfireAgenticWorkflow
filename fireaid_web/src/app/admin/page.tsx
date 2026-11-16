@@ -20,7 +20,7 @@ function Stars({ value }: { value: number }) {
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map(s => (
-        <Star key={s} size={14} className={s <= value ? "fill-[#FFCC33] text-[#FFCC33]" : "text-slate-200"} />
+        <Star key={s} size={14} className={s <= value ? "fill-[#FFCD00] text-[#FFCD00]" : "text-slate-200"} />
       ))}
     </div>
   );
@@ -63,7 +63,7 @@ export default function AdminPage() {
               ].map(({ label, value }) => (
                 <div key={label} className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
                   <div className="text-xs text-slate-400 uppercase tracking-widest">{label}</div>
-                  <div className="text-3xl font-bold text-[#003366]">{value}</div>
+                  <div className="text-3xl font-bold text-[#236192]">{value}</div>
                   <Stars value={Math.round(Number(value))} />
                 </div>
               ))}

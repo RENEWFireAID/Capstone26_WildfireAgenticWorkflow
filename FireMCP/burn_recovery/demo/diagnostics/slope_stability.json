@@ -1,0 +1,50 @@
+{
+  "method_2020": {
+    "n": 1573,
+    "opposite_sign_n": 48,
+    "opposite_sign_pct": 3.0514939605848697,
+    "positive_to_negative_n": 22,
+    "negative_to_positive_n": 26,
+    "exact_zero_either_n": 0,
+    "flip_both_abs_gt_001_n": 2,
+    "flip_both_abs_gt_001_pct": 0.12714558169103624,
+    "median_abs_difference": 0.001104690134525299,
+    "spearman": 0.9848277986702458
+  },
+  "method_2021": {
+    "n": 1573,
+    "opposite_sign_n": 140,
+    "opposite_sign_pct": 8.900190718372535,
+    "positive_to_negative_n": 89,
+    "negative_to_positive_n": 51,
+    "exact_zero_either_n": 0,
+    "flip_both_abs_gt_001_n": 57,
+    "flip_both_abs_gt_001_pct": 3.6236490781945325,
+    "median_abs_difference": 0.0019586543242136635,
+    "spearman": 0.9508343419307232
+  },
+  "period_ols": {
+    "n": 1573,
+    "opposite_sign_n": 233,
+    "opposite_sign_pct": 14.812460267005722,
+    "positive_to_negative_n": 129,
+    "negative_to_positive_n": 104,
+    "exact_zero_either_n": 0,
+    "flip_both_abs_gt_001_n": 149,
+    "flip_both_abs_gt_001_pct": 9.4723458359822,
+    "median_abs_difference": 0.006062275171279908,
+    "spearman": 0.6797721903874854
+  },
+  "period_theil_sen": {
+    "n": 1573,
+    "opposite_sign_n": 299,
+    "opposite_sign_pct": 19.00826446280992,
+    "positive_to_negative_n": 183,
+    "negative_to_positive_n": 116,
+    "exact_zero_either_n": 0,
+    "flip_both_abs_gt_001_n": 208,
+    "flip_both_abs_gt_001_pct": 13.223140495867769,
+    "median_abs_difference": 0.0064427802960077924,
+    "spearman": 0.652601086746512
+  }
+}

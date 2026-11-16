@@ -1,0 +1,115 @@
+{
+  "fire": "Shovel Creek",
+  "event_id": "AK6498714841520190621",
+  "crs": "EPSG:32606",
+  "scale_m": 30,
+  "generated_utc": "2026-09-27T20:26:12.932519+00:00",
+  "source_sha256": {
+    "auth.py": "4fbe29bb89860df798fb4b6e93a23c483f4b774fda5a6053a58375c653cff6b1",
+    "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+    "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+    "landcover.py": "bc78261b2ce70cbd414ff08a7c28a56dce31f9e2d7fcb65f75deda673c46b493",
+    "modeling.py": "3b051a69a1947fafadb4d9619f6b253581ca6493e2883882935dfb9619a67eaa",
+    "severity.py": "e18a959cac6851f47e3201b71f3a2f1a34111ee76613409fbede9cb62f649b8a",
+    "terrain.py": "19bef7a9cdfb0c41394c92b7e0a2ebff666a392825d0a713cb399849a6bb62fb",
+    "timeseries.py": "8ffe51ab74e17d17dca9344941bcb478139eaf7e238171e3fafe0171877b7348",
+    "__init__.py": "dd36dca0b29d19e2a503a7492cda9af0168759aec673dce6e348de3310109ba6"
+  },
+  "script_sha256": "d1d3af45262931a3306c1653e32922e9b622e8560e13b70851b495826baa1f43",
+  "reference_asset": "USFS/GTAC/MTBS/annual_burn_severity_mosaics/v1/mtbs_AK_2019",
+  "metadata": {
+    "Asmnt_Type": "Extended",
+    "BurnBndAc": 22128,
+    "BurnBndLat": "64.988",
+    "BurnBndLon": "-148.3",
+    "Comment": "",
+    "Event_ID": "AK6498714841520190621",
+    "High_T": 700,
+    "Ig_Date": 1561100400000,
+    "IncGreen_T": -150,
+    "Incid_Name": "SHOVEL CREEK",
+    "Incid_Type": "Wildfire",
+    "Low_T": 80,
+    "Map_ID": 10016695,
+    "Map_Prog": "MTBS",
+    "Mod_T": 378,
+    "NoData_T": -970,
+    "Perim_ID": "",
+    "Post_ID": "B06WVT20200609_30m",
+    "Pre_ID": "A06WVT20180722_30m",
+    "dNBR_offst": 14,
+    "dNBR_stdDv": 18,
+    "irwinID": "9155A802-F466-4D32-AFA3-F0B2D823B2EB"
+  },
+  "dates": {
+    "Pre_ID": [
+      "2018-07-22",
+      "2018-07-23"
+    ],
+    "Post_ID": [
+      "2020-06-09",
+      "2020-06-10"
+    ]
+  },
+  "support": {
+    "common_m2": 79906486.20059809,
+    "date_paired_m2": 79906486.20059809,
+    "intersection_m2": 87070102.90047431,
+    "mtbs_mapped_m2": 86169740.82890068,
+    "summer_paired_m2": 86168840.17332207
+  },
+  "comparisons": [
+    {
+      "method": "summer_2018_2020",
+      "threshold": 660,
+      "neither_m2": 45248249.216358624,
+      "hls_only_m2": 3160595.9985150504,
+      "mtbs_only_m2": 15003455.070258169,
+      "both_high_m2": 16494185.915466309,
+      "paired_m2": 79906486.20059815,
+      "agreement": 0.7726836464417421,
+      "high_iou": 0.4759095485141633
+    },
+    {
+      "method": "summer_2018_2020",
+      "threshold": 700,
+      "neither_m2": 46702147.613188624,
+      "hls_only_m2": 1706697.6018676758,
+      "mtbs_only_m2": 18688846.48377135,
+      "both_high_m2": 12808794.50189209,
+      "paired_m2": 79906486.20071974,
+      "agreement": 0.7447573400436256,
+      "high_iou": 0.38575665249667235
+    },
+    {
+      "method": "MTBS_calendar_dates",
+      "threshold": 660,
+      "neither_m2": 35526279.767509215,
+      "hls_only_m2": 12882565.44736448,
+      "mtbs_only_m2": 1223843.2658174399,
+      "both_high_m2": 30273797.719907034,
+      "paired_m2": 79906486.20059817,
+      "agreement": 0.8234635336389461,
+      "high_iou": 0.6821463925714308
+    },
+    {
+      "method": "MTBS_calendar_dates",
+      "threshold": 700,
+      "neither_m2": 39324014.80829602,
+      "hls_only_m2": 9084830.406455604,
+      "mtbs_only_m2": 1928177.9657587986,
+      "both_high_m2": 29569463.020026714,
+      "paired_m2": 79906486.20053715,
+      "agreement": 0.8621762901127246,
+      "high_iou": 0.7286264735883
+    }
+  ],
+  "limitations": [
+    "Reference-product agreement, not independent ground accuracy.",
+    "Calendar-date HLS composites are not an exact replication of MTBS imagery or processing.",
+    "MTBS classes 0 and 6 excluded; nearest-neighbor categorical sampling on explicit 30 m UTM grid.",
+    "Shared support may exclude difficult areas; report it alongside agreement.",
+    "Swan Lake reference baseline is 2017; the pipeline baseline remains 2018."
+  ],
+  "complete": true
+}

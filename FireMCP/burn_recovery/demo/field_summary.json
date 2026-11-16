@@ -1,0 +1,546 @@
+{
+  "complete": true,
+  "generated_utc": "2026-10-04T05:37:29.680636+00:00",
+  "script_sha256": "bc06b3484cc9fc649ec768e4b1de2c2769994eb4a002ecc53be9c8e89d799779",
+  "source_sha256": {
+    "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+    "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+    "observations.py": "5c55eaba842196ad6ee6c12e6fa003a6d9bb640d5816f390e40c0485a9965f68"
+  },
+  "sample_manifests": {
+    "Shovel Creek": "08e23278a70622624ae6b06fc180f091c4c3b4937853b061901064ac0d7a8911",
+    "Nugget Creek": "1eb388d88d401a5569e4cc1695d914764dc536f5b47eec4e14a46ed3292e24af"
+  },
+  "method": {
+    "product": "NASA HLS L30/S30 v002 surface reflectance",
+    "crs": "EPSG:32606",
+    "scale_m": 30,
+    "years": [
+      2018,
+      2020
+    ],
+    "summer_start": "06-15 inclusive",
+    "summer_end": "08-15 exclusive",
+    "dnbr": "(NBR_2018 - NBR_2020) * 1000",
+    "primary": "plot_15m",
+    "sensitivities": {
+      "center": 0,
+      "plot_15m": 15,
+      "buffer_20m": 20,
+      "buffer_30m": 30
+    },
+    "plot_size_source": "Smith et al. 2021 reports 30 m diameter",
+    "support": "Common valid pre/post NBR and post NDVI; no imputation",
+    "survey_dates": "Summer 2020 per provider; exact plot dates not supplied",
+    "class_comparison": "Untuned existing dNBR thresholds; merge two moderate bins. Increased greenness stays separate."
+  },
+  "limitations": [
+    "Accessible, clustered plots are not representative of fire area.",
+    "30 m HLS pixels and circular field footprints differ; partial-pixel means are weighted.",
+    "Exact survey timing is unknown; summer composites are not matched to survey day.",
+    "No fitted calibration or ordinary correlation p-values; associations are descriptive.",
+    "Legacy satellite columns and historical Training flags are excluded.",
+    "2020 severity observations do not validate 2020-2024 ecological recovery."
+  ],
+  "provider": "Santosh Panda, summer 2020 Shovel Creek and Nugget Creek CBI surveys",
+  "summary_source_sha256": "10ca23a0942ff912b81aa292be16e858e2251f9dc47d2b3759300837ff2d28f3",
+  "comparisons": [
+    {
+      "fire": "Nugget Creek",
+      "mode": "buffer_20m",
+      "n_total": 28,
+      "n_valid": 28,
+      "inside_perimeter": 28,
+      "spearman": {
+        "dnbr_mean": 0.8682143059072542,
+        "nbr_2020_mean": -0.8634531306813111,
+        "ndvi_2020_mean": -0.8012777836131143
+      },
+      "fixed_class_agreement": 0.6785714285714286,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          8,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          2,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 2,
+        "fn": 5,
+        "fp": 0,
+        "tn": 21
+      }
+    },
+    {
+      "fire": "Nugget Creek",
+      "mode": "buffer_30m",
+      "n_total": 28,
+      "n_valid": 28,
+      "inside_perimeter": 28,
+      "spearman": {
+        "dnbr_mean": 0.8794170711447672,
+        "nbr_2020_mean": -0.8659737528597515,
+        "ndvi_2020_mean": -0.8037984057915547
+      },
+      "fixed_class_agreement": 0.6071428571428571,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          8,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          1,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 1,
+        "fn": 6,
+        "fp": 0,
+        "tn": 21
+      }
+    },
+    {
+      "fire": "Nugget Creek",
+      "mode": "center",
+      "n_total": 28,
+      "n_valid": 28,
+      "inside_perimeter": 28,
+      "spearman": {
+        "dnbr_mean": 0.8676541676453785,
+        "nbr_2020_mean": -0.8497297432653579,
+        "ndvi_2020_mean": -0.7847537048877826
+      },
+      "fixed_class_agreement": 0.7142857142857143,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          9,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          2,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 2,
+        "fn": 5,
+        "fp": 0,
+        "tn": 21
+      }
+    },
+    {
+      "fire": "Nugget Creek",
+      "mode": "plot_15m",
+      "n_total": 28,
+      "n_valid": 28,
+      "inside_perimeter": 28,
+      "spearman": {
+        "dnbr_mean": 0.8757761724425754,
+        "nbr_2020_mean": -0.8572916098006791,
+        "ndvi_2020_mean": -0.7934358479468552
+      },
+      "fixed_class_agreement": 0.6785714285714286,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          8,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          2,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 2,
+        "fn": 5,
+        "fp": 0,
+        "tn": 21
+      }
+    },
+    {
+      "fire": "Shovel Creek",
+      "mode": "buffer_20m",
+      "n_total": 52,
+      "n_valid": 52,
+      "inside_perimeter": 52,
+      "spearman": {
+        "dnbr_mean": 0.8065995555889909,
+        "nbr_2020_mean": -0.7899597486060744,
+        "ndvi_2020_mean": -0.7462479240447343
+      },
+      "fixed_class_agreement": 0.6153846153846154,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          13,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          2,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          5,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 5,
+        "fn": 9,
+        "fp": 0,
+        "tn": 38
+      }
+    },
+    {
+      "fire": "Shovel Creek",
+      "mode": "buffer_30m",
+      "n_total": 52,
+      "n_valid": 52,
+      "inside_perimeter": 52,
+      "spearman": {
+        "dnbr_mean": 0.8099620036321709,
+        "nbr_2020_mean": -0.796857077925418,
+        "ndvi_2020_mean": -0.7453857578798163
+      },
+      "fixed_class_agreement": 0.5961538461538461,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          12,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          2,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          5,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 5,
+        "fn": 9,
+        "fp": 0,
+        "tn": 38
+      }
+    },
+    {
+      "fire": "Shovel Creek",
+      "mode": "center",
+      "n_total": 52,
+      "n_valid": 52,
+      "inside_perimeter": 52,
+      "spearman": {
+        "dnbr_mean": 0.802762916155106,
+        "nbr_2020_mean": -0.8019869666066798,
+        "ndvi_2020_mean": -0.7347380057430796
+      },
+      "fixed_class_agreement": 0.5576923076923077,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          13,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          11,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          5,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 5,
+        "fn": 9,
+        "fp": 1,
+        "tn": 37
+      }
+    },
+    {
+      "fire": "Shovel Creek",
+      "mode": "plot_15m",
+      "n_total": 52,
+      "n_valid": 52,
+      "inside_perimeter": 52,
+      "spearman": {
+        "dnbr_mean": 0.8054787395745976,
+        "nbr_2020_mean": -0.7940550378894348,
+        "ndvi_2020_mean": -0.7487913142312421
+      },
+      "fixed_class_agreement": 0.6153846153846154,
+      "confusion_rows": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_columns": [
+        "Unburned",
+        "Low",
+        "Moderate",
+        "High",
+        "Increased greenness"
+      ],
+      "confusion_counts": [
+        [
+          13,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          2,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          5,
+          0
+        ]
+      ],
+      "high_class": {
+        "tp": 5,
+        "fn": 9,
+        "fp": 0,
+        "tn": 38
+      }
+    }
+  ],
+  "sharing": "Aggregate statistics only; raw surveys, plot coordinates and plot-level results remain local."
+}

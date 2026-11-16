@@ -82,7 +82,7 @@ export default function WeatherPage() {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                 />
                 <input
-                  className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm outline-none transition focus:border-[#003366]"
+                  className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm outline-none transition focus:border-[#236192]"
                   placeholder="Search files..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -97,7 +97,7 @@ export default function WeatherPage() {
                   key={file}
                   href={`/weather/${file}`}
                   download={file}
-                  className="group flex flex-col items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-center transition hover:border-[#003366] hover:shadow-md"
+                  className="group flex flex-col items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-center transition hover:border-[#236192] hover:shadow-md"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50">
                     <FileText
@@ -109,7 +109,7 @@ export default function WeatherPage() {
                   <div className="break-all text-[11px] font-medium leading-tight text-slate-600">
                     {file.replace(".csv", "")}
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] font-semibold text-[#003366] opacity-0 transition group-hover:opacity-100">
+                  <div className="flex items-center gap-1 text-[10px] font-semibold text-[#236192] opacity-0 transition group-hover:opacity-100">
                     <Download size={11} />
                     Download
                   </div>

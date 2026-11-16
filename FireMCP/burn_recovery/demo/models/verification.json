@@ -1,0 +1,11 @@
+{
+  "verified_utc": "2026-10-02T20:04:57.435777+00:00",
+  "passed": true,
+  "transfer_models_independently_refit": 18,
+  "within_designs": 108,
+  "geometric_splits": 1137,
+  "spatial_folds_independently_refit": 6,
+  "max_transfer_prediction_difference": 3.0982161280945775e-15,
+  "max_spatial_prediction_difference": 3.3306690738754696e-16,
+  "note": "Computational verification on saved data, not independent ecological/field validation."
+}

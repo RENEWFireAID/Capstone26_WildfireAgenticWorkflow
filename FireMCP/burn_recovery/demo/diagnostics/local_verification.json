@@ -1,0 +1,10 @@
+{
+  "complete": true,
+  "independent_transfer_refits": 18,
+  "max_prediction_difference": 3.2612801348363973e-15,
+  "source_hashes_match": true,
+  "sample_hashes_match": true,
+  "independent_slopes_match": true,
+  "theil_sen_matches_scipy": true,
+  "moran_matches_current_and_saved": true
+}

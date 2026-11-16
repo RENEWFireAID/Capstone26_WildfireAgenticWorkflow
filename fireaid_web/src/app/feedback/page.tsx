@@ -22,7 +22,7 @@ function StarRating({ value, onChange }: { value: number; onChange: (v: number) 
         >
           <Star
             size={28}
-            className={`transition ${(hover || value) >= star ? "fill-[#FFCC33] text-[#FFCC33]" : "text-slate-300"}`}
+            className={`transition ${(hover || value) >= star ? "fill-[#FFCD00] text-[#FFCD00]" : "text-slate-300"}`}
           />
         </button>
       ))}
@@ -80,7 +80,7 @@ export default function FeedbackPage() {
                 <p className="text-slate-400 text-sm">Your feedback has been submitted successfully.</p>
                 <button
                   onClick={() => { setSubmitted(false); setForm({ name: "", email: "", overallRating: 0, uiClarity: 0, dataEase: 0, feedback: "", suggestions: "" }); }}
-                  className="mt-4 px-6 py-2.5 bg-[#003366] text-white rounded-xl text-sm font-semibold hover:bg-[#002244] transition"
+                  className="mt-4 px-6 py-2.5 bg-[#236192] text-white rounded-xl text-sm font-semibold hover:bg-[#111C4E] transition"
                 >
                   Submit another
                 </button>
@@ -93,7 +93,7 @@ export default function FeedbackPage() {
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-medium text-slate-500">Name <span className="text-slate-300">(optional)</span></label>
                     <input
-                      className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003366] transition bg-white"
+                      className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#236192] transition bg-white"
                       placeholder="Your name"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -102,7 +102,7 @@ export default function FeedbackPage() {
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-medium text-slate-500">Email <span className="text-slate-300">(optional)</span></label>
                     <input
-                      className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003366] transition bg-white"
+                      className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#236192] transition bg-white"
                       placeholder="your@email.com"
                       value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
@@ -133,7 +133,7 @@ export default function FeedbackPage() {
                   <label className="text-xs font-medium text-slate-500">General Feedback</label>
                   <textarea
                     rows={4}
-                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#236192] transition bg-white resize-none"
                     placeholder="What did you like? What was confusing?"
                     value={form.feedback}
                     onChange={e => setForm(f => ({ ...f, feedback: e.target.value }))}
@@ -145,7 +145,7 @@ export default function FeedbackPage() {
                   <label className="text-xs font-medium text-slate-500">Specific Suggestions</label>
                   <textarea
                     rows={4}
-                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#236192] transition bg-white resize-none"
                     placeholder="Any specific features or improvements you'd like to see?"
                     value={form.suggestions}
                     onChange={e => setForm(f => ({ ...f, suggestions: e.target.value }))}
@@ -155,7 +155,7 @@ export default function FeedbackPage() {
                 <div className="flex flex-col gap-1.5">
                   <textarea
                     rows={4}
-                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#236192] transition bg-white resize-none"
                     placeholder="Did you find the website useful?"
                     value={form.suggestions}
                     onChange={e => setForm(f => ({ ...f, suggestions: e.target.value }))}
@@ -166,7 +166,7 @@ export default function FeedbackPage() {
                 <div className="flex flex-col gap-1.5">
                   <textarea
                     rows={4}
-                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#003366] transition bg-white resize-none"
+                    className="border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#236192] transition bg-white resize-none"
                     placeholder="Could you tell us how you would like to use it?"
                     value={form.suggestions}
                     onChange={e => setForm(f => ({ ...f, suggestions: e.target.value }))}
@@ -177,7 +177,7 @@ export default function FeedbackPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full py-3 bg-[#003366] text-white rounded-xl text-sm font-semibold hover:bg-[#002244] disabled:opacity-40 transition"
+                  className="w-full py-3 bg-[#236192] text-white rounded-xl text-sm font-semibold hover:bg-[#111C4E] disabled:opacity-40 transition"
                 >
                   {loading ? "Submitting..." : "Submit Feedback"}
                 </button>

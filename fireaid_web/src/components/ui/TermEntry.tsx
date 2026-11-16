@@ -135,7 +135,7 @@ function PopUp({
               </label>
               <input
                 value={term}
-                className="h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFCC33]/40"
+                className="h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFCD00]/40"
                 onChange={(e) => setTerm(e.target.value)}
                 placeholder="Term"
               />
@@ -147,7 +147,7 @@ function PopUp({
               </label>
               <input
                 value={def}
-                className="h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFCC33]/40"
+                className="h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFCD00]/40"
                 onChange={(e) => setDef(e.target.value)}
                 placeholder="Definition"
               />
@@ -155,7 +155,7 @@ function PopUp({
 
             <button
               type="submit"
-              className="h-10 rounded-full bg-[#003366] px-6 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 disabled:opacity-60"
+              className="h-10 rounded-full bg-[#236192] px-6 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 disabled:opacity-60"
               disabled={loading}
             >
               SUBMIT
@@ -206,7 +206,7 @@ function PopUp({
 
                     <button
                       type="button"
-                      className="h-10 rounded-full bg-[#003366] px-6 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 disabled:opacity-60"
+                      className="h-10 rounded-full bg-[#236192] px-6 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 disabled:opacity-60"
                       onClick={fileUpload}
                       disabled={loading}
                     >

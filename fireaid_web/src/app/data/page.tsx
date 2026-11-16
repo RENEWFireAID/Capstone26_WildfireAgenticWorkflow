@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BookOpen, CloudSun, FileText, Flame, Snowflake } from "lucide-react";
+import { ArrowUpRight, BookOpen, CloudSun, FileText, Flame, Snowflake, type LucideIcon } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import PageHeader from "@/components/layout/PageHeader";
+import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 
-const DATA_ITEMS = [
+type Dataset = {
+  label: string;
+  desc: string;
+  detail: string;
+  icon: LucideIcon;
+  href: string;
+  external?: boolean;
+};
+
+const FIREAID_DATA: Dataset[] = [
   {
     label: "Fire history",
     desc: "Every fire recorded by the Alaska Fire Service, with location, size, cause and agency.",
@@ -27,6 +36,9 @@ const DATA_ITEMS = [
     icon: BookOpen,
     href: "/library",
   },
+];
+
+const OTHER_DATA: Dataset[] = [
   {
     label: "Weather",
     desc: "Current weather conditions and the fire risk they imply.",
@@ -44,46 +56,82 @@ const DATA_ITEMS = [
   },
 ];
 
+/** uaf.edu's icon block: a white line icon over an underlined slab-serif link. */
+function DatasetBlock({ data }: { data: Dataset }) {
+  const { label, desc, detail, icon: Icon, href, external } = data;
+  return (
+    <Link
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="group flex flex-col items-center px-4 text-center text-white"
+    >
+      <Icon size={60} strokeWidth={1.25} aria-hidden="true" className="transition group-hover:text-gold" />
+      <h3 className="mt-5 flex items-center gap-1.5 text-3xl font-bold underline decoration-2 underline-offset-[6px] transition group-hover:text-gold">
+        {label}
+        {external && <ArrowUpRight size={22} aria-label="Opens in a new tab" />}
+      </h3>
+      <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-slate-200">{desc}</p>
+      <p className="mt-2 font-mono text-sm font-semibold uppercase tracking-wide text-uaf-sky">{detail}</p>
+    </Link>
+  );
+}
+
+// The last section grows to meet the footer, so short pages leave no bare gap.
+function Section({ title, note, data, backdrop, columns, last = false }: {
+  title: string;
+  note: string;
+  data: Dataset[];
+  backdrop: React.CSSProperties;
+  columns: string;
+  last?: boolean;
+}) {
+  return (
+    <section className={`px-6 py-14 md:px-10 ${last ? "flex-1" : ""}`} style={backdrop}>
+      <div className="max-w-6xl">
+        <h2 className="text-3xl font-bold text-white">{title}</h2>
+        <p className="mt-1 text-sm text-slate-200">{note}</p>
+        <ul className={`mt-10 grid grid-cols-1 gap-x-8 gap-y-12 ${columns}`}>
+          {data.map((d) => (
+            <li key={d.label}>
+              <DatasetBlock data={d} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default function DataPage() {
   return (
     <div className="flex min-h-screen w-full">
       <FireAIDSidebar />
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <PageHeader
-          eyebrow="FireAID"
-          title="Data"
-          description="The datasets behind the apps and the assistant. Open one to browse or download it."
-        />
+        <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-10">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
+          <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Data</h1>
+          <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
+            The datasets behind the apps and the assistant. Open one to browse or download it.
+          </p>
+        </header>
 
-        <div className="flex-1 px-6 py-8 md:px-10">
-          <ul className="max-w-4xl divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
-            {DATA_ITEMS.map(({ label, desc, detail, icon: Icon, href, external }) => (
-              <li key={label}>
-                <Link
-                  href={href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  className="group flex items-center gap-4 px-5 py-4 transition hover:bg-slate-50"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-soft text-navy">
-                    <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-semibold text-slate-900 group-hover:text-navy">{label}</span>
-                    <span className="mt-0.5 block text-sm leading-snug text-slate-600">{desc}</span>
-                    <span className="mt-1 block font-mono text-[11px] text-slate-500">{detail}</span>
-                  </span>
-                  {external ? (
-                    <ArrowUpRight size={18} className="shrink-0 text-slate-400 group-hover:text-navy" aria-label="Opens in a new tab" />
-                  ) : (
-                    <ArrowRight size={18} className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-navy" aria-hidden="true" />
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Section
+          title="FireAID datasets"
+          note="Collected and served by FireAID; the apps and the assistant read these."
+          data={FIREAID_DATA}
+          backdrop={{ backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS }}
+          columns="md:grid-cols-3"
+        />
+        <Section
+          title="Other sources"
+          note="Live conditions and an outside dataset alongside FireAID's own."
+          data={OTHER_DATA}
+          backdrop={{ backgroundColor: "var(--color-navy)", backgroundImage: PEAKS }}
+          columns="md:grid-cols-2 md:max-w-3xl"
+          last
+        />
       </main>
     </div>
   );

@@ -1,0 +1,79 @@
+# Environment & Secrets
+.env
+.env.*
+*.env
+service-account-key.json
+*.pem
+credentials.json
+
+# Agents & Antigravity Local Customizations
+.agents/
+.gemini/
+.claude/
+.cursor/
+.windsurf/
+AGENTS.md
+GEMINI.md
+PROJECT_CONTEXT.md
+*context*.md
+PROJECT_PLAN.md
+pyrefly.toml
+
+# Python & Jupyter
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Data, Imagery & GEE exports (Large files)
+data/
+gee_exports/
+cached_layers/
+outputs/
+*.tif
+*.tiff
+*.geojson
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.zip
+*.tar.gz
+*.csv
+!demo/**/*.csv
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local research notes: README is the only Markdown committed.
+*.[mM][dD]
+!README.md
+
+# Generated standalone report (rebuild from the saved demo).
+fireaid_viewer.html
