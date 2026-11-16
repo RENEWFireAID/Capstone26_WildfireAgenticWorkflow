@@ -7,7 +7,10 @@ Article: https://www.mdpi.com/1999-4907/16/5/777
 
 Only the Earth Engine computation is reused here; the Solara/geemap UI layer of
 the original application is not included. The functions below are kept verbatim
-so they stay easy to diff against upstream.
+so they stay easy to diff against upstream. The trend, significance and fire
+perimeter code at the end is lifted out of her run_analysis and
+fetch_point_data, which mixed it with UI state; the Earth Engine calls and
+constants are unchanged.
 
 ---------------------------------------------------------------------------
 MIT License
@@ -33,6 +36,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ---------------------------------------------------------------------------
 """
+
+from datetime import datetime, timezone
 
 import ee
 
@@ -230,3 +235,85 @@ def get_annual_composites(col, roi, start_year, end_year, reducer_type):
         )
 
     return ee.ImageCollection.fromImages(years.map(create_annual))
+
+
+# ---------------------------------------------------------------------------
+# Trend maps and fire perimeters, from app_v1.0.0.py run_analysis,
+# fetch_point_data and MapDownloader.
+# ---------------------------------------------------------------------------
+
+TAU_PALETTE = ["#8c2d04", "#cc4c02", "#ec7014", "#fe9929", "#fdd49e", "#d9f0d3", "#addd8e", "#78c679", "#31a354", "#006837"]
+SLOPE_PALETTE = ["#67001f", "#b2182b", "#ef8a62", "#fddbc7", "#d1e5f0", "#67a9cf", "#2166ac", "#053061"]
+TAU_VIS = {"min": -1, "max": 1, "palette": TAU_PALETTE}
+SLOPE_VIS = {"min": -0.01, "max": 0.01, "palette": SLOPE_PALETTE}
+
+MTBS_ASSET = "USFS/GTAC/MTBS/burned_area_boundaries/v1"
+AK_FIRE_ASSET = "projects/ee-ssahoo2/assets/AK_fire_history"
+
+
+def compute_trends(annual_col, map_idx):
+    """Kendall tau, Sen slope and the p <= 0.05 mask for one index."""
+    xy = annual_col.select(["year", map_idx])
+
+    tau = xy.reduce(ee.Reducer.kendallsCorrelation()).select(f"{map_idx}_tau").rename("tau")
+    slope = xy.reduce(ee.Reducer.sensSlope()).select("slope").rename("slope")
+
+    # Significance Masking
+    n_img = annual_col.select(map_idx).count()
+    z_score = tau.multiply(3).multiply(n_img.multiply(n_img.subtract(1)).sqrt()) \
+                  .divide(n_img.multiply(2).add(5).multiply(2).sqrt()).abs()
+
+    sig_mask = z_score.gte(1.96)
+    return tau, slope, sig_mask
+
+
+def mtbs_perimeters(roi):
+    mtbs = ee.FeatureCollection(MTBS_ASSET).filterBounds(roi)
+    return mtbs, mtbs.style(fillColor="#4d474735", color="#ea1212", width=2)
+
+
+def ak_fire_perimeters(roi):
+    ak_fire = ee.FeatureCollection(AK_FIRE_ASSET).filterBounds(roi)
+    return ak_fire, ak_fire.style(fillColor="#e600ff1f", color="#a70f95", width=2)
+
+
+def mtbs_fires_at(geom):
+    """MTBS fires whose perimeters contain the point, as (name, source, year)."""
+    fires = []
+    # Check MTBS (National dataset)
+    mtbs = ee.FeatureCollection(MTBS_ASSET)
+    mtbs_intersect = mtbs.filterBounds(geom).select(["Incid_Name", "Ig_Date"], retainGeometry=False).getInfo().get("features", [])
+    for f in mtbs_intersect:
+        props = f.get("properties", {})
+        name = props.get("Incid_Name", "Unknown").title()
+        date = props.get("Ig_Date")
+        year = datetime.fromtimestamp(date / 1000, tz=timezone.utc).year if date else None
+        fires.append((name, "MTBS", year))
+    return fires
+
+
+def ak_fires_at(geom):
+    """Alaska fire history fires whose perimeters contain the point."""
+    fires = []
+    # Check AK Fire History (state dataset)
+    ak_fires = ee.FeatureCollection(AK_FIRE_ASSET)
+    ak_intersect = ak_fires.filterBounds(geom).select(["NAME", "FIREYEAR"], retainGeometry=False).getInfo().get("features", [])
+    for f in ak_intersect:
+        props = f.get("properties", {})
+        name = str(props.get("NAME", "Unnamed")).title()
+        try:
+            year = int(props.get("FIREYEAR"))
+        except (TypeError, ValueError):
+            year = None
+        fires.append((name, "AK Fire", year))
+    return fires
+
+
+def download_url(img, roi):
+    return img.getDownloadURL({
+        "region": roi,
+        "scale": 30,  # Landsat native resolution
+        "format": "GEO_TIFF",
+        "maxPixels": 1e10,  # Prevent total failure on slightly large maps
+    })
+

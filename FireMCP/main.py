@@ -7,6 +7,7 @@ from tools.vegetation_tools import (
 from tools.fire_risk_model import predict_risk
 from tools.fire_danger import forecast_for, map_for
 from tools import burn_recovery
+from tools import forest_trends
 from typing import Optional
 
 mcp = FastMCP(
@@ -90,6 +91,56 @@ async def get_vegetation_timeseries(
         end_year=end_year,
         reducer=reducer,
     )
+
+
+@mcp.tool()
+async def forest_trend_map(
+    region: dict,
+    start_year: int = 2000,
+    end_year: int = 2024,
+    index: str = "NDVI",
+    reducer: str = "median",
+) -> dict:
+    """Map where vegetation has been greening or browning across a region.
+
+    region is a GeoJSON Polygon in lon/lat (under 25,000 km2). For each pixel it
+    fits Kendall's tau and the Theil-Sen slope of the annual June-August Landsat
+    index (NDVI, NBR or NDMI; median, mean or max composite) over the years, as in
+    Sumana Sahoo's Forest Trend Mapper. Returns map tile URLs (all pixels and
+    p <= 0.05 only), MTBS and Alaska fire perimeter overlays, the number of
+    fires in the region, and a summary: median tau and slope and the share of
+    pixels significantly greening or browning. A cold query can take a minute.
+    """
+    return await forest_trends.forest_trend_map(region, start_year, end_year, index, reducer)
+
+
+@mcp.tool()
+async def forest_trend_downloads(
+    region: dict,
+    start_year: int = 2000,
+    end_year: int = 2024,
+    index: str = "NDVI",
+    reducer: str = "median",
+    significant_only: bool = False,
+) -> dict:
+    """GeoTIFF download links for a region's trend maps (Kendall tau, Sen slope).
+
+    Same inputs as forest_trend_map; the region must be under 6,500 km2, since
+    Earth Engine stops direct downloads near 32 MB. significant_only adds the
+    p <= 0.05 masked versions.
+    """
+    return await forest_trends.forest_trend_downloads(
+        region, start_year, end_year, index, reducer, significant_only
+    )
+
+
+@mcp.tool()
+async def fire_history_at_point(lat: float, lon: float) -> dict:
+    """Fires whose mapped perimeters contain a point, from MTBS and the Alaska
+    fire history, with name, source and year. Use it to tell whether a
+    location burned, and when, before reading its vegetation time series.
+    """
+    return await forest_trends.fire_history_at_point(lat, lon)
 
 
 # The training weather comes from a grid at 68-70N in northern Alaska, so climate
