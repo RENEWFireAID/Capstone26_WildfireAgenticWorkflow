@@ -74,6 +74,12 @@ export default function FireHistoryDataPage() {
         <div className="space-y-6">
           <Panel accent title="Download records" subtitle="One row per fire, with all 78 source columns, as CSV.">
             <div className="space-y-4">
+              <Notice tone="warning">
+                <b className="font-semibold">About 2,000 fires are missing from this copy.</b> An error when the data was
+                loaded dropped many records from 2001–2003 and 2009–2010, including every fire from 2002. Totals for those
+                years are too low until the data is reloaded. The publisher&apos;s copy at fire.ak.blm.gov does not have
+                this problem.
+              </Notice>
               <Segmented<"all" | "range"> label="Years" value={scope} onChange={setScope}
                 options={[{ value: "all", label: "All years" }, { value: "range", label: "Choose years" }]} />
               {scope === "range" && (
