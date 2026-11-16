@@ -6,7 +6,7 @@ import burnSeverityPreview from "./previews/burn-severity.jpg";
 import fireHistoryPreview from "./previews/fire-history.jpg";
 import fireRiskPreview from "./previews/fire-risk.jpg";
 import forestTrendsPreview from "./previews/forest-trends.jpg";
-import { ArrowRight, BookOpen, FileText, Flame, Satellite, Sprout, TrendingUp, TriangleAlert } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, Flame, Satellite, Sprout, TriangleAlert } from "lucide-react";
 
 const APPS = [
   {
@@ -28,16 +28,6 @@ const APPS = [
     href: "/fire-risk",
     developer: "Noah Bush",
     role: "Undergraduate Researcher · UAF Computer Science",
-  },
-  {
-    label: "Wildfire Prediction",
-    kind: "Machine learning",
-    desc: "Fire probability for each grid cell around Fairbanks from an XGBoost model.",
-    data: "Gridded temperature, humidity, wind and soil moisture · fire seasons 2000–2007",
-    icon: TrendingUp,
-    href: "/wildfire-prediction",
-    developer: "Yara Hassan",
-    role: "Undergraduate Researcher · UAA Electrical Engineering",
   },
   {
     label: "Forest Trends",
@@ -168,7 +158,7 @@ export default function AppsPage() {
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
           <h1 className={`${zilla.className} mt-1 text-4xl font-bold leading-tight text-navy-deep`}>Apps</h1>
           <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
-            Seven tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
+            Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
           </p>
         </header>
 

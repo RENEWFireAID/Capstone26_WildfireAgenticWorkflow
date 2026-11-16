@@ -9,7 +9,6 @@ fireaid_dump/
 llm-app/chroma_db/
 llm-app/data/
 *.csv
-ml_model/data/
 __pycache__/
 
 
@@ -29,7 +28,6 @@ secrets/
 # Local virtualenvs and caches
 scripts/.venv/
 mcp_server/.venv/
-ml_model/__pycache__/
 nohup.out
 
 # Burn Severity Recovery (FireMCP/burn_recovery) is vendored byte-for-byte from

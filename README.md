@@ -53,10 +53,6 @@ MCP Server for the manual access Fire History app. The historic fire data tool t
 
 The LLM query has access to this tool to retrieve context from a database of academic paper titles and abstracts.
 
-### [ml_model](./ml_model): Fire Visualization App
-
-This feature is not currently functional. Further work needed. [Learn more](./ml_model/README.md)
-
 ### [scripts](./scripts): Data Population Scripts
 
 - **Scripts**: [./scripts/README.md](./scripts/README.md)

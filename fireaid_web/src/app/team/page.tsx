@@ -31,7 +31,7 @@ const STUDENTS: Student[] = [
   { name: "Noah Bush",           campus: "UAF", program: "Undergraduate · Computer Science", lead: true, app: { label: "Alaska Fire Risk", href: "/fire-risk" } },
   { name: "Sumana Sahoo",        campus: "UAF", program: "Ph.D. · Natural Resources and Sustainability", app: { label: "Forest Trends", href: "/forest-trends" } },
   { name: "Muhammad Saffiullah", campus: "UAA", program: "Undergraduate · Computer Science", app: { label: "Burn Severity Recovery", href: "/burn-recovery" } },
-  { name: "Yara Hassan",         campus: "UAA", program: "Undergraduate · Electrical Engineering", app: { label: "Wildfire Prediction", href: "/wildfire-prediction" } },
+  { name: "Yara Hassan",         campus: "UAA", program: "Undergraduate · Electrical Engineering" },
   { name: "Utsav Dutta",         campus: "UAA", program: "Undergraduate · Computer Science", app: { label: "Publication", href: "/publication" } },
   { name: "Jenae Matson",        campus: "UAF", program: "Undergraduate · Computer Science", app: { label: "Terminology", href: "/library" } },
   { name: "Kohlby Vierthaler",   campus: "UAF", program: "B.S./M.S. · Computer Science", project: "Wildfire Risk / Remote Sensing App" },
