@@ -1,0 +1,4 @@
+# Saved fingerprints require identical file bytes on Windows and Linux.
+* text=auto eol=lf
+*.png binary
+*.gz binary

@@ -1,0 +1,11 @@
+{
+  "same_grid_cells": true,
+  "unchanged_geometric_splits": 195,
+  "max_input_differences": {
+    "easting": 5.820766091346741e-11,
+    "northness": 1.1102230246251565e-16
+  },
+  "max_r2_difference": 7.771561172376096e-16,
+  "max_rmse_difference": 5.204170427930421e-18,
+  "note": "Aligned by grid-cell identity rather than sorting approximate easting alone; no rounding was applied to coordinates used in buffer comparisons."
+}

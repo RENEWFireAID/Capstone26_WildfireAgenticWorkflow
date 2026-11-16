@@ -1,0 +1,103 @@
+{
+  "recipe": {
+    "fire": {
+      "ACREAGEMET": "",
+      "ACRES": 164803.1,
+      "ADDNUMBER": "",
+      "AFSNUMBER": "L92Q",
+      "AGENCYACRE": 0,
+      "COMMENTS": "Update from USGS 2024. Perimeter incorporated from MTBS records",
+      "DOFNUMBER": "903181",
+      "FIREID": 50903,
+      "FIRESEASON": "2010 - 2019",
+      "FIREYEAR": "2019",
+      "FPOUTDATE": 1575532800000,
+      "IRWINID": "{836450FA-2D41-41A0-B38F-5A4B17766214}",
+      "LATESTPERI": "Yes",
+      "NAME": "Swan Lake",
+      "PERIMETERD": 1595228400000,
+      "PRESCRIBED": "N",
+      "RECORDNUMB": "181",
+      "SOURCE": "Image Interpretation",
+      "SOURCECLAS": "",
+      "SOURCEMETH": "",
+      "Shape_Area": 666934492.092,
+      "Shape_Leng": 289573.087545,
+      "UPDATETIME": 1715065200000,
+      "USEDONFINA": "No",
+      "USFSNUMBER": "PNL92Q"
+    },
+    "mtbs": {
+      "Asmnt_Type": "Extended",
+      "BurnBndAc": 164801,
+      "BurnBndLat": "60.58",
+      "BurnBndLon": "-150.19",
+      "Comment": "Perimeter was taken from RAVG mapping which was taken from GeoMac perimeters.\r\n\r\nHigh severity is almost all in the high biomass areas.",
+      "Event_ID": "AK6063115043820190605",
+      "High_T": 660,
+      "Ig_Date": 1559804400000,
+      "IncGreen_T": -150,
+      "Incid_Name": "SWAN LAKE",
+      "Incid_Type": "Wildfire",
+      "Low_T": 100,
+      "Map_ID": 10016790,
+      "Map_Prog": "MTBS",
+      "Mod_T": 364,
+      "NoData_T": -970,
+      "Perim_ID": "",
+      "Post_ID": "A05VPH20200728_30m",
+      "Pre_ID": "A06VUN20170806_30m",
+      "dNBR_offst": 36,
+      "dNBR_stdDv": 48,
+      "irwinID": "836450FA-2D41-41A0-B38F-5A4B17766214"
+    },
+    "case": {
+      "event_id": "AK6063115043820190605",
+      "crs": "EPSG:32605"
+    },
+    "assets": {
+      "mtbs": "USFS/GTAC/MTBS/burned_area_boundaries/v1",
+      "ak_fire_history": "projects/ee-ssahoo2/assets/AK_fire_history",
+      "hls_l30": "NASA/HLS/HLSL30/v002",
+      "hls_s30": "NASA/HLS/HLSS30/v002",
+      "landsat8": "LANDSAT/LC08/C02/T1_L2",
+      "landsat7": "LANDSAT/LE07/C02/T1_L2",
+      "landsat5": "LANDSAT/LT05/C02/T1_L2",
+      "dynamic_world": "GOOGLE/DYNAMICWORLD/V1",
+      "dem": "USGS/3DEP/10m_collection",
+      "dem_fallback": "COPERNICUS/DEM/GLO30_2024_1",
+      "terraclimate": "IDAHO_EPSCOR/TERRACLIMATE"
+    },
+    "source_sha256": {
+      "auth.py": "4fbe29bb89860df798fb4b6e93a23c483f4b774fda5a6053a58375c653cff6b1",
+      "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+      "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+      "landcover.py": "bc78261b2ce70cbd414ff08a7c28a56dce31f9e2d7fcb65f75deda673c46b493",
+      "modeling.py": "3b051a69a1947fafadb4d9619f6b253581ca6493e2883882935dfb9619a67eaa",
+      "severity.py": "e18a959cac6851f47e3201b71f3a2f1a34111ee76613409fbede9cb62f649b8a",
+      "terrain.py": "19bef7a9cdfb0c41394c92b7e0a2ebff666a392825d0a713cb399849a6bb62fb",
+      "timeseries.py": "8ffe51ab74e17d17dca9344941bcb478139eaf7e238171e3fafe0171877b7348",
+      "__init__.py": "dd36dca0b29d19e2a503a7492cda9af0168759aec673dce6e348de3310109ba6"
+    },
+    "acquisition_sha256": "9a75cf928ff245d9698776c830f845e8c314652bda80d79ff20a2c502c025f94",
+    "sample_scale_m": 200,
+    "analysis_scale_m": 30,
+    "target_points": 2000,
+    "seed": 0,
+    "tile_scale": 4,
+    "pre_year": 2018,
+    "recovery_years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ]
+  },
+  "acquired_utc": "2026-09-22T04:37:24.685332+00:00",
+  "support_30m": {
+    "total_m2": 666923817.2305583,
+    "valid_m2": 656842930.3878695
+  },
+  "sample_sha256": "24bd5a95a32cbe623e3a2ccecc943520171cd2cd6cb9f1c0d686e1b96db1d5f1"
+}

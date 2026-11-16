@@ -1,0 +1,4 @@
+fire,samples,coverage_30m,blocks_2km,blocks_4km,climate_cells_with_samples,crs,mtbs_pre,mtbs_post,mtbs_high,mtbs_offset
+Shovel Creek,1573,0.9936700229197142,48,17,28,EPSG:32606,20180722,20200609,700,14
+Swan Lake,1708,0.9848845001749221,208,64,91,EPSG:32605,20170806,20200728,660,36
+Nugget Creek,1053,0.9953891734604419,31,11,19,EPSG:32606,20180929,20200817,615,20
