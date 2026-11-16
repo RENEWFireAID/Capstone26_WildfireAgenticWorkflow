@@ -11,6 +11,16 @@ export async function GET() {
   }
 }
 
+// Acres range on the normalized `acres` field; a blank bound is open.
+function acresFilter(body: any): Record<string, number> | undefined {
+  const range: Record<string, number> = {};
+  const min = Number(body?.acresMin);
+  const max = Number(body?.acresMax);
+  if (body?.acresMin != null && Number.isFinite(min)) range.$gte = min;
+  if (body?.acresMax != null && Number.isFinite(max)) range.$lte = max;
+  return Object.keys(range).length ? range : undefined;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -28,6 +38,8 @@ export async function POST(req: Request) {
       if (body.yearEnd)   query.year = { ...query.year, $lte: Number(body.yearEnd) };
       if (body.prescribed === "Y") query.prescribed = "Y";
       if (body.prescribed === "N") query.prescribed = "N";
+      const acres = acresFilter(body);
+      if (acres) query.acres = acres;
 
       const results = await db.collection("fire_points")
         .find(query, { projection: { _id: 0 } })
@@ -45,6 +57,8 @@ export async function POST(req: Request) {
     const p = body?.prescribed;
     if (p === "Y") query.PRESCRIBEDFIRE = "Y";
     else if (p === "N") query.PRESCRIBEDFIRE = "N";
+    const acres = acresFilter(body);
+    if (acres) query.acres = acres;
     const results = await db.collection("fire_points")
       .find(query, { projection: { _id: 0 } })
       .limit(limit)

@@ -499,7 +499,7 @@ function QueryBuilderPanel({
           />
         </Field>
 
-        <Field label="Acres (UI only for now)">
+        <Field label="Acres">
           <div className="grid grid-cols-2 gap-2">
             <input
               className="w-full rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-3 py-2 text-xs outline-none"
