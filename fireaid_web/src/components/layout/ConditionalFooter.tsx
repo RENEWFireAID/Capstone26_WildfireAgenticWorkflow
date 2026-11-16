@@ -2,7 +2,9 @@
 import { usePathname } from "next/navigation";
 import Footer from "@/components/layout/Footer";
 
-const HIDE_FOOTER = ["/portal", "/apps", "/data", "/prompt"];
+// Every page ends on the footer except the chat, which fills the window with
+// the conversation and keeps its input pinned to the bottom, and the admin tool.
+const HIDE_FOOTER = ["/portal", "/admin"];
 
 export default function ConditionalFooter() {
   const pathname = usePathname();
