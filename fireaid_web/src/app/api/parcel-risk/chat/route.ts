@@ -1,7 +1,8 @@
 import { handleToolChat } from "@/lib/toolChat";
+import { MODELS } from "@/lib/models";
 
 const PARCEL_TOOLS = ["parcel_fire_risk", "parcel_vegetation_at"] as const;
-const MODEL = process.env.PARCEL_CHAT_MODEL || "anthropic/claude-haiku-5.5";
+const MODEL = MODELS.parcelRisk;
 
 function systemPrompt(): string {
   return `You are the FireAID parcel fire risk assistant for the Fairbanks North Star Borough, Alaska.

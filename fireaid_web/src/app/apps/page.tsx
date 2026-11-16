@@ -6,6 +6,7 @@ import burnSeverityPreview from "./previews/burn-severity.jpg";
 import fireHistoryPreview from "./previews/fire-history.jpg";
 import fireRiskPreview from "./previews/fire-risk.jpg";
 import forestTrendsPreview from "./previews/forest-trends.jpg";
+import parcelRiskPreview from "./previews/parcel-risk.jpg";
 import { ArrowRight, BookOpen, FileText, Flame, MapPinned, Satellite, Sprout, TriangleAlert } from "lucide-react";
 
 const APPS = [
@@ -56,8 +57,8 @@ const APPS = [
     data: "FNSB vegetation map and tax parcels · 63,884 parcel records · Google Earth Engine",
     icon: MapPinned,
     href: "/parcel-risk",
-    developer: "Emma Heil and Darshan",
-    role: "Parcel Fire Risk Score notebook · built into FireAID by Noah Bush",
+    developer: "Emma Heil and Darshan Nautiyal",
+    role: "Undergraduate Researchers · UAF Wildlife Biology and Conservation, UAF Computer Science",
   },
   {
     label: "Publication",
@@ -88,6 +89,7 @@ const PREVIEWS: Record<string, StaticImageData> = {
   "Alaska Fire Risk": fireRiskPreview,
   "Forest Trends": forestTrendsPreview,
   "Burn Severity Recovery": burnSeverityPreview,
+  "Parcel Fire Risk": parcelRiskPreview,
 };
 
 // Reference tools sit apart from the apps that map and model fire data.

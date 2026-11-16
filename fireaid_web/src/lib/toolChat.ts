@@ -6,8 +6,9 @@ import type {
   ChatCompletionTool,
 } from "openai/resources/chat/completions";
 import { callFireTool, listFireToolSchemas } from "@/lib/mcpClient";
+import { MODELS } from "@/lib/models";
 
-const MODEL = process.env.FIRE_CHAT_MODEL || "anthropic/claude-sonnet-5.5";
+const MODEL = MODELS.fireRisk;
 const MAX_TOOL_ROUNDS = 5;
 const MAX_MESSAGES = 20;
 const MAX_CHARS = 4000;

@@ -4,10 +4,14 @@ import { useEffect, useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import { MapPin, Search } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import PageHeader from "@/components/layout/PageHeader";
 import FireRiskChat from "@/components/fire-risk/FireRiskChat";
 import type { LegendEntry, MapPoint, ParcelGeometry, RiskLayer } from "@/components/parcel-risk/ParcelRiskMap";
 
 const ParcelRiskMap = dynamic(() => import("@/components/parcel-risk/ParcelRiskMap"), { ssr: false });
+
+// The card style the other app pages use.
+const CARD = "bg-white shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)]";
 
 const SUGGESTIONS = [
   "What's the fire risk for parcel 622476?",
@@ -82,69 +86,74 @@ export default function ParcelRiskPage() {
   }
 
   return (
-    <div className="grid w-full min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1.4fr)_minmax(0,0.9fr)]">
+    <div className="flex min-h-screen w-full">
       <FireAIDSidebar />
 
-      <div className="min-w-0 space-y-4 py-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <h1 className="text-xl font-bold text-slate-900">Parcel Fire Risk</h1>
-          <p className="mt-1 text-xs text-slate-500">
-            Fairbanks North Star Borough · Source: AVIRIS-NG / Sentinel-2 vegetation classification
-          </p>
-        </div>
-
-        <div className="relative h-[640px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <ParcelRiskMap layers={layers} legend={legend} selected={selected} parcel={parcelShape(found)} onPick={pick} />
-          {status && (
-            <div role="status" className="absolute left-1/2 top-3 z-[1000] -translate-x-1/2 rounded-full bg-white px-4 py-2 text-sm text-slate-700 shadow-md">
-              {status}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-            <MapPin size={16} aria-hidden /> Selected spot
-          </div>
-          {selected && spot && typeof spot === "object" ? (
-            <SpotDetails point={selected} spot={spot} />
-          ) : (
-            <p className="mt-2 text-sm text-slate-600">{typeof spot === "string" ? spot : "Click the map to identify the fire risk level."}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="min-w-0 space-y-4 py-6 xl:pr-6">
-        <form onSubmit={search} className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-slate-900">Find a parcel by ID (PAN)</span>
-            <input
-              value={parcelId}
-              onChange={(e) => setParcelId(e.target.value)}
-              inputMode="numeric"
-              placeholder="e.g. 622476"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-slate-400"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={!parcelId.trim()}
-            className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            <Search size={14} aria-hidden /> Search
-          </button>
-          {typeof found === "string" && <p className="text-xs text-slate-600">{found}</p>}
-          {Array.isArray(found) && found.map((p, i) => <ParcelRow key={i} parcel={p} />)}
-        </form>
-
-        <FireRiskChat
-          endpoint="/api/parcel-risk/chat"
-          title="Ask about parcel fire risk"
-          subtitle="Vegetation, fire risk and parcel scores"
-          suggestions={SUGGESTIONS}
-          chartSource="the FNSB parcel fire risk data"
+      <main className="flex min-w-0 flex-1 flex-col">
+        <PageHeader
+          eyebrow="Apps · Property risk"
+          title="Parcel Fire Risk"
+          description="The vegetation fire risk of every property in the Fairbanks North Star Borough. Click the map for the risk at that spot, or look up a parcel number for its 0-100 score."
+          meta={["AVIRIS-NG / Sentinel-2 vegetation classification", "FNSB tax parcels", "Google Earth Engine"]}
         />
-      </div>
+
+        <div className="grid flex-1 grid-cols-1 gap-5 bg-slate-50 px-6 py-6 md:px-10 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)]">
+          <div className="min-w-0 space-y-5">
+            <div className={`relative h-[640px] overflow-hidden ${CARD}`}>
+              <ParcelRiskMap layers={layers} legend={legend} selected={selected} parcel={parcelShape(found)} onPick={pick} />
+              {status && (
+                <div role="status" className="absolute left-1/2 top-3 z-[1000] -translate-x-1/2 bg-white px-4 py-2 text-sm text-slate-700 shadow-md">
+                  {status}
+                </div>
+              )}
+            </div>
+
+            <section className={`p-5 ${CARD}`}>
+              <h2 className="flex items-center gap-2 text-xl font-bold text-navy-deep">
+                <MapPin size={18} aria-hidden /> Selected spot
+              </h2>
+              {selected && spot && typeof spot === "object" ? (
+                <SpotDetails point={selected} spot={spot} />
+              ) : (
+                <p className="mt-2 text-sm text-slate-600">{typeof spot === "string" ? spot : "Click the map to identify the fire risk level."}</p>
+              )}
+            </section>
+          </div>
+
+          <div className="min-w-0 space-y-5">
+            <form onSubmit={search} className={`space-y-3 border-t-4 border-gold p-5 ${CARD}`}>
+              <label className="block">
+                <span className="mb-2 block text-xl font-bold text-navy-deep">Find a parcel by ID (PAN)</span>
+                <input
+                  value={parcelId}
+                  onChange={(e) => setParcelId(e.target.value)}
+                  inputMode="numeric"
+                  placeholder="e.g. 622476"
+                  className="h-9 w-full border border-slate-300 bg-white px-2 text-sm font-medium text-slate-800 outline-none focus:border-navy"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={!parcelId.trim()}
+                className="flex w-full items-center justify-center gap-2 bg-gold px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-wide text-navy-deep transition hover:bg-[#ffd94d] disabled:opacity-40"
+              >
+                <Search size={14} aria-hidden /> Search
+              </button>
+              {typeof found === "string" && <p className="text-xs text-slate-600">{found}</p>}
+              {Array.isArray(found) && found.map((p, i) => <ParcelRow key={i} parcel={p} />)}
+            </form>
+
+            <FireRiskChat
+              endpoint="/api/parcel-risk/chat"
+              title="Ask about parcel fire risk"
+              subtitle="Vegetation, fire risk and parcel scores"
+              suggestions={SUGGESTIONS}
+              chartSource="the FNSB parcel fire risk data"
+              modelFeature="parcelRisk"
+            />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
@@ -159,8 +168,8 @@ function SpotDetails({ point, spot }: { point: MapPoint; spot: SpotInfo }) {
   const color = spot.no_data ? "#000000" : spot.risk_color;
   return (
     <div className="mt-3 max-h-[360px] space-y-3 overflow-y-auto">
-      <div className="rounded-xl border-l-4 bg-slate-50 p-3 text-sm text-slate-700" style={{ borderColor: color }}>
-        <div className="font-semibold text-slate-900">{spot.no_data ? "Water / No Data" : spot.risk_name}</div>
+      <div className="border-l-4 bg-slate-50 p-3 text-sm text-slate-700" style={{ borderColor: color }}>
+        <div className="font-semibold text-navy-deep">{spot.no_data ? "Water / No Data" : spot.risk_name}</div>
         {spot.no_data ? (
           <p className="mt-1">This area contains no vegetation data.</p>
         ) : (
@@ -189,11 +198,11 @@ function ParcelRow({ parcel }: { parcel: Parcel }) {
     ["Legal description", legal || "—"],
   ];
   return (
-    <dl className="grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 text-sm">
+    <dl className="grid grid-cols-2 gap-3 bg-slate-50 p-3 text-sm">
       {stats.map(([label, value]) => (
         <div key={label}>
           <dt className="text-[11px] font-medium text-slate-500">{label}</dt>
-          <dd className="mt-1 font-semibold text-slate-900">{value}</dd>
+          <dd className="mt-1 font-semibold text-navy-deep">{value}</dd>
         </div>
       ))}
     </dl>
