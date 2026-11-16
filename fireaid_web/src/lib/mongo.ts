@@ -7,31 +7,27 @@ if (!process.env.MONGODB_URI) {
 const uri = process.env.MONGODB_URI;
 const options = { appName: "fireaid-nextjs" };
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+// One connection per server process. In development it lives on `global` so
+// hot reloads reuse it rather than opening a new pool on every edit.
+const globalWithMongo = global as typeof globalThis & {
+  _mongoClientPromise?: Promise<MongoClient> | null;
+};
 
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>;
-  };
-
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    globalWithMongo._mongoClientPromise = client.connect();
-  }
-
-  clientPromise = globalWithMongo._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
+function connect(): Promise<MongoClient> {
+  const promise = new MongoClient(uri, options).connect();
+  // A failed connect must not be cached, or every later query fails with the
+  // same error even after MongoDB comes back (e.g. when the web container
+  // starts before mongo is ready). Forget it so the next call retries.
+  promise.catch(() => {
+    if (globalWithMongo._mongoClientPromise === promise) {
+      globalWithMongo._mongoClientPromise = null;
+    }
+  });
+  return promise;
 }
 
-// Export a module-scoped MongoClient. By doing this in a
-// separate module, the client can be shared across functions.
 export async function getDb(): Promise<Db> {
-    const client = await clientPromise;
-    return client.db("fireaid");
+  globalWithMongo._mongoClientPromise ??= connect();
+  const client = await globalWithMongo._mongoClientPromise;
+  return client.db("fireaid");
 }
