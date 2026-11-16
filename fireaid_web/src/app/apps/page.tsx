@@ -81,9 +81,13 @@ const APPS = [
 // data scale and wear the UAF colours instead.
 type Cover = { colors: string[]; scale?: string; accent: string };
 const COVERS: Record<string, Cover> = {
-  "Fire History": { colors: ["#22c55e", "#eab308", "#ea580c", "#dc2626"], scale: "Fire size: 10 to 10,000+ acres", accent: "#c2410c" },
+  // The map's 100+ acre classes, ending on its largest-fire outline, so the band
+  // reads as embers rather than repeating the green-to-red of the next two cards.
+  "Fire History": { colors: ["#eab308", "#ea580c", "#dc2626", "#7f1d1d"], scale: "Fire size: 100 to 10,000+ acres", accent: "#c2410c" },
   "Alaska Fire Risk": { colors: ["#2563eb", "#15803d", "#facc15", "#f97316", "#dc2626"], scale: "AICC danger: Low to Extreme", accent: "#b45309" },
-  "Wildfire Prediction": { colors: ["#22c55e", "#eab308", "#f97316", "#dc2626"], scale: "Fire probability: <25% to ≥75%", accent: "#dc2626" },
+  // Inferno, a standard probability scale, keeps this card apart from the two
+  // above; the app's own map still uses green to red.
+  "Wildfire Prediction": { colors: ["#2d0a5b", "#7a1d6f", "#c2364e", "#f1701f", "#fcd34d"], scale: "Fire probability: low to high", accent: "#9d174d" },
   "Forest Trends": { colors: ["#e5d7b3", "#aed581", "#1b5e20"], scale: "NDVI greenness", accent: "#15803d" },
   "Burn Severity Recovery": { colors: ["#006400", "#70a800", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026", "#7a0000"], scale: "dNBR burn severity", accent: "#bd0026" },
   "Publication": { colors: ["#0a1f3d", "#003366", "#2a78d6", "#8ec5f5"], accent: "#2a78d6" },
