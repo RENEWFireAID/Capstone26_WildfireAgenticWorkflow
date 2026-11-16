@@ -85,7 +85,7 @@ export default function ProjectsPage() {
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-[#003366] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#002244] transition"
+            className="flex items-center gap-2 bg-[#236192] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#111C4E] transition"
           >
             <Plus size={16} />
             New project
@@ -97,7 +97,7 @@ export default function ProjectsPage() {
           <div className="relative max-w-lg mb-8">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
-              className="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-[#003366] transition"
+              className="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-[#236192] transition"
               placeholder="Search projects..."
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -122,7 +122,7 @@ export default function ProjectsPage() {
                       <span className="inline-block bg-blue-50 text-blue-600 text-[10px] font-semibold px-2.5 py-0.5 rounded-full mb-2">
                         {p.tag}
                       </span>
-                      <h3 className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">
+                      <h3 className="text-base font-semibold text-slate-800 group-hover:text-[#236192] transition">
                         {p.title}
                       </h3>
                     </div>
@@ -152,7 +152,7 @@ export default function ProjectsPage() {
             <div className="flex flex-col gap-1">
               <label className="text-xs text-slate-500 font-medium">Title</label>
               <input
-                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003366] transition"
+                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#236192] transition"
                 placeholder="Project title"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
@@ -162,7 +162,7 @@ export default function ProjectsPage() {
               <label className="text-xs text-slate-500 font-medium">Description</label>
               <textarea
                 rows={3}
-                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003366] transition resize-none"
+                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#236192] transition resize-none"
                 placeholder="What is this project about?"
                 value={description}
                 onChange={e => setDesc(e.target.value)}
@@ -171,7 +171,7 @@ export default function ProjectsPage() {
             <div className="flex flex-col gap-1">
               <label className="text-xs text-slate-500 font-medium">Tag</label>
               <select
-                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003366] transition bg-white"
+                className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#236192] transition bg-white"
                 value={tag}
                 onChange={e => setTag(e.target.value)}
               >
@@ -192,7 +192,7 @@ export default function ProjectsPage() {
               <button
                 onClick={createProject}
                 disabled={saving || !title.trim()}
-                className="px-5 py-2 rounded-xl bg-[#003366] text-white text-sm font-semibold hover:bg-[#002244] disabled:opacity-40 transition"
+                className="px-5 py-2 rounded-xl bg-[#236192] text-white text-sm font-semibold hover:bg-[#111C4E] disabled:opacity-40 transition"
               >
                 {saving ? "Creating..." : "Create"}
               </button>

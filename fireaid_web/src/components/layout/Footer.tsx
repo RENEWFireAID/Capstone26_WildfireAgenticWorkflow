@@ -2,7 +2,7 @@ import { Flame } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-navy text-white">
+    <footer className="bg-navy-deep text-white">
       {/* Main grid */}
       <div className="mx-auto max-w-7xl px-6 py-12 grid grid-cols-1 gap-10 md:grid-cols-3">
         {/* Left */}

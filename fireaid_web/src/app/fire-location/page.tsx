@@ -36,14 +36,14 @@ export default function FireLocationPage() {
             <a
               href="/fire-location/AK_fire_location_points.csv"
               download="AK_fire_location_points.csv"
-              className="group inline-flex items-center gap-5 rounded-2xl border border-slate-200 bg-white px-8 py-6 transition hover:border-[#003366] hover:shadow-lg"
+              className="group inline-flex items-center gap-5 rounded-2xl border border-slate-200 bg-white px-8 py-6 transition hover:border-[#236192] hover:shadow-lg"
             >
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-green-50">
                 <MapPin size={28} className="text-green-600" strokeWidth={1.5} />
               </div>
 
               <div>
-                <div className="text-base font-semibold text-slate-800 transition group-hover:text-[#003366]">
+                <div className="text-base font-semibold text-slate-800 transition group-hover:text-[#236192]">
                   AK Fire Location Points
                 </div>
                 <div className="mt-1 text-xs text-slate-400">
@@ -51,7 +51,7 @@ export default function FireLocationPage() {
                 </div>
               </div>
 
-              <div className="ml-8 flex items-center gap-2 text-sm font-semibold text-[#003366] opacity-0 transition group-hover:opacity-100">
+              <div className="ml-8 flex items-center gap-2 text-sm font-semibold text-[#236192] opacity-0 transition group-hover:opacity-100">
                 <Download size={16} />
                 Download
               </div>

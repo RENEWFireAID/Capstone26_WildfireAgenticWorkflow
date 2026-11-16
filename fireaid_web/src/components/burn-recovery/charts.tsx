@@ -151,7 +151,7 @@ export function ObservedPredicted({ observed, predicted }: { observed: number[];
         </g>
       ))}
       {observed.map((o, i) => (
-        <circle key={i} cx={px(o)} cy={py(predicted[i])} r={2.4} fill="#003366" fillOpacity={0.35} />
+        <circle key={i} cx={px(o)} cy={py(predicted[i])} r={2.4} fill="#236192" fillOpacity={0.35} />
       ))}
       <line x1={px(lo)} y1={py(lo)} x2={px(hi)} y2={py(hi)} stroke="#e4572e" strokeDasharray="5 4" strokeWidth={1.5} />
       <text x={(M + S - P) / 2} y={S - 12} textAnchor="middle" fontSize="11" fill="#475569">Observed slope (NDVI/year)</text>

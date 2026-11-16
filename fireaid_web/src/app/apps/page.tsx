@@ -90,8 +90,8 @@ const COVERS: Record<string, Cover> = {
   "Wildfire Prediction": { colors: ["#2d0a5b", "#7a1d6f", "#c2364e", "#f1701f", "#fcd34d"], scale: "Fire probability: low to high", accent: "#9d174d" },
   "Forest Trends": { colors: ["#e5d7b3", "#aed581", "#1b5e20"], scale: "NDVI greenness", accent: "#15803d" },
   "Burn Severity Recovery": { colors: ["#006400", "#70a800", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026", "#7a0000"], scale: "dNBR burn severity", accent: "#bd0026" },
-  "Publication": { colors: ["#0a1f3d", "#003366", "#2a78d6", "#8ec5f5"], accent: "#2a78d6" },
-  "Terminology": { colors: ["#003366", "#1d4f80", "#ffcc33"], accent: "#a77b00" },
+  "Publication": { colors: ["#0a1f3d", "#236192", "#2a78d6", "#8ec5f5"], accent: "#2a78d6" },
+  "Terminology": { colors: ["#236192", "#1d4f80", "#ffcd00"], accent: "#a77b00" },
 };
 
 function coverBackground({ colors }: Cover) {

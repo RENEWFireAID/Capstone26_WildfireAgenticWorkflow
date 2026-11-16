@@ -11,7 +11,7 @@ const VIZ_ITEMS = [
     desc: "Search historical fire records",
     icon: Search,
     href: "/search",
-    accent: "#003366",
+    accent: "#236192",
     bg: "bg-blue-50",
     iconColor: "text-blue-600",
   },
@@ -67,12 +67,12 @@ export default function VisualizationPage() {
                     <Icon size={28} className={iconColor} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">
+                    <div className="text-base font-semibold text-slate-800 group-hover:text-[#236192] transition">
                       {label}
                     </div>
                     <div className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</div>
                   </div>
-                  <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <div className="text-xs font-semibold text-[#236192] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                     Open →
                   </div>
                 </div>

@@ -66,14 +66,14 @@ export default function LLMPrompt() {
       {/* 输入区 */}
       <form className="mt-4 flex items-center gap-2" onSubmit={handleSubmit}>
         <input
-          className="h-10 flex-1 rounded-full border border-slate-300 bg-white px-4 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCC33] focus:ring-1 focus:ring-[#FFCC33]"
+          className="h-10 flex-1 rounded-full border border-slate-300 bg-white px-4 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-[#FFCD00] focus:ring-1 focus:ring-[#FFCD00]"
           placeholder="Ask FireAID about this area..."
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
         />
         <button
           type="submit"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#003366] text-white hover:bg-slate-900"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#236192] text-white hover:bg-slate-900"
         >
           ➤
         </button>

@@ -36,7 +36,7 @@ export default function FireHistoryPage() {
                     <div className="text-slate-400 text-sm mt-0.5">{file.filename} · {file.size}</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[#003366] font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="flex items-center gap-2 text-[#236192] font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <Download size={16} />
                   Download
                 </div>

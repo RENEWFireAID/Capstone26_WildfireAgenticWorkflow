@@ -9,10 +9,13 @@
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --color-navy: #003366;
-  --color-navy-deep: #0a1f3d;
-  --color-navy-soft: #e8eef6;
-  --color-gold: #ffcc33;
+  /* UAF's own web palette, as on uaf.edu: UAF Blue, the navy of its menu bar,
+     and UAF Gold, with the light blue that opens its header gradient. */
+  --color-navy: #236192;
+  --color-navy-deep: #111c4e;
+  --color-navy-soft: #e5eef5;
+  --color-gold: #ffcd00;
+  --color-uaf-sky: #87d1e6;
   --color-fire: #e4572e;
 
   /* Secondary text was set in slate-400 across the site and read too faint on white. */
