@@ -18,10 +18,9 @@ OPENROUTER_API_KEY=<your-openrouter-api-key>
 5. Paste it into `.env` as `OPENROUTER_API_KEY`
 
 > ⚠️ Without this key, the following features will show "401 Missing Authentication header":
-> - AI Query (MCP Tools page)
-> - AI Chart Generator (Charts page)
-> - AI Fire Prediction (Prediction page)
-> - AI Report Generator (Reports page)
+> - FireAID Assistant (Chat page)
+> - Ask AI on the Fire History page
+> - The Alaska Fire Risk chat
 
 ---
 
@@ -68,12 +67,13 @@ docker exec -it mongo mongoimport \
 
 | Page | Path | AI Required | Description |
 |------|------|-------------|-------------|
-| Search | `/search` | No | Search fire records with filters |
-| Charts | `/charts` | ✅ Yes | AI-generated charts from natural language |
-| Prediction | `/prediction` | ✅ Yes | AI fire trend prediction |
-| Reports | `/reports` | ✅ Yes | AI-generated PDF reports |
+| Chat | `/portal` | ✅ Yes | FireAID Assistant over fire records, literature and terms |
+| Fire History | `/mcp-tools` | ✅ Yes | Fire records map, query builder and Ask AI with charts |
+| Alaska Fire Risk | `/fire-risk` | ✅ Yes | Fire danger forecast, map, risk classifier and chat |
+| Forest Trends | `/forest-trends` | No | Post-fire vegetation recovery (needs Earth Engine) |
+| Burn Severity Recovery | `/burn-recovery` | No | Saved three-fire burn severity study, served by FireMCP |
+| Publication | `/publication` | No | Semantic search of research abstracts (needs rag-service) |
 | Library | `/library` | No | Wildfire terminology dictionary |
-| Explore | `/mcp-tools` | ✅ Yes | MCP tools + AI query + map |
 
 ---
 
@@ -92,15 +92,15 @@ fireaid_web/src/app/
 ├── api/
 │   ├── mcp/
 │   │   ├── run/route.ts        # MCP query endpoint
-│   │   ├── chat/route.ts       # AI natural language query
-│   │   ├── chart/route.ts      # AI chart generation
-│   │   ├── predict/route.ts    # AI fire prediction
-│   │   └── report/route.ts     # AI report generation
+│   │   └── analyze/route.ts    # Fire History Ask AI (answers and charts)
+│   ├── burn-recovery/route.ts  # Burn Severity Recovery, via FireMCP
+│   ├── models/route.ts         # Which model each AI chat uses
 │   └── terms/route.ts          # Terminology CRUD
-├── search/page.tsx             # Search page
-├── charts/page.tsx             # AI Charts page
-├── prediction/page.tsx         # AI Prediction page
-├── reports/page.tsx            # AI Reports page
-├── library/page.tsx            # Terminology Library
-└── mcp-tools/page.tsx          # MCP Explorer
+├── portal/page.tsx             # FireAID Assistant (Chat)
+├── mcp-tools/page.tsx          # Fire History
+├── fire-risk/page.tsx          # Alaska Fire Risk
+├── forest-trends/page.tsx      # Forest Trends
+├── burn-recovery/page.tsx      # Burn Severity Recovery
+├── publication/page.tsx        # Publication
+└── library/page.tsx            # Terminology Library
 ```

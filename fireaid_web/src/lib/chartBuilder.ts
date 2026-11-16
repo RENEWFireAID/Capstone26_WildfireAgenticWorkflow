@@ -127,8 +127,8 @@ export function toChartData(
 
 /**
  * Turn a natural-language request into a chart backed by a real aggregation
- * over fire_points. Shared by the Charts page and the chat assistant's
- * generate_chart tool so both behave identically.
+ * over fire_points, for the chat assistant's generate_chart tool. Fire
+ * History's Ask AI draws its charts with toChartData and clampData above.
  */
 export async function buildChart(message: string): Promise<BuiltChart> {
   if (!process.env.OPENROUTER_API_KEY) throw new Error("Missing OPENROUTER_API_KEY");
