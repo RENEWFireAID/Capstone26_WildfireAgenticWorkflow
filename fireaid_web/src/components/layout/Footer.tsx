@@ -1,11 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Zilla_Slab } from "next/font/google";
 import { Facebook, Instagram } from "lucide-react";
 import uafMark from "@/components/topbar/assets/uaf-mark.png";
 import topoBorder from "./assets/uaf-topo-border.svg";
-
-const zilla = Zilla_Slab({ subsets: ["latin"], weight: ["700"] });
 
 // Laid out and linked as uaf.edu's footer is; every URL was checked against it.
 const CONTACT = [
@@ -56,7 +53,7 @@ const linkClass = "underline decoration-white/60 underline-offset-2 transition h
 function Column({ title, links, internal = false }: { title: string; links: { label: string; href: string }[]; internal?: boolean }) {
   return (
     <div>
-      <h2 className={`${zilla.className} text-2xl font-bold`}>{title}</h2>
+      <h2 className="text-2xl font-bold">{title}</h2>
       <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] marker:text-white/70">
         {links.map(({ label, href }) => (
           <li key={label}>
@@ -77,7 +74,7 @@ export default function Footer() {
     <footer className="bg-navy text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 pb-12 pt-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <h2 className={`${zilla.className} text-2xl font-bold leading-tight`}>University of Alaska Fairbanks</h2>
+          <h2 className="text-2xl font-bold leading-tight">University of Alaska Fairbanks</h2>
           <p className="mt-1 text-sm font-semibold text-gold">FireAID · UAF Data/AI Lab</p>
           <address className="mt-3 text-[15px] not-italic leading-relaxed text-white/90">
             1731 South Chandalar Dr.<br />

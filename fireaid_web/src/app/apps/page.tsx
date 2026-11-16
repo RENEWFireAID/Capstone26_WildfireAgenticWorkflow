@@ -1,6 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { Barlow_Condensed, Zilla_Slab } from "next/font/google";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import burnSeverityPreview from "./previews/burn-severity.jpg";
 import fireHistoryPreview from "./previews/fire-history.jpg";
@@ -71,10 +70,6 @@ const APPS = [
   },
 ];
 
-// uaf.edu's type: Zilla Slab headings and condensed capitals on its gold buttons.
-const zilla = Zilla_Slab({ subsets: ["latin"], weight: ["600", "700"] });
-const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ["600"] });
-
 // A screenshot of each app's main view with real data in it, captured from the
 // live site; apps with no map to show fall back to their icon on UAF Blue.
 const PREVIEWS: Record<string, StaticImageData> = {
@@ -121,7 +116,7 @@ function AppCard({ app, onBlue }: { app: (typeof APPS)[number]; onBlue: boolean 
 
       <div className="flex flex-1 flex-col p-6">
         <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-navy">{kind}</p>
-        <h3 className={`${zilla.className} mt-1 text-2xl font-bold leading-tight text-navy-deep`}>{label}</h3>
+        <h3 className="mt-1 text-2xl font-bold leading-tight text-navy-deep">{label}</h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
 
         <div className="flex-1" />
@@ -139,7 +134,7 @@ function AppCard({ app, onBlue }: { app: (typeof APPS)[number]; onBlue: boolean 
           </div>
         </dl>
 
-        <span className={`${barlowCondensed.className} mt-5 inline-flex items-center justify-center gap-2 self-start bg-gold px-6 py-2.5 text-[15px] uppercase tracking-wide text-navy-deep transition group-hover:bg-[#ffd633]`}>
+        <span className="mt-5 inline-flex items-center justify-center gap-2 self-start bg-gold px-6 py-2.5 font-mono text-[15px] font-semibold uppercase tracking-wide text-navy-deep transition group-hover:bg-[#ffd633]">
           Open app
           <ArrowRight size={16} aria-hidden="true" className="transition group-hover:translate-x-0.5" />
         </span>
@@ -156,7 +151,7 @@ export default function AppsPage() {
       <main className="flex min-w-0 flex-1 flex-col">
         <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-10">
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
-          <h1 className={`${zilla.className} mt-1 text-4xl font-bold leading-tight text-navy-deep`}>Apps</h1>
+          <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Apps</h1>
           <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
             Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
           </p>
@@ -165,7 +160,7 @@ export default function AppsPage() {
         {SECTIONS.map(({ title, note, apps, onBlue, backdrop }) => (
           <section key={title} className="px-6 py-10 md:px-10" style={backdrop}>
             <div className="max-w-6xl">
-              <h2 className={`${zilla.className} text-3xl font-bold text-white`}>{title}</h2>
+              <h2 className="text-3xl font-bold text-white">{title}</h2>
               <p className="mt-1 text-sm text-slate-200">{note}</p>
               <ul className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {apps.map((app) => (

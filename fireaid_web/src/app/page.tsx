@@ -198,7 +198,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-6xl font-extrabold tracking-tight text-white leading-none" style={{
+              <span className="font-heading text-6xl font-bold tracking-tight text-white leading-none" style={{
                 textShadow: "0 0 32px rgba(125,211,252,0.28), 0 2px 12px rgba(2,6,23,0.6)",
                 minWidth: "7.2ch",
               }}>

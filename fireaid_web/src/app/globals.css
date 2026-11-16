@@ -6,8 +6,11 @@
   and hazard, and everything else is a cool neutral.
 */
 @theme {
-  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-zilla-slab), Georgia, serif;
+  /* Labels, figures and buttons: uaf.edu sets these in a condensed face, not a
+     monospace, so font-mono now means condensed capitals and readouts. */
+  --font-mono: var(--font-barlow-condensed), var(--font-barlow), ui-sans-serif, sans-serif;
 
   /* UAF's own web palette, as on uaf.edu: UAF Blue, the navy of its menu bar,
      and UAF Gold, with the light blue that opens its header gradient. */
@@ -35,6 +38,13 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  /* uaf.edu sets body text at Barlow 500. */
+  font-weight: 500;
+}
+
+/* As on uaf.edu, every heading is Zilla Slab. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 /* Numbers that sit in columns or update live line up. */
