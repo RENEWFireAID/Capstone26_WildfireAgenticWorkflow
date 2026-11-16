@@ -1,6 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 import burnSeverityPreview from "./previews/burn-severity.jpg";
 import fireHistoryPreview from "./previews/fire-history.jpg";
 import fireRiskPreview from "./previews/fire-risk.jpg";
@@ -79,15 +80,6 @@ const PREVIEWS: Record<string, StaticImageData> = {
   "Burn Severity Recovery": burnSeverityPreview,
 };
 
-// uaf.edu's backdrops: contour lines on navy and scattered peaks on UAF Blue.
-const CONTOURS = [
-  "repeating-radial-gradient(ellipse at 12% 20%, transparent 0 26px, rgba(135,209,230,0.07) 26px 27px)",
-  "repeating-radial-gradient(ellipse at 88% 85%, transparent 0 30px, rgba(135,209,230,0.06) 30px 31px)",
-].join(", ");
-const PEAKS = `url("data:image/svg+xml,${encodeURIComponent(
-  "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><g fill='#111c4e' fill-opacity='0.35'><path d='M30 40l8 13H22z'/><path d='M160 30l6 10h-12z'/><path d='M110 120l9 15H101z'/><path d='M190 170l7 11h-14z'/><path d='M50 180l6 10H44z'/></g></svg>",
-)}")`;
-
 // Reference tools sit apart from the apps that map and model fire data.
 const REFERENCE = new Set(["Publication", "Terminology"]);
 const SECTIONS = [
@@ -157,8 +149,9 @@ export default function AppsPage() {
           </p>
         </header>
 
-        {SECTIONS.map(({ title, note, apps, onBlue, backdrop }) => (
-          <section key={title} className="px-6 py-10 md:px-10" style={backdrop}>
+        {SECTIONS.map(({ title, note, apps, onBlue, backdrop }, i) => (
+          // The last section grows to meet the footer, so short pages leave no bare gap.
+          <section key={title} className={`px-6 py-10 md:px-10 ${i === SECTIONS.length - 1 ? "flex-1" : ""}`} style={backdrop}>
             <div className="max-w-6xl">
               <h2 className="text-3xl font-bold text-white">{title}</h2>
               <p className="mt-1 text-sm text-slate-200">{note}</p>

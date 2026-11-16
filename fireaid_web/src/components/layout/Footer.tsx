@@ -72,6 +72,8 @@ function Column({ title, links, internal = false }: { title: string; links: { la
 export default function Footer() {
   return (
     <footer className="bg-navy text-white">
+      {/* The header's light blue to gold rule, so the footer reads apart from a blue section above it. */}
+      <div className="h-1 bg-[linear-gradient(90deg,var(--color-uaf-sky)_0%,#c4cfda_50%,var(--color-gold)_100%)]" aria-hidden="true" />
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 pb-12 pt-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <h2 className="text-2xl font-bold leading-tight">University of Alaska Fairbanks</h2>
