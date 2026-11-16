@@ -4,24 +4,32 @@ import { usePathname } from "next/navigation";
 import { LayoutGrid, Database, Terminal } from "lucide-react";
 
 const SIDEBAR_ITEMS = [
-  { key: "apps",          label: "APPS",   icon: LayoutGrid, href: "/apps" },
-  { key: "data",          label: "DATA",   icon: Database,   href: "/data" },
+  { key: "apps",   label: "Apps",   icon: LayoutGrid, href: "/apps" },
+  { key: "data",   label: "Data",   icon: Database,   href: "/data" },
+  { key: "prompt", label: "Prompt", icon: Terminal,   href: "/prompt" },
 ];
 
 export default function FireAIDSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   return (
-    <aside className="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-6 gap-2 shrink-0">
-      {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => (
-        <Link
-          key={key}
-          href={href}
-          className="w-30 py-2.5 rounded-xl flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-100 hover:text-[#003366] transition text-[14px] font-semibold tracking-widest"
-        >
-          <Icon size={30} strokeWidth={1.8} />
-          {label}
-        </Link>
-      ))}
+    <aside className="flex w-[76px] shrink-0 flex-col items-center gap-1 border-r border-slate-200 bg-white py-5">
+      {SIDEBAR_ITEMS.map(({ key, label, icon: Icon, href }) => {
+        const active = pathname.startsWith(href);
+        return (
+          <Link
+            key={key}
+            href={href}
+            aria-current={active ? "page" : undefined}
+            className={`relative flex w-[60px] flex-col items-center gap-1 rounded-lg py-2.5 text-[11px] font-semibold transition ${
+              active ? "bg-navy-soft text-navy" : "text-slate-500 hover:bg-slate-100 hover:text-navy"
+            }`}
+          >
+            {active && <span className="absolute -left-2 top-2 bottom-2 w-[3px] rounded-full bg-gold" aria-hidden="true" />}
+            <Icon size={22} strokeWidth={1.75} />
+            {label}
+          </Link>
+        );
+      })}
     </aside>
   );
 }

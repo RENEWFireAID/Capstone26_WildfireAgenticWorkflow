@@ -1,5 +1,7 @@
+export type RagChunk = { text: string; metadata: Record<string, unknown> };
 
-export async function retrieveRagContext(query: string) {
+/** Top abstracts for a query from the RAG service, or null if it could not be reached. */
+export async function retrieveRagChunks(query: string): Promise<RagChunk[] | null> {
     try {
         const url = process.env.RAG_API_URL || "http://host.docker.internal:8000/api/retrieve";
         const response = await fetch(url, {
@@ -11,9 +13,9 @@ export async function retrieveRagContext(query: string) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return JSON.stringify(data.chunks);
+        return Array.isArray(data.chunks) ? data.chunks : [];
     } catch (e) {
         console.error("Failed to retrieve context:", e);
-        return "Failed to retrieve context.";
+        return null;
     }
 }

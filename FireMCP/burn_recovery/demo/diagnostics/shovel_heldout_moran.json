@@ -1,0 +1,26 @@
+[
+  {
+    "morans_i": 0.6120009008202015,
+    "expected_i": -0.0006361323155216285,
+    "permutation_mean": -0.00018382188748726106,
+    "permutation_sd": 0.012829728919753631,
+    "z_permutation": 47.716107373486466,
+    "p_two_sided": 0.001,
+    "permutations": 999,
+    "seed": 0,
+    "heuristic_abs_I_lt_015": false,
+    "start_year": 2020
+  },
+  {
+    "morans_i": 0.5854148532124691,
+    "expected_i": -0.0006361323155216285,
+    "permutation_mean": -0.0002664738538995052,
+    "permutation_sd": 0.012723655058612714,
+    "z_permutation": 46.03090262730108,
+    "p_two_sided": 0.001,
+    "permutations": 999,
+    "seed": 0,
+    "heuristic_abs_I_lt_015": false,
+    "start_year": 2021
+  }
+]

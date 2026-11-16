@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { CloudRain, Droplets, Eye, Flame, Map as MapIcon, Microscope, Satellite, Sun, Thermometer, Wind } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import Popup from "@/components/ui/TermEntry";
 import LLMPrompt from "@/components/ui/LLMPrompt";
@@ -24,13 +25,13 @@ function getWindDir(deg: number) {
 }
 
 function getCondition(code: number): string {
-  if (code === 0) return "☀️ Clear";
-  if (code <= 3) return "⛅ Partly Cloudy";
-  if (code <= 48) return "🌫️ Foggy";
-  if (code <= 67) return "🌧️ Rain";
-  if (code <= 77) return "❄️ Snow";
-  if (code <= 82) return "🌦️ Showers";
-  return "⛈️ Thunderstorm";
+  if (code === 0) return "Clear";
+  if (code <= 3) return "Partly cloudy";
+  if (code <= 48) return "Fog";
+  if (code <= 67) return "Rain";
+  if (code <= 77) return "Snow";
+  if (code <= 82) return "Showers";
+  return "Thunderstorm";
 }
 
 function getFireRisk(humidity: number, wind: number): { label: string; color: string; bg: string } {
@@ -133,7 +134,7 @@ function AlaskaWeather() {
         {/* Fire Risk banner */}
         <div className="mx-4 mb-4 rounded-xl px-4 py-2.5 flex items-center justify-between"
           style={{ background: "rgba(255,255,255,0.6)" }}>
-          <span className="text-slate-700 text-sm font-medium">🔥 Fire Risk</span>
+          <span className="flex items-center gap-1.5 text-slate-700 text-sm font-medium"><Flame size={15} className="text-fire" aria-hidden="true" />Fire risk</span>
           <span className="font-bold text-sm px-3 py-1 rounded-full" style={{ background: risk.bg, color: risk.color }}>
             {risk.label}
           </span>
@@ -142,16 +143,16 @@ function AlaskaWeather() {
         {/* Stats grid — iPhone weather tiles */}
         <div className="grid grid-cols-3 gap-2 px-4 pb-4">
           {[
-            { icon: "💨", label: "WIND", value: `${w.wind} mph`, sub: getWindDir(w.winddir) },
-            { icon: "💧", label: "HUMIDITY", value: `${w.humidity}%`, sub: w.humidity < 25 ? "⚠️ Dangerously Low" : w.humidity < 40 ? "Low" : "Normal" },
-            { icon: "🌡️", label: "FEELS LIKE", value: `${w.feelsLike}°F`, sub: "" },
-            { icon: "🌧️", label: "PRECIP", value: `${w.precip} mm`, sub: "Current" },
-            { icon: "☀️", label: "UV INDEX", value: String(w.uv), sub: w.uv <= 2 ? "Low" : w.uv <= 5 ? "Moderate" : w.uv <= 7 ? "High" : "Very High" },
-            { icon: "👁️", label: "VISIBILITY", value: `${w.visibility} mi`, sub: "" },
-          ].map(({ icon, label, value, sub }) => (
+            { icon: Wind, label: "Wind", value: `${w.wind} mph`, sub: getWindDir(w.winddir) },
+            { icon: Droplets, label: "Humidity", value: `${w.humidity}%`, sub: w.humidity < 25 ? "Dangerously low" : w.humidity < 40 ? "Low" : "Normal" },
+            { icon: Thermometer, label: "Feels like", value: `${w.feelsLike}°F`, sub: "" },
+            { icon: CloudRain, label: "Precipitation", value: `${w.precip} mm`, sub: "Current" },
+            { icon: Sun, label: "UV index", value: String(w.uv), sub: w.uv <= 2 ? "Low" : w.uv <= 5 ? "Moderate" : w.uv <= 7 ? "High" : "Very High" },
+            { icon: Eye, label: "Visibility", value: `${w.visibility} mi`, sub: "" },
+          ].map(({ icon: Icon, label, value, sub }) => (
             <div key={label} className="rounded-xl px-3 py-3" style={{ background: "rgba(255,255,255,0.6)" }}>
-              <div className="text-[10px] text-slate-500 font-semibold tracking-wide">{icon} {label}</div>
-              <div className="text-slate-900 text-lg font-semibold mt-0.5">{value}</div>
+              <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-semibold"><Icon size={13} aria-hidden="true" />{label}</div>
+              <div className="font-mono tabular text-slate-900 text-lg font-semibold mt-0.5">{value}</div>
               {sub && <div className="text-[10px] text-slate-500 mt-0.5">{sub}</div>}
             </div>
           ))}
@@ -173,14 +174,11 @@ export default function FireAIDPage() {
   const getTerms = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/get_terms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
+      // /api/get_terms stopped existing when its handler moved under llm_query/tools.
+      const res = await fetch("/api/terms");
       const json = await res.json();
       if (!res.ok) {
-        console.error(json.message);
+        console.error(json.error);
       } else {
         const list: Term[] = json.map((i: object) => i as Term);
         setTermList(list);
@@ -199,10 +197,10 @@ export default function FireAIDPage() {
   }, []);
 
   return (
-    <div className="flex gap-5 min-h-screen">
+    <div className="flex min-h-screen w-full">
       <FireAIDSidebar/>
 
-      <div className="flex-1 space-y-6 min-w-0 flex flex-col">
+      <div className="flex min-w-0 flex-1 flex-col space-y-6 px-6 py-6 md:px-8">
 
         {/* 1. WEATHER + EXTERNAL RESOURCES side by side */}
         <div className="grid grid-cols-[1fr_280px] gap-6">
@@ -223,32 +221,32 @@ export default function FireAIDPage() {
                   name: "FRAMES / AFSC",
                   desc: "Alaska Fire Science Consortium — research, reports & data",
                   url: "https://www.frames.gov/afsc/ACWE",
-                  icon: "🔬",
+                  icon: Microscope,
                 },
                 {
                   name: "NIFC ArcGIS Portal",
                   desc: "National Interagency Fire Center — interactive fire maps",
                   url: "https://nifc.maps.arcgis.com/apps/instant/portfolio/index.html?appid=099b1abe3559408995a5840688e8df57&sectionId=a01873bd7b844df2b0d290dd809fbd8d",
-                  icon: "🗺️",
+                  icon: MapIcon,
                 },
                 {
                   name: "GINA Alaska",
                   desc: "Geographic Information Network of Alaska — satellite & spatial data",
                   url: "https://gina.alaska.edu/",
-                  icon: "🛰️",
+                  icon: Satellite,
                 },
-              ].map(({ name, desc, url, icon }) => (
+              ].map(({ name, desc, url, icon: Icon }) => (
                 <a
                   key={name}
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-3 items-start rounded-xl border border-slate-200 p-4 hover:bg-slate-50 hover:border-blue-300 transition-all group"
+                  className="flex gap-3 items-start rounded-xl border border-slate-200 p-4 hover:bg-slate-50 hover:border-navy/40 transition-all group"
                 >
-                  <span className="text-2xl">{icon}</span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-navy-soft text-navy"><Icon size={18} strokeWidth={1.75} aria-hidden="true" /></span>
                   <div>
-                    <div className="font-semibold text-sm text-slate-800 group-hover:text-blue-600 transition-colors">{name}</div>
-                    <div className="text-xs text-slate-400 mt-0.5 leading-relaxed">{desc}</div>
+                    <div className="font-semibold text-sm text-slate-800 group-hover:text-navy transition-colors">{name}</div>
+                    <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</div>
                   </div>
                 </a>
               ))}

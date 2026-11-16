@@ -1,0 +1,19 @@
+fire,start_year,model,n_train,n_test,training_fires,active_predictors,fraction_outside_any_training_range,rmse,baseline_rmse,pooled_r2
+Shovel Creek,2020,full,2761,1573,Swan Lake; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,0.0019071837253655435,0.016859815629466045,0.016710690308114305,-0.01966884639500832
+Shovel Creek,2020,initial_NDVI_only,2761,1573,Swan Lake; Nugget Creek,NDVI_2020,0.0,0.011115034716792132,0.016710690308114305,0.5568250998641735
+Shovel Creek,2020,full_plus_initial_NDVI,2761,1573,Swan Lake; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,0.0019071837253655435,0.017233858245774527,0.016710690308114305,-0.06541434832495319
+Swan Lake,2020,full,2626,1708,Shovel Creek; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,1.0,0.023242710042620556,0.02815609338903445,0.3142364400745409
+Swan Lake,2020,initial_NDVI_only,2626,1708,Shovel Creek; Nugget Creek,NDVI_2020,0.01522248243559719,0.021488516030928412,0.02815609338903445,0.41384331198545454
+Swan Lake,2020,full_plus_initial_NDVI,2626,1708,Shovel Creek; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,1.0,0.02290022493624474,0.02815609338903445,0.3342972184593255
+Nugget Creek,2020,full,3281,1053,Shovel Creek; Swan Lake,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,1.0,0.014073260743997796,0.014755375120353688,0.026792061438760673
+Nugget Creek,2020,initial_NDVI_only,3281,1053,Shovel Creek; Swan Lake,NDVI_2020,0.0,0.011635101969034499,0.014755375120353688,0.33479338087023736
+Nugget Creek,2020,full_plus_initial_NDVI,3281,1053,Shovel Creek; Swan Lake,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,1.0,0.011857117845914587,0.014755375120353688,0.3091648174297703
+Shovel Creek,2021,full,2761,1573,Swan Lake; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,0.0019071837253655435,0.0170607736889591,0.01174740533310676,-1.1442000369602838
+Shovel Creek,2021,initial_NDVI_only,2761,1573,Swan Lake; Nugget Creek,NDVI_2020,0.0,0.013847596377424509,0.01174740533310676,-0.4125916927228057
+Shovel Creek,2021,full_plus_initial_NDVI,2761,1573,Swan Lake; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,0.0019071837253655435,0.017632259552273745,0.01174740533310676,-1.290254764549533
+Swan Lake,2021,full,2626,1708,Shovel Creek; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,1.0,0.02550820786634024,0.027673313707759304,0.10194940683913212
+Swan Lake,2021,initial_NDVI_only,2626,1708,Shovel Creek; Nugget Creek,NDVI_2020,0.01522248243559719,0.02433266883000821,0.027673313707759304,0.18281497413037728
+Swan Lake,2021,full_plus_initial_NDVI,2626,1708,Shovel Creek; Nugget Creek,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,1.0,0.02427747592042479,0.027673313707759304,0.18651795196782794
+Nugget Creek,2021,full,3281,1053,Shovel Creek; Swan Lake,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly,1.0,0.008892918004668618,0.014411913888718413,0.2328700824603377
+Nugget Creek,2021,initial_NDVI_only,3281,1053,Shovel Creek; Swan Lake,NDVI_2020,0.0,0.012820561108724624,0.014411913888718413,-0.5943894440591722
+Nugget Creek,2021,full_plus_initial_NDVI,3281,1053,Shovel Creek; Swan Lake,dNBR; elevation; slope; northness; trees; temp_anomaly; precip_anomaly; NDVI_2020,1.0,0.008373413718485326,0.014411913888718413,0.319880160802814

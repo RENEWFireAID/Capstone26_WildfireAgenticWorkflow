@@ -9,6 +9,29 @@ fireaid_dump/
 llm-app/chroma_db/
 llm-app/data/
 *.csv
-ml_model/data/
 __pycache__/
 
+
+__pycache__/
+*.pyc
+
+# Google Earth Engine credentials — never commit
+*-key.json
+*-credentials.json
+gee-key*.json
+service-account*.json
+.config/earthengine/
+**/.config/earthengine/
+earthengine-credentials*
+secrets/
+
+# Local virtualenvs and caches
+scripts/.venv/
+mcp_server/.venv/
+nohup.out
+
+# Burn Severity Recovery (FireMCP/burn_recovery) is vendored byte-for-byte from
+# saffi907/fireaid-burn-severity-recovery; its loader rejects any missing or
+# changed file, so keep its saved results despite the patterns above.
+!FireMCP/burn_recovery/**/*.csv
+!FireMCP/burn_recovery/requirements.txt

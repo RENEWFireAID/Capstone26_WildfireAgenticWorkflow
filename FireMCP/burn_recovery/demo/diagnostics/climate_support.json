@@ -1,0 +1,46 @@
+{
+  "climate_correlation": -0.9491830146314068,
+  "shovel_outside_joint_climate_convex_hull_n": 1242,
+  "shovel_outside_joint_climate_convex_hull_pct": 78.9574062301335,
+  "training_VIF": {
+    "dNBR": 1.1964073587067579,
+    "elevation": 3.039078673598571,
+    "slope": 2.3177810960489045,
+    "northness": 1.071435359370155,
+    "trees": 1.4184937534715303,
+    "temp_anomaly": 14.642446999747314,
+    "precip_anomaly": 13.8272354182023
+  },
+  "temperature_precip_ranges": {
+    "Shovel Creek": {
+      "temp_anomaly": {
+        "min": 0.4111111111111114,
+        "max": 0.49222222222222456
+      },
+      "precip_anomaly": {
+        "min": 13.633333333333326,
+        "max": 21.76666666666671
+      }
+    },
+    "Swan Lake": {
+      "temp_anomaly": {
+        "min": 0.29999999999999716,
+        "max": 0.48666666666666636
+      },
+      "precip_anomaly": {
+        "min": 37.70000000000002,
+        "max": 49.93333333333334
+      }
+    },
+    "Nugget Creek": {
+      "temp_anomaly": {
+        "min": 0.6188888888888897,
+        "max": 0.6688888888888904
+      },
+      "precip_anomaly": {
+        "min": -2.166666666666657,
+        "max": 3.1999999999999886
+      }
+    }
+  }
+}

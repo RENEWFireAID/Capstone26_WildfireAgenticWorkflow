@@ -36,14 +36,14 @@ export default function LibraryPage() {
   const letters = Object.keys(grouped).sort();
 
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[288px_minmax(0,1fr)]">
+    <div className="flex min-h-screen w-full min-w-0">
       <FireAIDSidebar/>
 
-      <div className="min-w-0 space-y-4">
+      <div className="min-w-0 max-w-6xl flex-1 space-y-4 px-6 py-6 md:px-10">
         {/* Header */}
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-soft text-navy">
               <Book size={18} />
             </div>
             <div>

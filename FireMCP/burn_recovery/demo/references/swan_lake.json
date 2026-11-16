@@ -1,0 +1,93 @@
+{
+  "fire": "Swan Lake",
+  "event_id": "AK6063115043820190605",
+  "crs": "EPSG:32605",
+  "scale_m": 30,
+  "generated_utc": "2026-09-27T20:21:46.987677+00:00",
+  "source_sha256": {
+    "auth.py": "4fbe29bb89860df798fb4b6e93a23c483f4b774fda5a6053a58375c653cff6b1",
+    "config.py": "7ecf5c422fe2bfb05de6e22be4119a5721acea173e4fc2b451ca76e4be50e1b7",
+    "imagery.py": "b70cc159048ae79ba074142a6f2c98eeff5158ae81020d9dab8d364889845ef5",
+    "landcover.py": "bc78261b2ce70cbd414ff08a7c28a56dce31f9e2d7fcb65f75deda673c46b493",
+    "modeling.py": "3b051a69a1947fafadb4d9619f6b253581ca6493e2883882935dfb9619a67eaa",
+    "severity.py": "e18a959cac6851f47e3201b71f3a2f1a34111ee76613409fbede9cb62f649b8a",
+    "terrain.py": "19bef7a9cdfb0c41394c92b7e0a2ebff666a392825d0a713cb399849a6bb62fb",
+    "timeseries.py": "8ffe51ab74e17d17dca9344941bcb478139eaf7e238171e3fafe0171877b7348",
+    "__init__.py": "dd36dca0b29d19e2a503a7492cda9af0168759aec673dce6e348de3310109ba6"
+  },
+  "script_sha256": "d1d3af45262931a3306c1653e32922e9b622e8560e13b70851b495826baa1f43",
+  "reference_asset": "USFS/GTAC/MTBS/annual_burn_severity_mosaics/v1/mtbs_AK_2019",
+  "metadata": {
+    "Asmnt_Type": "Extended",
+    "BurnBndAc": 164801,
+    "BurnBndLat": "60.58",
+    "BurnBndLon": "-150.19",
+    "Comment": "Perimeter was taken from RAVG mapping which was taken from GeoMac perimeters.\r\n\r\nHigh severity is almost all in the high biomass areas.",
+    "Event_ID": "AK6063115043820190605",
+    "High_T": 660,
+    "Ig_Date": 1559804400000,
+    "IncGreen_T": -150,
+    "Incid_Name": "SWAN LAKE",
+    "Incid_Type": "Wildfire",
+    "Low_T": 100,
+    "Map_ID": 10016790,
+    "Map_Prog": "MTBS",
+    "Mod_T": 364,
+    "NoData_T": -970,
+    "Perim_ID": "",
+    "Post_ID": "A05VPH20200728_30m",
+    "Pre_ID": "A06VUN20170806_30m",
+    "dNBR_offst": 36,
+    "dNBR_stdDv": 48,
+    "irwinID": "836450FA-2D41-41A0-B38F-5A4B17766214"
+  },
+  "dates": {
+    "Pre_ID": [
+      "2017-08-06",
+      "2017-08-07"
+    ],
+    "Post_ID": [
+      "2020-07-28",
+      "2020-07-29"
+    ]
+  },
+  "support": {
+    "common_m2": 612034500.6446728,
+    "date_paired_m2": 612147157.3473918,
+    "intersection_m2": 666811978.8509121,
+    "mtbs_mapped_m2": 665155917.8787028,
+    "summer_paired_m2": 660452437.0112089
+  },
+  "comparisons": [
+    {
+      "method": "summer_2018_2020",
+      "threshold": 660,
+      "neither_m2": 445940852.16495323,
+      "hls_only_m2": 92896005.4647133,
+      "mtbs_only_m2": 2631955.4049586877,
+      "both_high_m2": 70565687.60980344,
+      "paired_m2": 612034500.6444287,
+      "agreement": 0.8439173596111201,
+      "high_iou": 0.42485482290145127
+    },
+    {
+      "method": "MTBS_calendar_dates",
+      "threshold": 660,
+      "neither_m2": 492407378.50134325,
+      "hls_only_m2": 46429479.12881146,
+      "mtbs_only_m2": 4002104.7836207966,
+      "both_high_m2": 69195538.2308972,
+      "paired_m2": 612034500.6446728,
+      "agreement": 0.917600096302886,
+      "high_iou": 0.5784268399267484
+    }
+  ],
+  "limitations": [
+    "Reference-product agreement, not independent ground accuracy.",
+    "Calendar-date HLS composites are not an exact replication of MTBS imagery or processing.",
+    "MTBS classes 0 and 6 excluded; nearest-neighbor categorical sampling on explicit 30 m UTM grid.",
+    "Shared support may exclude difficult areas; report it alongside agreement.",
+    "Swan Lake reference baseline is 2017; the pipeline baseline remains 2018."
+  ],
+  "complete": true
+}

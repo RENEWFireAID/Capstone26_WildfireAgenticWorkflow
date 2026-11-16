@@ -1,67 +1,170 @@
-"use client";
-
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
-import { BarChart3, BookOpen, FileText, Flame, Search, TrendingUp, TriangleAlert } from "lucide-react";
+import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
+import burnSeverityPreview from "./previews/burn-severity.jpg";
+import fireHistoryPreview from "./previews/fire-history.jpg";
+import fireRiskPreview from "./previews/fire-risk.jpg";
+import forestTrendsPreview from "./previews/forest-trends.jpg";
+import { ArrowRight, BookOpen, FileText, Flame, Satellite, Sprout, TriangleAlert } from "lucide-react";
 
 const APPS = [
-  { label: "Terminology",        desc: "Browse wildfire terms & definitions", icon: BookOpen,   href: "/library",             accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600",  developer: "Jenae Matson", role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Publication",        desc: "Research papers & reports",          icon: FileText,   href: "/publication",         accent: "#64748b", bg: "bg-slate-100", iconColor: "text-slate-500", developer: "Utsav Dutta",  role: "Undergraduate Student · UAA Computer Science" },
-  { label: "Fire History",       desc: "Explore historical fire records",    icon: Flame,      href: "/mcp-tools",           accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500", developer: "Ivy Swenson",  role: "Undergraduate Student · UAF Computer Science" },
-  { label: "Wildfire Prediction", desc: "AI-powered fire risk predictions",  icon: TrendingUp, href: "/wildfire-prediction", accent: "#dc2626", bg: "bg-red-50",    iconColor: "text-red-500" },
-  { label: "Alaska Fire Risk",     desc: "Fire danger forecast, map & risk classifier", icon: TriangleAlert, href: "/fire-risk", accent: "#ea580c", bg: "bg-amber-50",  iconColor: "text-amber-600", developer: "Noah Bush",    role: "Undergraduate Student · UAF Computer Science" },
+  {
+    label: "Fire History",
+    kind: "Historical records",
+    desc: "Map, filter and chart every recorded Alaska fire since 1939, or ask questions about them in plain English.",
+    data: "Alaska Fire Service records · 33,596 fires, 1939–2024",
+    icon: Flame,
+    href: "/mcp-tools",
+    developer: "Ivy Swenson",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
+  {
+    label: "Alaska Fire Risk",
+    kind: "Forecast",
+    desc: "Daily fire danger for any place in Alaska, a statewide danger map, and a classifier that rates the risk of a fire.",
+    data: "Canadian Fire Weather Index with AICC ratings · Open-Meteo weather",
+    icon: TriangleAlert,
+    href: "/fire-risk",
+    developer: "Noah Bush",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
+  {
+    label: "Forest Trends",
+    kind: "Remote sensing",
+    desc: "Follow how vegetation recovers after a fire, year by year, from satellite greenness and burn severity.",
+    data: "Landsat summer NDVI and NBR · Google Earth Engine",
+    icon: Sprout,
+    href: "/forest-trends",
+    developer: "Sumana Sahoo",
+    role: "PhD Student · UAF Natural Resources and Sustainability",
+  },
+  {
+    label: "Burn Severity Recovery",
+    kind: "Fire effects research",
+    desc: "Compare burn severity and post-fire greenness across three 2019 Alaska fires, and test whether recovery on one fire can be predicted from the other two.",
+    data: "NASA HLS imagery, MTBS and field CBI · 3 fires, 2018–2024",
+    icon: Satellite,
+    href: "/burn-recovery",
+    developer: "Muhammad Saffiullah",
+    role: "Undergraduate Researcher · UAA Computer Science",
+  },
+  {
+    label: "Publication",
+    kind: "Research literature",
+    desc: "Find research by meaning rather than keywords across a library of fire, climate and ecology abstracts.",
+    data: "101,856 paper abstracts · semantic search",
+    icon: FileText,
+    href: "/publication",
+    developer: "Utsav Dutta",
+    role: "Undergraduate Researcher · UAA Computer Science",
+  },
+  {
+    label: "Terminology",
+    kind: "Reference",
+    desc: "Look up the wildfire terms used across the apps, from fuel types to fire behavior.",
+    data: "FireAID wildfire glossary",
+    icon: BookOpen,
+    href: "/library",
+    developer: "Jenae Matson",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
 ];
 
-const VISUALS = [
-  { label: "Search",     desc: "Search historical fire records",   icon: Search,     href: "/search",     accent: "#003366", bg: "bg-blue-50",   iconColor: "text-blue-600" },
-  { label: "Charts",     desc: "Visualize fire data & trends",     icon: BarChart3,  href: "/charts",     accent: "#7c3aed", bg: "bg-violet-50", iconColor: "text-violet-600" },
-  { label: "Prediction", desc: "AI-powered fire prediction",       icon: TrendingUp, href: "/prediction", accent: "#ea580c", bg: "bg-orange-50", iconColor: "text-orange-500" },
-  { label: "Reports",    desc: "Generate & export reports",        icon: FileText,   href: "/reports",    accent: "#16a34a", bg: "bg-green-50",  iconColor: "text-green-600" },
+// A screenshot of each app's main view with real data in it, captured from the
+// live site; apps with no map to show fall back to their icon on UAF Blue.
+const PREVIEWS: Record<string, StaticImageData> = {
+  "Fire History": fireHistoryPreview,
+  "Alaska Fire Risk": fireRiskPreview,
+  "Forest Trends": forestTrendsPreview,
+  "Burn Severity Recovery": burnSeverityPreview,
+};
+
+// Reference tools sit apart from the apps that map and model fire data.
+const REFERENCE = new Set(["Publication", "Terminology"]);
+const SECTIONS = [
+  { title: "Fire and vegetation", note: "Map, forecast and model Alaska fire and its aftermath.", apps: APPS.filter((a) => !REFERENCE.has(a.label)), onBlue: false, backdrop: { backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS } },
+  { title: "Reference", note: "Look up the research and the terms behind the apps.", apps: APPS.filter((a) => REFERENCE.has(a.label)), onBlue: true, backdrop: { backgroundColor: "var(--color-navy)", backgroundImage: PEAKS } },
 ];
+
+// onBlue: the card sits on the UAF Blue section, so its icon panel goes navy to stay distinct.
+function AppCard({ app, onBlue }: { app: (typeof APPS)[number]; onBlue: boolean }) {
+  const { label, kind, desc, data, icon: Icon, href, developer, role } = app;
+  const preview = PREVIEWS[label];
+  return (
+    <Link href={href} className="group flex h-full flex-col bg-white shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5">
+      <div className={`relative aspect-[2/1] overflow-hidden ${onBlue ? "bg-navy-deep" : "bg-navy"}`}>
+        {preview ? (
+          <Image src={preview} alt={`${label} with real data`}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]" />
+        ) : (
+          <div className="flex h-full items-center justify-center" style={{ backgroundImage: PEAKS }}>
+            <Icon size={64} strokeWidth={1.25} className="text-white" aria-hidden="true" />
+          </div>
+        )}
+      </div>
+      {/* uaf.edu's rule: UAF light blue through grey to UAF Gold. */}
+      <div className="h-1 bg-[linear-gradient(90deg,var(--color-uaf-sky)_0%,#c4cfda_50%,var(--color-gold)_100%)]" aria-hidden="true" />
+
+      <div className="flex flex-1 flex-col p-6">
+        <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-navy">{kind}</p>
+        <h3 className="mt-1 text-2xl font-bold leading-tight text-navy-deep">{label}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
+
+        <div className="flex-1" />
+        <dl className="mt-5 grid gap-1.5 text-xs">
+          <div className="grid grid-cols-[64px_minmax(0,1fr)] gap-2">
+            <dt className="text-slate-500">Data</dt>
+            <dd className="text-slate-700">{data}</dd>
+          </div>
+          <div className="grid grid-cols-[64px_minmax(0,1fr)] gap-2">
+            <dt className="text-slate-500">Built by</dt>
+            <dd className="min-w-0">
+              <span className="font-semibold text-slate-800">{developer}</span>
+              <span className="block text-slate-500">{role}</span>
+            </dd>
+          </div>
+        </dl>
+
+        <span className="mt-5 inline-flex items-center justify-center gap-2 self-start bg-gold px-6 py-2.5 font-mono text-[15px] font-semibold uppercase tracking-wide text-navy-deep transition group-hover:bg-[#ffd633]">
+          Open app
+          <ArrowRight size={16} aria-hidden="true" className="transition group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 export default function AppsPage() {
   return (
-    <div className="flex w-full min-h-screen">
-      <FireAIDSidebar/>
+    <div className="flex min-h-screen w-full">
+      <FireAIDSidebar />
 
-      <main className="flex-1 flex flex-col">
-        <div className="bg-slate-50 px-12 py-8 border-b border-slate-200">
-          <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">FireAID</p>
-          <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Apps</h1>
-        </div>
+      <main className="flex min-w-0 flex-1 flex-col">
+        <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-10">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
+          <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Apps</h1>
+          <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
+            Six tools over Alaska wildfire data, each built and maintained by a researcher in the UAF Data/AI Lab.
+          </p>
+        </header>
 
-        <div className="flex-1 bg-slate-50 px-12 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-          {APPS.map(({ label, desc, icon: Icon, href, bg, iconColor, accent }) => (
-  <Link key={label} href={href}
-    className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200">
-    <div className="h-1.5 w-full" style={{ background: accent }} />
-    <div className="p-6 flex flex-col gap-4">
-      <div className={`w-14 h-14 rounded-2xl ${bg} flex items-center justify-center`}>
-        <Icon size={28} className={iconColor} strokeWidth={1.5} />
-      </div>
-      <div>
-        <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">{label}</div>
-        <div className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</div>
-      </div>
-      {/* {developer && (
-        <div className="border-t border-slate-100 pt-3 flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-[#003366] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-            {developer.split(" ").map((n: string) => n[0]).join("")}
-          </div>
-          <div>
-            <div className="text-[11px] font-semibold text-slate-700">{developer}</div>
-            <div className="text-[10px] text-slate-400">{role}</div>
-          </div>
-        </div>
-      )} */}
-      <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">Open →</div>
-    </div>
-  </Link>
-))}
-          </div>
-        </div>
+        {SECTIONS.map(({ title, note, apps, onBlue, backdrop }, i) => (
+          // The last section grows to meet the footer, so short pages leave no bare gap.
+          <section key={title} className={`px-6 py-10 md:px-10 ${i === SECTIONS.length - 1 ? "flex-1" : ""}`} style={backdrop}>
+            <div className="max-w-6xl">
+              <h2 className="text-3xl font-bold text-white">{title}</h2>
+              <p className="mt-1 text-sm text-slate-200">{note}</p>
+              <ul className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {apps.map((app) => (
+                  <li key={app.label} className="min-w-0">
+                    <AppCard app={app} onBlue={onBlue} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ))}
       </main>
     </div>
   );

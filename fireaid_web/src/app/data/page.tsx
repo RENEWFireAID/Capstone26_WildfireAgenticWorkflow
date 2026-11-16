@@ -1,122 +1,137 @@
 "use client";
 
 import Link from "next/link";
-import {
-  LayoutGrid,
-  BarChart3,
-  Database,
-  Terminal,
-  BookOpen,
-  FileText,
-  Flame,
-  CloudSun,
-  MapPin,
-  Snowflake,
-} from "lucide-react";
+import { ArrowUpRight, BookOpen, CloudSun, FileText, Flame, Snowflake, type LucideIcon } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
+import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 
-const DATA_ITEMS = [
+type Dataset = {
+  label: string;
+  desc: string;
+  detail: string;
+  icon: LucideIcon;
+  href: string;
+  external?: boolean;
+};
+
+const FIREAID_DATA: Dataset[] = [
   {
-    label: "Terminology",
-    desc: "Browse wildfire terms",
-    icon: BookOpen,
-    href: "/library",
-    accent: "#003366",
-    bg: "bg-blue-50",
-    iconColor: "text-blue-600",
+    label: "Fire history",
+    desc: "Every fire recorded by the Alaska Fire Service, with location, size, cause and agency.",
+    detail: "33,596 fires · 1939–2024",
+    icon: Flame,
+    href: "/fire-history",
   },
   {
-    label: "Publication",
-    desc: "Research papers & reports",
+    label: "Research literature",
+    desc: "Abstracts of papers on fire, climate and ecology, with title, authors, year and field.",
+    detail: "101,856 abstracts",
     icon: FileText,
     href: "/publication",
-    accent: "#64748b",
-    bg: "bg-slate-100",
-    iconColor: "text-slate-500",
   },
   {
-    label: "History",
-    desc: "Historical fire records",
-    icon: Flame,
-    href: "/mcp-tools",
-    accent: "#ea580c",
-    bg: "bg-orange-50",
-    iconColor: "text-orange-500",
+    label: "Wildfire terminology",
+    desc: "Definitions of the fire science and fire management terms used across FireAID.",
+    detail: "Glossary",
+    icon: BookOpen,
+    href: "/library",
   },
+];
+
+const OTHER_DATA: Dataset[] = [
   {
     label: "Weather",
-    desc: "Live weather & fire risk",
+    desc: "Current weather conditions and the fire risk they imply.",
+    detail: "Live",
     icon: CloudSun,
     href: "/weather",
-    accent: "#d97706",
-    bg: "bg-amber-50",
-    iconColor: "text-amber-500",
-  },
-  {
-    label: "Fire Location",
-    desc: "Active fire map & locations",
-    icon: MapPin,
-    href: "/fire-location",
-    accent: "#16a34a",
-    bg: "bg-green-50",
-    iconColor: "text-green-600",
   },
   {
     label: "Permafrost",
-    desc: "Permafrost data & monitoring",
+    desc: "Active layer thickness from the Circumpolar Active Layer Monitoring network.",
+    detail: "External · CALM, George Washington University",
     icon: Snowflake,
     href: "https://www2.gwu.edu/~calm/data/north.htm",
-    accent: "#0d9488",
-    bg: "bg-teal-50",
-    iconColor: "text-teal-500",
     external: true,
   },
 ];
 
+/** uaf.edu's icon block: a white line icon over an underlined slab-serif link. */
+function DatasetBlock({ data }: { data: Dataset }) {
+  const { label, desc, detail, icon: Icon, href, external } = data;
+  return (
+    <Link
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="group flex flex-col items-center px-4 text-center text-white"
+    >
+      <Icon size={60} strokeWidth={1.25} aria-hidden="true" className="transition group-hover:text-gold" />
+      <h3 className="mt-5 flex items-center gap-1.5 text-3xl font-bold underline decoration-2 underline-offset-[6px] transition group-hover:text-gold">
+        {label}
+        {external && <ArrowUpRight size={22} aria-label="Opens in a new tab" />}
+      </h3>
+      <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-slate-200">{desc}</p>
+      <p className="mt-2 font-mono text-sm font-semibold uppercase tracking-wide text-uaf-sky">{detail}</p>
+    </Link>
+  );
+}
+
+// The last section grows to meet the footer, so short pages leave no bare gap.
+function Section({ title, note, data, backdrop, columns, last = false }: {
+  title: string;
+  note: string;
+  data: Dataset[];
+  backdrop: React.CSSProperties;
+  columns: string;
+  last?: boolean;
+}) {
+  return (
+    <section className={`px-6 py-14 md:px-10 ${last ? "flex-1" : ""}`} style={backdrop}>
+      <div className="max-w-6xl">
+        <h2 className="text-3xl font-bold text-white">{title}</h2>
+        <p className="mt-1 text-sm text-slate-200">{note}</p>
+        <ul className={`mt-10 grid grid-cols-1 gap-x-8 gap-y-12 ${columns}`}>
+          {data.map((d) => (
+            <li key={d.label}>
+              <DatasetBlock data={d} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default function DataPage() {
   return (
-    <div className="flex w-full min-h-screen">
-      <FireAIDSidebar/>
+    <div className="flex min-h-screen w-full">
+      <FireAIDSidebar />
 
-      <main className="flex-1 flex flex-col">
-      <div className="bg-slate-50 px-12 py-10 border-b border-slate-200">
-          <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">FireAID</p>
-            <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Data</h1>
-          <p className="text-slate-400 text-sm mt-1">Explore datasets and data sources</p>
-      </div>
-        <div className="flex-1 bg-slate-50 px-12 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-            {DATA_ITEMS.map(
-              ({ label, desc, icon: Icon, href, bg, iconColor, accent, external }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-200"
-                >
-                  <div className="h-1.5 w-full" style={{ background: accent }} />
-                  <div className="p-6 flex flex-col gap-4">
-                    <div className={`w-14 h-14 rounded-2xl ${bg} flex items-center justify-center`}>
-                      <Icon size={28} className={iconColor} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="text-base font-semibold text-slate-800 group-hover:text-[#003366] transition">
-                        {label}
-                      </div>
-                      <div className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        {desc}
-                      </div>
-                    </div>
-                    <div className="text-xs font-semibold text-[#003366] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                      Open →
-                    </div>
-                  </div>
-                </Link>
-              )
-            )}
-          </div>
-        </div>
+      <main className="flex min-w-0 flex-1 flex-col">
+        <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-10">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
+          <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Data</h1>
+          <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
+            The datasets behind the apps and the assistant. Open one to browse or download it.
+          </p>
+        </header>
+
+        <Section
+          title="FireAID datasets"
+          note="Collected and served by FireAID; the apps and the assistant read these."
+          data={FIREAID_DATA}
+          backdrop={{ backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS }}
+          columns="md:grid-cols-3"
+        />
+        <Section
+          title="Other sources"
+          note="Live conditions and an outside dataset alongside FireAID's own."
+          data={OTHER_DATA}
+          backdrop={{ backgroundColor: "var(--color-navy)", backgroundImage: PEAKS }}
+          columns="md:grid-cols-2 md:max-w-3xl"
+          last
+        />
       </main>
     </div>
   );

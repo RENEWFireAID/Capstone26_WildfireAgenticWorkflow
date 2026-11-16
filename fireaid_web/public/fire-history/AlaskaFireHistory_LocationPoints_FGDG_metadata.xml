@@ -1,0 +1,1212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+<idinfo>
+<citation>
+<citeinfo>
+<origin>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</origin>
+<pubdate>20250129</pubdate>
+<title>BLM AFS Alaska Statewide Fire Location Points</title>
+<geoform>vector digital data</geoform>
+<pubinfo>
+<pubplace>Fairbanks, AK</pubplace>
+<publish>Bureau of Land Management</publish>
+</pubinfo>
+<othercit>Suggested Citation:
+Authors: Alaska Wildland Fire Coordinating Group, State of Alaska Department of Natural Resources, Division of Forestry and Fire Protection, US Department of Agriculture, Forest Service,  U.S. Department of the Interior, Bureau of Land Management, Alaska Fire Service.
+Title: Alaska Statewide Fire History Location Points.
+Year : 2024.
+Publisher: Bureau of Land Management.
+Access Information: https://fire.ak.blm.gov/predsvcs/maps.php</othercit>
+<onlink>https://fire.ak.blm.gov/predsvcs/maps.php</onlink>
+<onlink>https://fire.ak.blm.gov/arcgis/rest/services/MapAndFeatureServices</onlink>
+</citeinfo>
+</citation>
+<descript>
+<abstract>Wildland fire history data is made up of wildland fire locations (fire occurrence points) and wildland fire perimeter polygons. Alaska Fire History Points is a time series of reported wildland fires in each calendar year across Alaska.  This dataset represents location points of wildfires that are ignited naturally (e.g., lightning) or by humans (including prescribed fires). The dataset includes some, but not all, historical (fires declared ‘out’ in calendar years prior to the current year) wildland fires and is subject to revision. There is no lower size limit for fires to be included and as such, reported 'false alarms' are included.  The accuracy of the point locations range in quality because of inconsistencies in the number of significant digits recorded for both latitude and longitude coordinates.  Users should be aware that there are many of the fires between 1961 and 1968 are missing fire reports.  Data are available as ArcGIS Server Map and Feature Services https://fire.ak.blm.gov/arcgis/rest/services/MapAndFeatureServices and for download from https://fire.ak.blm.gov/predsvcs/maps.php</abstract>
+<purpose>This dataset is used to display the fire occurrence points of historical wildland fires within Alaska on maps. These data are subject to revision.</purpose>
+<supplinf>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service manages a comprehensive Fire History (points and polygons) dataset for Alaska.</supplinf>
+</descript>
+<timeperd>
+<timeinfo>
+<sngdate>
+<caldate>19390520</caldate>
+</sngdate>
+</timeinfo>
+<current>Start date.</current>
+</timeperd>
+<status>
+<progress>In work</progress>
+<update>Annually</update>
+</status>
+<spdom>
+<bounding>
+<westbc>-178</westbc>
+<eastbc>-129</eastbc>
+<northbc>71</northbc>
+<southbc>51</southbc>
+</bounding>
+</spdom>
+<keywords>
+<theme>
+<themekt>BLM-THEME</themekt>
+<themekey>Fire</themekey>
+<themekey>Geospatial</themekey>
+<themekey>Management</themekey>
+</theme>
+<theme>
+<themekt>NONE</themekt>
+<themekey>fire history</themekey>
+<themekey>fire origin</themekey>
+<themekey>GIS</themekey>
+<themekey>wildfire</themekey>
+<themekey>wildland fire locations</themekey>
+<themekey>wildland fire points</themekey>
+</theme>
+<theme>
+<themekt>ISO 19115 Topic Categories</themekt>
+<themekey>biota</themekey>
+<themekey>environment</themekey>
+<themekey>location</themekey>
+</theme>
+<place>
+<placekt>BLM-STATE</placekt>
+<placekey>Alaska</placekey>
+</place>
+</keywords>
+<accconst>None, these data are considered public domain.</accconst>
+<useconst>These data are provided by Bureau of Land Management (BLM) 'as is' and might contain errors or omissions. The User assumes the entire risk associated with its use of these data and bears all responsibility in determining whether these data are fit for the User's intended use. The information contained in these data is dynamic and may change over time. The data are not better than the sources from which they were derived, and both scale and accuracy may vary across the data set. These data might not have the accuracy, resolution, completeness, timeliness, or other characteristics appropriate for applications that potential users of the data may contemplate. The User is encouraged to carefully consider the content of the metadata file associated with these data. These data are neither legal documents nor land surveys, and must not be used as such. Official records may be referenced at most BLM offices. Please report any errors in the data to the BLM office from which it was obtained. The BLM should be cited as the data source in any products derived from these data. Any Users wishing to modify the data should describe the types of modifications they have performed. The User should not misrepresent the data, nor imply that changes made were approved or endorsed by BLM. This data may be updated by the BLM without notification.</useconst>
+<ptcontac>
+<cntinfo>
+<cntorgp>
+<cntorg>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</cntorg>
+</cntorgp>
+<cntpos>GIS Specialist</cntpos>
+<cntaddr>
+<addrtype>mailing</addrtype>
+<address>P.O. Box 35005</address>
+<city>Fort Wainwright</city>
+<state>AK</state>
+<postal>99703</postal>
+<country>US</country>
+</cntaddr>
+<cntemail>blm_ak_afs_gis@blm.gov</cntemail>
+<cntinst>Contact by email.</cntinst>
+</cntinfo>
+</ptcontac>
+<ptcontac>
+<cntinfo>
+<cntorgp>
+<cntorg>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</cntorg>
+</cntorgp>
+<cntpos>GIS Specialist</cntpos>
+<cntaddr>
+<addrtype>mailing</addrtype>
+<address>P.O. Box 35005</address>
+<city>Fort Wainwright</city>
+<state>AK</state>
+<postal>99703</postal>
+<country>US</country>
+</cntaddr>
+<cntemail>blm_ak_afs_gis@blm.gov</cntemail>
+<cntinst>Contact by email.</cntinst>
+</cntinfo>
+</ptcontac>
+<datacred>Alaska Wildland Fire Coordinating Group (AWFCG), State of Alaska Department of Natural Resources, Division of Forestry and Fire Protection (DOFFP), US Department of Agriculture, Forest Service (USFS),  U.S. Department of the Interior, Bureau of Land Management , Alaska Fire Service (AFS)</datacred>
+<native>Esri ArcGIS 12.9.4.32739</native>
+</idinfo>
+<dataqual>
+<attracc>
+<attraccr>Unknown, accuracy requirements are generally determined by the required use of the Protecting Agencies and Jurisdictional Agencies.</attraccr>
+</attracc>
+<logic>No formal reporting process. However, data is considered consistent as inconsistencies would have been seen by reviewers.</logic>
+<complete>Only fires within the State of Alaska are included in this dataset. Although this is a comprehensive dataset, it is not complete and is subject to revision.</complete>
+<posacc>
+<horizpa>
+<horizpar>Unknown, accuracy requirements are generally determined by the required use of the Protecting Agencies and Jurisdictional Agencies. Note that accuracy has improved over time.</horizpar>
+</horizpa>
+</posacc>
+<lineage>
+<procstep>
+<procdesc>Data continually submitted by multiple sources.</procdesc>
+<procdate>20250129</procdate>
+<proccont>
+<cntinfo>
+<cntorgp>
+<cntorg>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</cntorg>
+</cntorgp>
+<cntpos>GIS Specialist</cntpos>
+<cntaddr>
+<addrtype>mailing</addrtype>
+<address>P.O. Box 35005</address>
+<city>Fort Wainwright</city>
+<state>AK</state>
+<postal>99703</postal>
+<country>US</country>
+</cntaddr>
+<cntemail>blm_ak_afs_gis@blm.gov</cntemail>
+<cntinst>Contact by email.</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+</lineage>
+</dataqual>
+<spdoinfo>
+<direct>Vector</direct>
+<ptvctinf>
+<sdtsterm>
+<sdtstype>Entity point</sdtstype>
+<ptvctcnt>35591</ptvctcnt>
+</sdtsterm>
+</ptvctinf>
+</spdoinfo>
+<eainfo xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+<detailed>
+<enttyp>
+<enttypl>AK_fire_location_points</enttypl>
+<enttypd>Alaska Statewide Wildland Fire History Location Points</enttypd>
+<enttypds>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</enttypds>
+</enttyp>
+<attr>
+<attrlabl>OBJECTID</attrlabl>
+<attrdef>Internal feature number.</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+<udom>Sequential unique whole numbers that are automatically generated.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SHAPE</attrlabl>
+<attrdef>Feature geometry.</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+<udom>Coordinates defining the features.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ID</attrlabl>
+<attrdef>AICC Identification number, duplicate values not allowed. Used to join Fire Perimeters (polygons) to Fire Locations (points). Perimeters FIREID = Fire points ID.</attrdef>
+<attrdefs>AICC</attrdefs>
+<attrdomv>
+<udom>Identification number, duplicate values not allowed.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>RECORDNUMBER</attrlabl>
+<attrdef>Fire sequence number, unique within a give year</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive number.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>NAME</attrlabl>
+<attrdef>The name assigned to an incident.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIRESEASON</attrlabl>
+<attrdef>The year in which the fire occurred. In YYYY format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Year the fire started.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>LASTUPDATETIME</attrlabl>
+<attrdef>Date and time the record was updated. Date is expressed MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MGMTORGID</attrlabl>
+<attrdef>Agency that has primary protection responsibility at the point of origin at the time of the incident.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>DOF</edomv>
+<edomvd>State of Alaska Department of Natural Resources, Division of Forestry and Fire Protection</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>AFS</edomv>
+<edomvd>DOI Bureau of Land Management, Alaska Fire Service</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>USFS</edomv>
+<edomvd>USDA Forest Service</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MGMTOFFICEID</attrlabl>
+<attrdef>Unit ID code for the administrative unit at the point or origin at the time of the incident.</attrdef>
+<attrdefs>NWCG</attrdefs>
+<attrdomv>
+<udom>Unit ID code</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MGMTOPTIONID</attrlabl>
+<attrdef>Fire Management Options at the time of ignition.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Values generally include: Critical, Full, Modified, Limited, Unplanned, Prescribed.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>PRESCRIBEDFIRE</attrlabl>
+<attrdef>This field describes whether the fire type was a prescribed fire (i.e., planned ignition).</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Y</edomv>
+<edomvd>Yes</edomvd>
+</edom>
+<edom>
+<edomv>N</edomv>
+<edomvd>No</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FALSEALARM</attrlabl>
+<attrdef>Describes is the fire event was classified as a false alarm. Yes (Y) or No (N)</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Y</edomv>
+<edomvd>Yes</edomvd>
+</edom>
+<edom>
+<edomv>N</edomv>
+<edomvd>No</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>LATITUDE</attrlabl>
+<attrdef>Latitude coordinate of where the incident started. Format is decimal degrees. This value can change as more information about the fire event becomes available.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Latitude coordinate.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>LONGITUDE</attrlabl>
+<attrdef>Longitude coordinate of where the incident started. Format is decimal degrees. This value can change as more information about the fire event becomes available.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Longitude coordinate.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MAPNAME</attrlabl>
+<attrdef>Name of the UGSG topographic map.</attrdef>
+<attrdefs>USGS</attrdefs>
+<attrdomv>
+<udom>Name of the UGSG topographic map.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MAPNUMBER</attrlabl>
+<attrdef>Map number. Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Map number. Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>NEARESTWEATHERSTA</attrlabl>
+<attrdef>Name of the nearest weather station. Include station identification number, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINOWNERID</attrlabl>
+<attrdef>Land owner at site of fire origin at the time of the incident, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>OWNERKIND</attrlabl>
+<attrdef>Type of land owner, if known.</attrdef>
+<attrdefs>NWCG</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Federal</edomv>
+<edomvd>Federal entity</edomvd>
+</edom>
+<edom>
+<edomv>Values include Federal, Private, Other.</edomv>
+<edomvd>Private entity</edomvd>
+</edom>
+<edom>
+<edomv>Other</edomv>
+<edomvd>Other, including State of Alaska</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINADMINUNITID</attrlabl>
+<attrdef>Administrative unit at the site of fire origin, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>DISCOVERYDATETIME</attrlabl>
+<attrdef>Date and time the fire was discovered. Date is expressed as MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>DISCOVERYSIZE</attrlabl>
+<attrdef>Estimated size of fire at time of discovery, expressed in acres.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>IADATETIME</attrlabl>
+<attrdef>Date and time of initial attack, if any. Date is expressed as MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>IASIZE</attrlabl>
+<attrdef>Estimated size of fire at the time of initial attack, expressed in acres.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>INITIALBEHAVIOR</attrlabl>
+<attrdef>Initial behavior of the fire, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Values generally include: Creeping, Crowning, Out, Rank 1, Rank 2, Rank 3, Rank 4, Rank 5, Rank 6, Running, Smoldering, Unknown.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>CONTROLDATETIME</attrlabl>
+<attrdef>Date and time the fire was classified as controlled. Date is in MM/DD/YYYY format, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>OUTDATE</attrlabl>
+<attrdef>Date the fire was classified as out. Date is expressed as MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ESTIMATEDTOTALACRES</attrlabl>
+<attrdef>Estimated total acres of fire. This field SHOULD be used to calculate total acres.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ACTUALTOTALACRES</attrlabl>
+<attrdef>Actual total acres, if known. This field SHOULD NOT be used to calculate total acreages.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ESTIMATEDTOTALCOST</attrlabl>
+<attrdef>Estimated total cost., expressed in US Dollars.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIRECAUSE</attrlabl>
+<attrdef>Cause of Fire</attrdef>
+<attrdefs>NWCG</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Natural</edomv>
+<edomvd>Natural (e.g., lightning)</edomvd>
+</edom>
+<edom>
+<edomv>Human</edomv>
+<edomvd>Human caused</edomvd>
+</edom>
+<edom>
+<edomv>Undetermined</edomv>
+<edomvd>Cause undetermined</edomvd>
+</edom>
+<edom>
+<edomv>False Alarm</edomv>
+<edomvd>False alarm</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>GENERALCAUSE</attrlabl>
+<attrdef>General cause of the fire, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Values generally include: False Alarm (F/A), Human, Lightning, Lightning-WFU, Natural Out, Prescribed, Unknown.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SPECIFICCAUSE</attrlabl>
+<attrdef>Specific cause of the fire, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINSLOPE</attrlabl>
+<attrdef>Approximate slope at site of fire origin. Expressed in a range of degrees.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>76+</edomv>
+<edomvd>76 degrees of slope or greater.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>56-75</edomv>
+<edomvd>56 to 75 degrees of slope.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>Unknown</edomv>
+<edomvd>Degree of slope unknown.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>0-25</edomv>
+<edomvd>0 to 25 degrees of slope</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>41-55</edomv>
+<edomvd>41 to 55 degrees of slope.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>26-40</edomv>
+<edomvd>26 to 40 degrees of slope.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINASPECT</attrlabl>
+<attrdef>Approximate aspect at site of fire origin, if known. Expressed in compass directions, may be descriptive, or Unknown.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Expressed in compass directions (East, North, Northeast, Northwest, South, Southwest, Southeast, West) or may be descriptive (Flat, Ridge Top), or Unknown.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINELEVATION</attrlabl>
+<attrdef>Estimated elevation of the fire origin in 500 foot (0-500) increments or 1000 foot increments for values over 500. Units are feet above mean sea level (MSL).</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>4501-5500</edomv>
+<edomvd>4501 to 5500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>2501-3500</edomv>
+<edomvd>2501 to 3500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>8501+</edomv>
+<edomvd>Greater thatn 8501 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>501-1500</edomv>
+<edomvd>501 to 1500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>3501-4500</edomv>
+<edomvd>3501 to 4500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>0-500</edomv>
+<edomvd>0 (zero) to 500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>5501-6500</edomv>
+<edomvd>5501 to 6500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>6501-7500</edomv>
+<edomvd>6501 to 7500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>1501-2500</edomv>
+<edomvd>1501 to 2500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>0501-1500</edomv>
+<edomvd>501 to 1500 feet above sea level.</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>Unknown</edomv>
+<edomvd>Elevation unknown</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINTOWNSHIP</attrlabl>
+<attrdef>Public Land Survey Township where the fire started.</attrdef>
+<attrdefs>PLSS</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>1</rdommin>
+<rdommax>103</rdommax>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINRANGE</attrlabl>
+<attrdef>Public Land Survey Range number of the Township where the fire started.</attrdef>
+<attrdefs>PLSS</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>1</rdommin>
+<rdommax>266</rdommax>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINSECTION</attrlabl>
+<attrdef>Public Land Survey Section number of where the fire started. Sections are generally numbered from 1-36.</attrdef>
+<attrdefs>PLSS</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>1</rdommin>
+<rdommax>36</rdommax>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINQUARTER</attrlabl>
+<attrdef>Public Land Survey Section Subdivision of where the fire started.</attrdef>
+<attrdefs>PLSS</attrdefs>
+<attrdomv>
+<udom>Public Land Survey Section Subdivision.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINMERIDIAN</attrlabl>
+<attrdef>Public Land Survey Meridian of where the fire started.</attrdef>
+<attrdefs>PLSS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Copper River</edomv>
+<edomvd>Copper River</edomvd>
+</edom>
+<edom>
+<edomv>Fairbanks</edomv>
+<edomvd>Fairbanks</edomvd>
+</edom>
+<edom>
+<edomv>Seward</edomv>
+<edomvd>Seward</edomvd>
+</edom>
+<edom>
+<edomv>Kateel</edomv>
+<edomvd>Kateel</edomvd>
+</edom>
+<edom>
+<edomv>Umiat</edomv>
+<edomvd>Umiat</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>STRUCTURESTHREATENED</attrlabl>
+<attrdef>Number of structures threatened by fire, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive whole numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>STRUCTURESBURNED</attrlabl>
+<attrdef>Number of structures burned, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive whole numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>PRIMARYFUELTYPE</attrlabl>
+<attrdef>Primary fuel type, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Aspen/Birch</edomv>
+<edomvd>Aspen/Birch</edomvd>
+</edom>
+<edom>
+<edomv>Black Spruce</edomv>
+<edomvd>Black Spruce</edomvd>
+</edom>
+<edom>
+<edomv>Brush</edomv>
+<edomvd>Brush</edomvd>
+</edom>
+<edom>
+<edomv>Dead White Spruce</edomv>
+<edomvd>Dead White Spruce</edomvd>
+</edom>
+<edom>
+<edomv>Grass</edomv>
+<edomvd>Grass</edomvd>
+</edom>
+<edom>
+<edomv>Hardwoods</edomv>
+<edomvd>Hardwoods</edomvd>
+</edom>
+<edom>
+<edomv>Live White Spruce</edomv>
+<edomvd>Live White Spruce</edomvd>
+</edom>
+<edom>
+<edomv>Mixed (Hardwoods/Softwoods)</edomv>
+<edomvd>Mixed (Hardwoods/Softwoods)</edomvd>
+</edom>
+<edom>
+<edomv>Mixed Trees</edomv>
+<edomvd>Mixed Trees</edomvd>
+</edom>
+<edom>
+<edomv>Other</edomv>
+<edomvd>Other</edomvd>
+</edom>
+<edom>
+<edomv>Slash</edomv>
+<edomvd>Slash</edomvd>
+</edom>
+<edom>
+<edomv>Tundra</edomv>
+<edomvd>Tundra</edomvd>
+</edom>
+<edom>
+<edomv>Unknown</edomv>
+<edomvd>Unknown</edomvd>
+</edom>
+<edom>
+<edomv>White Spruce</edomv>
+<edomvd>White Spruce</edomvd>
+</edom>
+<edom>
+<edomv>Tussock</edomv>
+<edomvd>Tussock</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>HARDCOPYREPORTAVAILABLE</attrlabl>
+<attrdef>Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>TYPE1ASSIGNEDDATE</attrlabl>
+<attrdef>Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>TYPE1RELEASEDDATE</attrlabl>
+<attrdef>Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>TYPE2ASSIGNEDDATE</attrlabl>
+<attrdef>Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>TYPE2RELEASEDDATE</attrlabl>
+<attrdef>Field not used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>AFSNUMBER</attrlabl>
+<attrdef>Fire event number assigned by BLM Alaska Fire Service dispatch.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>DOFNUMBER</attrlabl>
+<attrdef>Fire event number assigned by DNR Division of Forestry dispatch.</attrdef>
+<attrdefs>DNR</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>USFSNUMBER</attrlabl>
+<attrdef>Fire event number assigned by USDA Forest Service dispatch.</attrdef>
+<attrdefs>USDA</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ADDITIONALNUMBER</attrlabl>
+<attrdef>Any additional number assigned to the fire event.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FORCESITRPT</attrlabl>
+<attrdef>Forces a fire to appear on the sit report on the day in the field. Used for fires that are reported after they start or are already out.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date or null.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FORCESITRPTSTATUS</attrlabl>
+<attrdef>Whether the the fire has appeared on a situation report, Field not typically used.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Field not used.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>COMPLEX</attrlabl>
+<attrdef>Name of complex. Applicable only if fire was incorporated into a complex at any point before declared contained. A complex is two or more incidents located in the same general area which are assigned to a single incident commander or unified command.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>IMPORT_NOTES</attrlabl>
+<attrdef>For the scenario where the record has been imported from another system, notes about the fire event record.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>WFUFIRE</attrlabl>
+<attrdef>Wildland Fire Use. A natural cause fire that is managed for resource objectives.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Y</edomv>
+<edomvd>Yes</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>REPORTRECEIVEDDATE</attrlabl>
+<attrdef>Date and time of final report. Date is expressed as MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISCOMPLEX</attrlabl>
+<attrdef>Specifies if the fire was part of a complex. Yes (Y) or null.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Y</edomv>
+<edomvd>Yes</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>CARRYOVER</attrlabl>
+<attrdef>The name of the previous seasons fire that is carried into this season. Coal seam fires are an example. Value is the a string of the fire name.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Value is the a string of the fire name.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>STATEADSID</attrlabl>
+<attrdef>The unique ID in the state dispatch system</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>The unique ID in the state dispatch system</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINAL_LATITUDE</attrlabl>
+<attrdef>Originally reported latitude coordinate of where the incident started. Format is decimal degrees.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Positive numbers.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ORIGINAL_LONGITUDE</attrlabl>
+<attrdef>Originally reported longitude coordinate of where the incident started. Format is decimal degrees.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Typically negative numbers, but could be positive if the fire is in the Aleutians.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>IRWINID</attrlabl>
+<attrdef>ID assigned by IRWIN system.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>ID assigned by IRWIN system.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISVALID</attrlabl>
+<attrdef>For internal use.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>True or NULL. For internal use.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SUPPRESSIONSTRATEGY</attrlabl>
+<attrdef>Suppression strategy being used for the fire, if known.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Confine</edomv>
+<edomvd>Confine</edomvd>
+</edom>
+<edom>
+<edomv>Full Suppression</edomv>
+<edomvd>Full suppression</edomvd>
+</edom>
+<edom>
+<edomv>Monitor</edomv>
+<edomvd>Monitor</edomvd>
+</edom>
+<edom>
+<edomv>N/A</edomv>
+<edomvd>Not applicable</edomvd>
+</edom>
+<edom>
+<edomv>Point Zone Protection</edomv>
+<edomvd>Point protection</edomvd>
+</edom>
+<edom>
+<edomv>Point Zone Suppression</edomv>
+<edomvd>Point suppression</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIREMGMTCOMPLEXITY</attrlabl>
+<attrdef>Complexity of the fire management. Value are Type 1 through Type 5. Type 1 is the most complex. Usually implies a fire urban interface and/or multiple agencies involved.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Value are Type 1 through Type 5.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ADSPERMISSIONSTATE</attrlabl>
+<attrdef>Whether the Fire is managed via the ICS 209 system. Denotes who can update certain attributes in the fire record.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+<edom>
+<edomv>false</edomv>
+<edomvd>false</edomvd>
+</edom>
+<edom>
+<edomv>default</edomv>
+<edomvd>default</edomvd>
+</edom>
+<edom>
+<edomv>ICS209</edomv>
+<edomvd>ICS209</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIRECODEREQUESTED</attrlabl>
+<attrdef>Whether the fire code system should supply a fire code.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>True or False</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISREIMBURSABLE</attrlabl>
+<attrdef>Specifies whether agencies can recover costs associated with an incident.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>False</edomv>
+<edomvd>No</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+<edom>
+<edomv>True</edomv>
+<edomvd>Yes</edomvd>
+<edomvds>AFS</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISFSASSISTED</attrlabl>
+<attrdef>Whether the fire code was issued to allow the USFS to supply resources.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>True/false</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISTRESPASS</attrlabl>
+<attrdef>Specifies if the fire was caused human-caused fire and where negligence or intent has been established.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>False or null.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIRECODENOTES</attrlabl>
+<attrdef>Notes on why the firecode was issued.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Free text.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>CONTAINMENTDATETIME</attrlabl>
+<attrdef>Date and time the fire was contained, if known. Date is expressed as MM/DD/YYYY, time is in 12 hour format.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date and time.</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>CONFLICTIRWINID</attrlabl>
+<attrdef>IRWIN ID of conflicting Irwin record. Another is fire is very close and is not out.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>IRWIN ID or NULL</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>COMPLEXPARENTIRWINID</attrlabl>
+<attrdef>If the fire is part of a complex this field will be an IRWID ID. If the fire is not part of a complex, this field will be NULL.</attrdef>
+<attrdefs>IRWIN</attrdefs>
+<attrdomv>
+<udom>IRWID ID or NULL</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MERGEDINTO</attrlabl>
+<attrdef>Record number of the consuming fire.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Text</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MERGEDDATE</attrlabl>
+<attrdef>Date fire merged with another fire.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Date</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>MERGED_REL_IRWINIRID</attrlabl>
+<attrdef>For the scenario where multiple fires have burned together, identified the IRWIN ID</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Globally Unique Identifier (GUID) or other unique ID</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>COMPLEX_REL_IRWINIRID</attrlabl>
+<attrdef>For the scenario where multiple fires are managed as a complex, identifies the complex by capturing a complex ID.</attrdef>
+<attrdefs>NWCG</attrdefs>
+<attrdomv>
+<udom>Globally Unique Identifier (GUID) or other unique ID</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>ISQUARANTINED</attrlabl>
+<attrdef>Identified quarantined records.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<edom>
+<edomv>false</edomv>
+<edomvd>false</edomvd>
+</edom>
+<edom>
+<edomv>true</edomv>
+<edomvd>true</edomvd>
+</edom>
+<edom>
+<edomv>NULL</edomv>
+<edomvd>NULL</edomvd>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>FIRESEASONS</attrlabl>
+<attrdef>Decade the fire occurred (e.g., 2000-2009)</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Decade the fire occurred (e.g., 2000-2009)</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>CERTIFIED_IN_INFORM</attrlabl>
+<attrdef>Identifies records that have been certified in the  InFORM reporting platform.</attrdef>
+<attrdefs>AFS</attrdefs>
+</attr>
+<attr>
+<attrlabl>WCE_INCIDENTID</attrlabl>
+<attrdef>WildCAD incident ID</attrdef>
+<attrdefs>WildCAD</attrdefs>
+</attr>
+<attr>
+<attrlabl>MGMTOPTION_PROTDATE</attrlabl>
+<attrdef>Fire Management Options and Conversion Date (when appropriate) at the time of ignition.</attrdef>
+<attrdefs>AFS</attrdefs>
+<attrdomv>
+<udom>Values generally include: Critical, Full, Modified (Jul 10), Modified (Aug 10), Modified (Aug 20) , Limited, Unplanned, Prescribed.</udom>
+</attrdomv>
+</attr>
+</detailed>
+<overview>
+<eaover>This dataset depicts the location (fire origin or point of dispatch) for wildland fires in Alaska.</eaover>
+</overview>
+</eainfo>
+<distinfo>
+<distrib>
+<cntinfo>
+<cntorgp>
+<cntorg>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</cntorg>
+</cntorgp>
+<cntpos>GIS Specialist</cntpos>
+<cntaddr>
+<addrtype>mailing</addrtype>
+<address>P.O. Box 35005</address>
+<city>Fort Wainwright</city>
+<state>AK</state>
+<postal>99703</postal>
+<country>US</country>
+</cntaddr>
+<cntemail>blm_ak_afs_gis@blm.gov</cntemail>
+<cntinst>Contact by email.</cntinst>
+</cntinfo>
+</distrib>
+<distliab>The BLM assumes no responsibility for errors or omissions.  No warranty is made by the BLM as to the accuracy, reliability, or completeness of these data for individual use or aggregate use with other data; nor shall the act of distribution to contractors, partners, or beyond, constitute any such warranty for individual or aggregate data use with other data.  Although these data have been processed successfully on computers of BLM, no warranty, expressed or implied, is made by BLM regarding the use of these data on any other system, or for general or scientific purposes, nor does the fact of distribution constitute or imply any such warranty.  In no event shall the BLM have any liability whatsoever for payment of any consequential, incidental, indirect, special, or tort damages of any kind, including, but not limited to, any loss of profits arising out of the use or reliance on the geographic data or arising out of the delivery, installation, operation, or support by BLM.</distliab>
+</distinfo>
+<metainfo>
+<metd>20250129</metd>
+<metrd>20240129</metrd>
+<metc>
+<cntinfo>
+<cntorgp>
+<cntorg>U.S. Department of the Interior, Bureau of Land Management (BLM), Alaska Fire Service</cntorg>
+</cntorgp>
+<cntpos>GIS Specialist</cntpos>
+<cntaddr>
+<addrtype>mailing</addrtype>
+<address>P.O. Box 35005</address>
+<city>Fort Wainwright</city>
+<state>AK</state>
+<postal>99703</postal>
+<country>US</country>
+</cntaddr>
+<cntemail>blm_ak_afs_gis@blm.gov</cntemail>
+<cntinst>Contact by email.</cntinst>
+</cntinfo>
+</metc>
+<metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+<metstdv>FGDC-STD-001-1998</metstdv>
+<mettc>local time</mettc>
+<metac>None, these data are considered public domain.</metac>
+<metuc>These data are provided by Bureau of Land Management (BLM) 'as is' and might contain errors or omissions. The User assumes the entire risk associated with its use of these data and bears all responsibility in determining whether these data are fit for the User's intended use. The information contained in these data is dynamic and may change over time. The data are not better than the sources from which they were derived, and both scale and accuracy may vary across the data set. These data might not have the accuracy, resolution, completeness, timeliness, or other characteristics appropriate for applications that potential users of the data may contemplate. The User is encouraged to carefully consider the content of the metadata file associated with these data. These data are neither legal documents nor land surveys, and must not be used as such. Official records may be referenced at most BLM offices. Please report any errors in the data to the BLM office from which it was obtained. The BLM should be cited as the data source in any products derived from these data. Any Users wishing to modify the data should describe the types of modifications they have performed. The User should not misrepresent the data, nor imply that changes made were approved or endorsed by BLM. This data may be updated by the BLM without notification.</metuc>
+</metainfo>
+</metadata>

@@ -1,8 +1,12 @@
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 from tools.mongo_fire_tools import search_fire_points, count_fire_points
+from tools.vegetation_tools import (
+    get_vegetation_timeseries as _get_vegetation_timeseries,
+)
 from tools.fire_risk_model import predict_risk
 from tools.fire_danger import forecast_for, map_for
+from tools import burn_recovery
 from typing import Optional
 
 mcp = FastMCP(
@@ -62,6 +66,32 @@ def list_available_years() -> dict:
     return {"ok": True, "years": years}
 
 
+@mcp.tool()
+async def get_vegetation_timeseries(
+    lat: float,
+    lon: float,
+    start_year: int = 2000,
+    end_year: int = 2024,
+    reducer: str = "median",
+) -> dict:
+    """Get annual summer vegetation and climate values at a point from Landsat.
+
+    Returns one record per year with NDVI, NBR and NDMI (June-August composite,
+    cloud masked) plus TerraClimate summer temperature, precipitation, spring
+    snow water equivalent and soil moisture, including 1-year lagged climate.
+    Use it to assess pre- and post-fire vegetation change at a fire point.
+    Values may be null for years with no usable imagery. Requires Earth Engine
+    credentials; a cold query can take up to a minute.
+    """
+    return await _get_vegetation_timeseries(
+        lat=lat,
+        lon=lon,
+        start_year=start_year,
+        end_year=end_year,
+        reducer=reducer,
+    )
+
+
 # The training weather comes from a grid at 68-70N in northern Alaska, so climate
  #   normals from elsewhere (e.g. Fairbanks) are outside what the models saw; prefer
   #  the defaults unless the user gives real weather values.
@@ -114,6 +144,53 @@ def fire_danger_map(date: Optional[str] = None) -> dict:
     return map_for(date)
 
 
+@mcp.tool()
+def burn_recovery_overview(fire: Optional[str] = None) -> dict:
+    """Burn severity and post-fire recovery of the 2019 Shovel Creek, Swan Lake and Nugget Creek fires.
+
+    Use this to answer questions about these three fires: sampled locations, mean NDVI
+    by dNBR severity group for 2020-2024, how well models trained on two fires predict
+    the third (R², RMSE vs a training-mean baseline), agreement with MTBS, and field
+    CBI checks. Omit fire for all three. Small; contains no images.
+    """
+    return burn_recovery.overview(fire)
+
+
+@mcp.tool()
+def burn_recovery_imagery(
+    fire: str, layer: str, year: Optional[str] = None, contrast: str = "percentile"
+) -> dict:
+    """A saved satellite preview of one of the three 2019 fires, as a PNG data URL (large).
+
+    For drawing the Burn Severity Recovery page, not for answering questions.
+    layer: rgb_2018, rgb_2020, rgb_2024, dnbr, ndvi or observations. year (2018,
+    2020-2024) applies to ndvi and observations. contrast (percentile, brighter,
+    original) applies to the natural-color rgb layers only.
+    """
+    return burn_recovery.imagery(fire, layer, year, contrast)
+
+
+@mcp.tool()
+def burn_recovery_samples(fire: str, period: str = "2020", model: str = "full") -> dict:
+    """Per-location values for one of the three 2019 fires (large arrays, ~1,000-1,700 points).
+
+    For drawing the Burn Severity Recovery page. Returns sample coordinates, dNBR,
+    annual NDVI, severity-group curves, and the observed and predicted NDVI slopes for
+    period (2020 or 2021, through 2024) and model (full, initial_NDVI_only,
+    full_plus_initial_NDVI).
+    """
+    return burn_recovery.samples(fire, period, model)
+
+
+@mcp.tool()
+def burn_recovery_diagnostic(figure: str) -> dict:
+    """A saved Shovel Creek diagnostic figure as a PNG data URL (large).
+
+    figure: residual_maps, joint_climate_support, slope_stability or mtbs_class_iou.
+    """
+    return burn_recovery.diagnostic(figure)
+
+
 if __name__ == "__main__":
     import threading
 
@@ -121,6 +198,8 @@ if __name__ == "__main__":
 
     # Build the page's example-day map in the background so the demo loads instantly.
     threading.Thread(target=map_for, args=("2022-06-15",), daemon=True).start()
+    # Verify and load the burn recovery study up front; it checks every saved file.
+    threading.Thread(target=burn_recovery.overview, daemon=True).start()
 
     app = mcp.streamable_http_app()
     uvicorn.run(app, host="0.0.0.0", port=8081)

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FireAid | Three-fire research viewer</title>
+<style>
+:root{font:16px/1.5 system-ui,sans-serif;color:#233c35;background:#f3f5f1}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0}header{background:#183f35;color:#fff;padding:28px max(24px,calc((100% - 1360px)/2))}
+h1{font-size:30px;margin:4px 0}h2{font-size:19px;margin:0 0 8px}p{margin:8px 0}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#bce2bf}
+main{max-width:1408px;margin:auto;padding:24px}.controls,.stats,.grid{display:grid;gap:16px}.controls{grid-template-columns:repeat(3,1fr)}
+label{font-size:13px;font-weight:600;display:block}select{display:block;margin-top:6px;width:100%;padding:11px;border:1px solid #9aada3;border-radius:6px;background:white;font:inherit;color:inherit}
+.stats{grid-template-columns:repeat(4,1fr);margin:20px 0}.card,.panel{background:#fff;border:1px solid #d8e2d9;border-radius:10px;padding:18px}.card strong{display:block;font-size:27px;font-weight:600}.card small,.muted{color:#52675e;font-size:13px}
+.grid{grid-template-columns:1fr 1fr}.panel{min-width:0;margin-bottom:16px}.plot{width:100%;height:390px}.notice{background:#fff5e4;padding:12px 16px;margin:16px 0;color:#614319}
+#status{font-size:14px}a{color:#176a52}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid #d8e2d9}summary{cursor:pointer;font-weight:600}li{margin:6px 0}.pill{font-size:12px;border:1px solid #658c78;border-radius:20px;padding:3px 10px;display:inline-block}button{font:inherit;padding:7px 12px;border:1px solid #9aada3;border-radius:5px;background:white;cursor:pointer}
+@media(max-width:800px){.grid,.controls{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}main{padding:16px}.plot{height:350px}}
+</style>
+<script>/*__PLOTLY__*/</script>
+</head>
+<body>
+<header><div class="eyebrow">FireAid / Alaska, 2019 fires</div><h1>Explore what the data show</h1><p>Shovel Creek, Swan Lake, Nugget Creek</p><span class="pill">Research prototype, saved notebook results</span></header>
+<main>
+<div class="controls">
+<label>Fire<select id="fire"></select></label>
+<label>Recovery slope period<select id="period"><option value="2020">2020–2024</option><option value="2021">2021–2024</option></select></label>
+<label>Model trained on the other two fires<select id="model"><option value="full">Environmental predictors</option><option value="initial_NDVI_only">Initial NDVI only</option><option value="full_plus_initial_NDVI">Environmental predictors + initial NDVI</option></select></label>
+</div>
+<div class="stats">
+<div class="card">Sampled locations<strong id="n"></strong><small>Severity-stratified; not area-weighted</small></div>
+<div class="card">Complete input coverage<strong id="coverage"></strong><small>30 m grid; whole fire input audit</small></div>
+<div class="card">Held-out-fire R²<strong id="r2"></strong><small>Negative = worse than held-out mean</small></div>
+<div class="card">Prediction RMSE<strong id="rmse"></strong><small>NDVI units/year; lower is better</small></div>
+</div>
+<p id="status" aria-live="polite"></p>
+<div class="notice" id="limitations">These are satellite greenness trends, not measured forest recovery. Model results are exploratory; independent ground accuracy has not been established.</div>
+<div id="raster-section" class="grid" hidden>
+<section class="panel"><h2>What does the landscape look like?</h2><div class="controls" style="grid-template-columns:2fr 1fr">
+<label>Raster preview<select id="raster-layer"><option value="rgb_2018">Before fire, natural color (2018)</option><option value="rgb_2020">After fire, natural color (2020)</option><option value="rgb_2024">Later, natural color (2024)</option><option value="dnbr">Burn-related change, dNBR</option><option value="ndvi">Summer greenness, NDVI</option><option value="observations">Usable image inputs</option></select></label>
+<label>Summer<select id="raster-year"><option>2018</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option></select></label></div>
+<img id="raster-image" alt="" style="width:100%;height:420px;object-fit:contain;background:#fafbf8;margin-top:14px">
+<p id="raster-caption" class="muted"></p><p id="raster-extent" class="muted"></p><p class="muted">Grid north is up. Display-resampled previews; statistics use the 30 m analysis grid. Blank areas are outside the fire or masked. These pictures are not queryable full-resolution rasters.</p></section>
+<section class="panel"><h2>How many images support each summer?</h2><p>Coverage tells us where data exist. Observation counts show how much imagery supports each location.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Summer</th><th>Approx. median inputs</th><th>No inputs</th><th>1–2 inputs</th><th>Valid NDVI</th></tr></thead><tbody id="support-rows"></tbody></table></div>
+<p class="muted">Counts require QA-screened red, NIR and SWIR2 bands in the same image. They are image inputs, not distinct days or independent measurements. The approximate median count uses all analysis pixels, including zeros; area percentages use the whole fire boundary.</p>
+<p class="muted">The 1–2 column is a descriptive flag, not a validated minimum-data rule. NDVI is calculated from median reflectance and may add its own masks, so usable input counts and valid-index coverage answer different questions.</p>
+<p id="raster-date" class="muted"></p></section></div>
+<div class="grid">
+<section class="panel"><h2>Where are the observations?</h2><label>Color sampled locations by<select id="layer"><option value="dnbr">dNBR (×1000), 2018 versus 2020</option><option value="ndvi2024">NDVI, summer 2024</option><option value="slope">Observed satellite recovery slope</option><option value="error">Prediction error (predicted − observed)</option></select></label><div id="map" class="plot"></div><p class="muted" id="mapnote"></p><p class="muted">Click a sample to see its annual NDVI. Points are sampled values, not a continuous severity map or field plots. Color limits stay fixed across fires; values outside the range use the end colors.</p></section>
+<section class="panel"><h2>How does greenness change?</h2><p class="muted">Means within provisional dNBR bins. These bins are not MTBS classes. Curves use the same sampled locations each year.</p><div id="trajectory" class="plot"></div><button id="clear">Clear selected sample</button><p class="muted">NDVI is unitless. Positive slopes indicate spectral greening; they do not establish species composition or forest structure.</p></section>
+<section class="panel"><h2>Does the model transfer?</h2><p class="muted">Each point was held out with its entire fire. The dashed line marks a perfect prediction.</p><div id="prediction" class="plot"></div></section>
+<section class="panel"><h2>Is it better than a simple baseline?</h2><p class="muted">The baseline predicts the training fires’ mean slope. Both errors use the same held-out samples.</p><div id="baseline" class="plot"></div><p class="muted" id="range"></p></section>
+</div>
+<section class="panel"><h2>How does severity compare with MTBS?</h2><p id="reference-note"></p><div style="overflow-x:auto"><table><thead><tr><th>HLS imagery</th><th>High cutoff (dNBR ×1000)</th><th>High vs other agreement</th><th>High-severity overlap (IoU)</th></tr></thead><tbody id="reference-rows"></tbody></table></div><p class="muted">IoU = area both products call high severity / area either product calls high severity. Overall agreement includes all other mapped classes and can look high when high severity is uncommon. These are product comparisons, not field accuracy.</p></section>
+<section class="panel"><details><summary>Sources, methods and limits</summary>
+<ul>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_HLS_HLSL30_v002">NASA HLS L30</a> and <a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_HLS_HLSS30_v002">S30</a>: QA-masked median reflectance, June 15 inclusive to August 15 exclusive. Pre-fire baseline 2018; post-fire NDVI 2020–2024.</li>
+<li><a href="https://fire.ak.blm.gov/predsvcs/maps.php">Alaska Fire History</a>: selected fire boundaries from the shared project asset. Swan Lake’s perimeter was incorporated from MTBS; it is not an independent boundary reference.</li>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1">Dynamic World</a>: mean pre-fire tree-class probability, not percent tree cover.</li>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/USGS_3DEP_10m_collection">USGS 3DEP</a> with <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_DEM_GLO30_2024_1">Copernicus GLO-30</a> fallback: elevation, slope and northness. Copernicus DEM © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018, provided under COPERNICUS by the European Union and ESA; all rights reserved.</li>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_TERRACLIMATE">TerraClimate</a>: summer temperature/precipitation anomalies, 2020–2024 versus 1991–2020. Coarse climate cells are not independent 30 m observations.</li>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/USFS_GTAC_MTBS_annual_burn_severity_mosaics_v1">USFS/USGS MTBS</a>: separate severity reference comparisons, not ground truth. This viewer plots HLS-derived sample values; it does not display MTBS raster classes.</li>
+<li>OLS predicts each sample’s linear NDVI slope. Environmental predictors: dNBR, elevation, slope, northness, tree-class probability, temperature anomaly and precipitation anomaly. All samples have equal weight; these are not area-weighted fire estimates.</li>
+<li>Initial NDVI is from 2020 and shares a year with the 2020-start response. Climate covers the response period. These retrospective comparisons are not prospective forecasts or evidence of causation.</li>
+<li>Residual spatial dependence remains in all full-model fire/window fits. Ordinary OLS significance and Alaska-wide accuracy are not established. Three selected fires from one year cannot demonstrate statewide generalization.</li>
+</ul><p class="muted" id="provenance"></p></details></section>
+</main>
+<script>
+const DATA = /*__DATA__*/;
+const $ = id => document.getElementById(id);
+const colors = ['#216e49','#74a34e','#bda225','#db8535','#c64c35','#832f41'];
+const bins = ['< −100','−100 to 100','100 to 270','270 to 440','440 to 660','> 660'];
+const config = {responsive:true,displaylogo:false};
+const layout = {margin:{l:62,r:25,t:25,b:60},paper_bgcolor:'#fff',plot_bgcolor:'#fff',font:{family:'system-ui',color:'#233c35'},hovermode:'closest'};
+let selected = null, renderVersion = 0;
+Object.keys(DATA.fires).forEach(name => $('fire').add(new Option(name,name)));
+function current(){const fire=DATA.fires[$('fire').value];return [fire,fire.cases[`${$('period').value}:${$('model').value}`]];}
+function trajectories(){
+ const [f]=current();
+ const lines=f.trajectory.map(t=>({x:DATA.years,y:t.mean,type:'scatter',mode:'lines+markers',name:`${bins[t.severity]} (n=${t.n})`,line:{color:colors[t.severity]},hovertemplate:'%{x}: %{y:.3f}<extra>%{fullData.name}</extra>'}));
+ if(selected!==null)lines.push({x:DATA.years,y:f.ndvi[selected],type:'scatter',mode:'lines+markers',name:`Sample ${selected}`,line:{color:'#172a25',width:4,dash:'dot'}});
+ return Plotly.react('trajectory',lines,{...layout,xaxis:{title:'Summer',dtick:1},yaxis:{title:'NDVI',range:[-0.2,1]},legend:{orientation:'h',y:-0.23},margin:{...layout.margin,b:115}},config);
+}
+function renderRaster(){
+ const record=DATA.rasters[$('fire').value];
+ $('raster-section').hidden=!record;
+ if(!record)return;
+ const type=$('raster-layer').value, year=$('raster-year').value;
+ const seasonal=type==='ndvi'||type==='observations';
+ $('raster-year').disabled=!seasonal;
+ const key=seasonal?`${type}_${year}`:type, layer=record.layers[key];
+ $('raster-image').src=layer.url;
+ $('raster-image').alt=`${record.fire}: ${layer.description}`;
+ $('raster-caption').textContent=layer.description;
+ const corners=record.projected_bounds.coordinates[0], xs=corners.map(p=>p[0]), ys=corners.map(p=>p[1]);
+ $('raster-extent').textContent=`${record.crs}, easting ${(Math.min(...xs)/1000).toFixed(1)}–${(Math.max(...xs)/1000).toFixed(1)} km; northing ${(Math.min(...ys)/1000).toFixed(1)}–${(Math.max(...ys)/1000).toFixed(1)} km. Same extent for every preview of this fire.`;
+ $('raster-date').textContent=`Fresh raster export: ${record.generated_utc}. Model results still use their original saved samples.`;
+ $('support-rows').replaceChildren();
+ for(const [year,summary] of Object.entries(record.years)){
+  const tr=document.createElement('tr');
+  const values=[year,summary.counts.observations_p50.toFixed(0),...( ['zero_fraction','one_or_two_fraction','ndvi_valid_fraction'].map(k=>(100*summary[k]).toFixed(2)+'%'))];
+  for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+  $('support-rows').append(tr);
+ }
+}
+for(const id of ['raster-layer','raster-year'])$(id).addEventListener('change',renderRaster);
+async function render(){
+ const version=++renderVersion;
+ renderRaster();
+ const [f,c]=current(), n=f.x.length;
+ const ref=DATA.references[$('fire').value];
+ $('reference-rows').replaceChildren();
+ if(ref){
+  const support=100*ref.support.common_m2/ref.support.intersection_m2;
+  $('reference-note').textContent=`Same valid pixels for every row: ${support.toFixed(2)}% of the intersection of the fire and MTBS boundaries. Reference dates ${ref.dates.Pre_ID[0]} → ${ref.dates.Post_ID[0]}; event high cutoff ${ref.metadata.High_T}. Calendar dates match, but HLS is not identical to MTBS processing. No offset correction applied.`;
+  for(const row of ref.comparisons){
+   const tr=document.createElement('tr');
+   const values=[row.method==='summer_2018_2020'?'Summer composites (2018 → 2020)':'MTBS calendar dates',row.threshold,(100*row.agreement).toFixed(2)+'%',row.high_iou===null?'Undefined (no high pixels)':(100*row.high_iou).toFixed(2)+'%'];
+   for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+   $('reference-rows').append(tr);
+  }
+ }else{$('reference-note').textContent='No reference comparison included in this export.';}
+ $('n').textContent=n.toLocaleString();$('coverage').textContent=(100*f.context.coverage_30m).toFixed(2)+'%';
+ $('r2').textContent=c.r2.toFixed(3);$('rmse').textContent=c.rmse.toFixed(4);
+ $('status').textContent=`Trained on ${c.training_fires}. ${c.rmse<c.baseline_rmse?'Lower':'Higher'} error than the training-mean baseline (${c.baseline_rmse.toFixed(4)} NDVI/year).`;
+ $('range').textContent=`${(100*c.outside_fraction).toFixed(1)}% of test samples have at least one predictor outside its training range. This flags extrapolation; it does not prove the cause of errors.`;
+ $('mapnote').textContent=`${f.context.crs}, projected coordinates in kilometers. Nominal 200 m sampling scale; not a minimum point separation.`;
+ $('provenance').textContent=`Notebook run completed ${DATA.run_completed_utc}. Samples acquired ${f.acquired_utc}. Viewer built ${DATA.generated_utc}. Sample hashes, source hashes, response slopes and displayed scores checked at export.`;
+ const layer=$('layer').value;
+ let values=f.dnbr, scale=['#006400','#70a800','#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026','#7a0000'].map((color,i)=>[i/7,color]), min=-100,max=800,title='dNBR ×1000';
+ if(layer==='ndvi2024'){values=f.ndvi.map(v=>v[4]);scale=[[0,'#e5d7b3'],[0.5,'#aed581'],[1,'#1b5e20']];min=-0.2;max=1;title='NDVI';}
+ if(layer==='slope'){values=c.observed;scale=[[0,'#b2182b'],[0.5,'#ffffbf'],[1,'#1a9850']];min=-0.08;max=0.08;title='NDVI/yr';}
+ if(layer==='error'){values=c.predicted.map((v,i)=>v-c.observed[i]);scale=[[0,'#2166ac'],[0.5,'#f7f7f7'],[1,'#b2182b']];min=-0.08;max=0.08;title='Error /yr';}
+ await Plotly.react('map',[{x:f.x,y:f.y,customdata:values,type:'scatter',mode:'markers',marker:{size:5,color:values,colorscale:scale,cmin:min,cmax:max,colorbar:{title:{text:title},thickness:12}},hovertemplate:'E %{x:.2f} km<br>N %{y:.2f} km<br>Value %{customdata:.4f}<extra></extra>'}],{...layout,xaxis:{title:'UTM easting (km)'},yaxis:{title:'UTM northing (km)',scaleanchor:'x',scaleratio:1},uirevision:$('fire').value},config);
+ if(version!==renderVersion)return;
+ await trajectories();
+ if(version!==renderVersion)return;
+ const bound=[Math.min(...c.observed,...c.predicted),Math.max(...c.observed,...c.predicted)];
+ await Plotly.react('prediction',[{x:c.observed,y:c.predicted,type:'scatter',mode:'markers',marker:{size:5,color:'#267557',opacity:0.55},name:'Held-out samples',hovertemplate:'Observed %{x:.4f}<br>Predicted %{y:.4f}<extra></extra>'},{x:bound,y:bound,mode:'lines',line:{color:'#785b40',dash:'dash'},name:'1:1'}],{...layout,xaxis:{title:'Observed satellite slope (NDVI/year)'},yaxis:{title:'Predicted slope (NDVI/year)'},showlegend:false},config);
+ if(version!==renderVersion)return;
+ await Plotly.react('baseline',[{x:['Selected model','Training-mean baseline'],y:[c.rmse,c.baseline_rmse],type:'bar',marker:{color:['#267557','#a8b5a5']},hovertemplate:'%{x}<br>RMSE %{y:.5f}<extra></extra>'}],{...layout,yaxis:{title:'RMSE (NDVI/year)',rangemode:'tozero'}},config);
+}
+for(const id of ['fire','period','model','layer'])$(id).addEventListener('change',()=>{if(id==='fire')selected=null;render().catch(showError);});
+$('clear').addEventListener('click',()=>{selected=null;trajectories().catch(showError);});
+function showError(error){$('status').textContent='Viewer error: '+error.message;console.error(error);}
+render().then(()=>$('map').on('plotly_click',event=>{selected=event.points[0].pointIndex;trajectories().catch(showError);})).catch(showError);
+</script>
+</body>
+</html>
