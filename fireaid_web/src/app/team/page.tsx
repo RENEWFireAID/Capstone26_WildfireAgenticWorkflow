@@ -59,13 +59,13 @@ const initials = (name: string) => {
   return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase();
 };
 
-function Avatar({ name, size = "md", ring = false }: { name: string; size?: "md" | "lg"; ring?: boolean }) {
+function Avatar({ name, size = "md" }: { name: string; size?: "md" | "lg" }) {
   return (
     <span
       aria-hidden="true"
       className={`flex shrink-0 items-center justify-center rounded-full bg-navy font-mono font-semibold text-white ${
         size === "lg" ? "h-14 w-14 text-base" : "h-11 w-11 text-sm"
-      } ${ring ? "ring-2 ring-gold ring-offset-2" : ""}`}
+      }`}
     >
       {initials(name)}
     </span>
@@ -172,9 +172,8 @@ export default function TeamPage() {
             <SectionHead title="Framework leads" note="Own the shared platform the apps run on" />
             <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {LEADS.map((s) => (
-                <li key={s.name} className="relative flex min-w-0 items-center gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-5">
-                  <span className="absolute inset-x-0 top-0 h-1 bg-gold" aria-hidden="true" />
-                  <Avatar name={s.name} size="lg" ring />
+                <li key={s.name} className="flex min-w-0 items-center gap-4 rounded-xl border border-slate-200 bg-white p-5">
+                  <Avatar name={s.name} size="lg" />
                   <div className="min-w-0 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-lg font-bold text-navy-deep">{s.name}</span>
