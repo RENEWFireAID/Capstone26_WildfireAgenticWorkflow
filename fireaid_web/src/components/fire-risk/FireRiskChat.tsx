@@ -4,8 +4,19 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 import { Bot, Send } from "lucide-react";
 import ModelBadge from "@/components/ui/ModelBadge";
+import type { ModelFeature } from "@/lib/models";
+import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
 
 type Message = { role: "user" | "assistant"; content: string; error?: boolean };
+
+function parseChart(json: string): ChatChartSpec | null {
+  try {
+    const chart = JSON.parse(json);
+    return ["bar", "line", "pie", "scatter"].includes(chart?.type) && Array.isArray(chart.data) ? chart : null;
+  } catch {
+    return null;
+  }
+}
 
 const SUGGESTIONS = [
   "What was the fire danger in Fairbanks on June 15, 2022?",
@@ -15,7 +26,21 @@ const SUGGESTIONS = [
 
 const ERROR_REPLY = "Sorry, I couldn't get a response. Try again.";
 
-export default function FireRiskChat() {
+export default function FireRiskChat({
+  endpoint = "/api/fire-risk/chat",
+  title = "Ask about fire risk",
+  subtitle = "Fire history, risk predictions and fire danger forecasts",
+  suggestions = SUGGESTIONS,
+  chartSource,
+  modelFeature = "fireRisk",
+}: {
+  endpoint?: string;
+  title?: string;
+  subtitle?: string;
+  suggestions?: string[];
+  chartSource?: string;
+  modelFeature?: ModelFeature;
+} = {}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +61,7 @@ export default function FireRiskChat() {
     setInput("");
     setLoading(true);
     try {
-      const res = await fetch("/api/fire-risk/chat", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // Error bubbles are display-only and never sent back to the model.
@@ -66,9 +91,9 @@ export default function FireRiskChat() {
           <Bot size={18} />
         </div>
         <div>
-          <div className="text-sm font-semibold text-slate-900">Ask about fire risk</div>
-          <div className="text-xs text-slate-600">Fire history, risk predictions and fire danger forecasts</div>
-          <ModelBadge feature="fireRisk" className="mt-0.5" />
+          <div className="text-sm font-semibold text-slate-900">{title}</div>
+          <div className="text-xs text-slate-600">{subtitle}</div>
+          <ModelBadge feature={modelFeature} className="mt-0.5" />
         </div>
       </div>
 
@@ -80,7 +105,7 @@ export default function FireRiskChat() {
           <div>
             <div className="text-sm text-slate-600">Try asking:</div>
             <div className="mt-2 flex flex-wrap gap-2">
-              {SUGGESTIONS.map((s) => (
+              {suggestions.map((s) => (
                 <button
                   key={s}
                   type="button"
@@ -96,7 +121,7 @@ export default function FireRiskChat() {
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+              className={`${m.content.includes("```") ? "w-full" : "max-w-[80%]"} rounded-2xl px-4 py-2 text-sm ${
                 m.role === "user"
                   ? "bg-orange-500 text-white"
                   : m.error
@@ -108,7 +133,11 @@ export default function FireRiskChat() {
                 <span className="whitespace-pre-wrap">{m.content}</span>
               ) : (
                 <div className="[&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-1 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5">
-                  <ReactMarkdown>{m.content}</ReactMarkdown>
+                  {m.content.split(/```(?:chart|json)\s*([\s\S]*?)```/).map((part, j) => {
+                    if (j % 2 === 0) return part.trim() && <ReactMarkdown key={j}>{part}</ReactMarkdown>;
+                    const chart = parseChart(part);
+                    return chart && <ChatChart key={j} chart={chart} source={chartSource} />;
+                  })}
                 </div>
               )}
             </div>

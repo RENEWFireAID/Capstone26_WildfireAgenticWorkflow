@@ -8,6 +8,7 @@ from tools.fire_risk_model import predict_risk
 from tools.fire_danger import forecast_for, map_for
 from tools import burn_recovery
 from tools import forest_trends
+from tools import parcel_risk
 from typing import Optional
 
 mcp = FastMCP(
@@ -240,6 +241,27 @@ def burn_recovery_diagnostic(figure: str) -> dict:
     figure: residual_maps, joint_climate_support, slope_stability or mtbs_class_iou.
     """
     return burn_recovery.diagnostic(figure)
+
+
+@mcp.tool()
+async def parcel_risk_layers() -> dict:
+    """Map tile URLs and legends for the Fairbanks North Star Borough parcel fire risk map."""
+    return await parcel_risk.get_layers()
+
+
+@mcp.tool()
+async def parcel_vegetation_at(lat: float, lon: float) -> dict:
+    """Vegetation type, fire risk tier (1 Very High to 4 Low) and parcel scores at a point.
+
+    Fairbanks North Star Borough only. Parcel risk_score is 0-100, from vegetation.
+    """
+    return await parcel_risk.vegetation_at(lat, lon)
+
+
+@mcp.tool()
+def parcel_fire_risk(pan: int, include_geometry: bool = False) -> dict:
+    """Fire risk score (0-100, from vegetation) for a Fairbanks North Star Borough tax parcel by PAN."""
+    return parcel_risk.parcel_fire_risk(pan, include_geometry)
 
 
 if __name__ == "__main__":
