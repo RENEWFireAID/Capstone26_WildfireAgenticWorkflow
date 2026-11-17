@@ -6,6 +6,7 @@ import {
   type Diagnostic, type FireName, type FireOverview, type Imagery, type ModelKey, type Samples,
 } from "./data";
 import { ObservedPredicted, RmseBars, SampleMap, TrajectoryChart, type Scale } from "./charts";
+import { buttonClass } from "@/components/ui/app";
 import { Caption, Details, LoadError, Loading, Metrics, Note, SectionTitle, Select, Table } from "./ui";
 
 /* ------------------------------------------------------------------ Imagery */
@@ -51,13 +52,13 @@ export function ImageryTab({ fire }: { fire: FireName }) {
       )}
       {error ? <LoadError message={error} /> : loading || !data ? <Loading label="Loading imagery…" /> : (
         <>
-          <figure className="rounded-lg border border-slate-200 bg-white p-4">
+          <figure className="border border-slate-200 bg-white p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.url} alt={`${fire}: ${data.description}`} width={data.width} height={data.height}
               className="mx-auto h-auto max-h-[490px] w-auto max-w-full object-contain" />
             {data.legend && (
               <div className="mx-auto mt-4 w-full max-w-md text-xs text-slate-600">
-                <div className="h-3 rounded-sm" style={{ background: `linear-gradient(to right, ${data.legend.palette.join(", ")})` }} />
+                <div className="h-3" style={{ background: `linear-gradient(to right, ${data.legend.palette.join(", ")})` }} />
                 <div className="mt-1 flex justify-between font-mono tabular">
                   <span>{data.legend.min}</span><span className="font-sans">{data.legend.unit}</span><span>{data.legend.max}</span>
                 </div>
@@ -129,7 +130,7 @@ export function GreennessTab({ fire, period, model }: { fire: FireName; period: 
             <TrajectoryChart years={data.years} trajectory={data.trajectory}
               selected={selected === null ? null : { index: selected, values: data.ndvi[selected] }} />
             <button type="button" onClick={() => setSelected(null)} disabled={selected === null}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:border-navy hover:text-navy disabled:opacity-40">
+              className={buttonClass("secondary", "px-3 py-1.5")}>
               Clear selected sample
             </button>
             {selected !== null && (
@@ -245,9 +246,9 @@ export function ValidationTab({ fire, overview, runCompleted }: { fire: FireName
               options={diagnostics.map((d) => ({ value: d.key, label: d.title }))} onChange={setFigure} />
           </div>
           {error ? <LoadError message={error} /> : loading || !image ? <Loading label="Loading figure…" /> : (
-            <figure className="rounded-lg border border-slate-200 bg-white p-3">
+            <figure className="border border-slate-200 bg-white p-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image.url} alt={`Shovel Creek diagnostic: ${image.title}`} className="h-auto w-full" />
+              <img src={image.url} alt={`Shovel Creek diagnostic: ${image.title}`} className="mx-auto h-auto w-full max-w-5xl" />
             </figure>
           )}
           <Caption>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Flame, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { FIELD, Field, Notice, Panel, Placeholder } from "@/components/ui/app";
 import {
   ASPECT_SCORES,
   CAUSE_SCORES,
@@ -57,6 +58,7 @@ const WEATHER_FIELDS: { key: keyof WeatherInputs; label: string; unit: string; s
   { key: "wind", label: "Wind", unit: "m/s, max, past 7 days", step: 0.5 },
 ];
 
+// Encodes the predicted risk level, so it keeps its hazard colours.
 const CATEGORY_STYLE: Record<string, string> = {
   High: "bg-red-50 border-red-200 text-red-700",
   Moderate: "bg-orange-50 border-orange-200 text-orange-700",
@@ -64,8 +66,6 @@ const CATEGORY_STYLE: Record<string, string> = {
   "Very Low": "bg-green-50 border-green-200 text-green-700",
 };
 
-const INPUT_CLASS =
-  "mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-100";
 
 function toInputs(form: Form): { fire: FireInputs; weather: WeatherInputs } | null {
   const num = (s: string) => (s.trim() === "" ? NaN : Number(s));
@@ -87,10 +87,9 @@ function toInputs(form: Form): { fire: FireInputs; weather: WeatherInputs } | nu
 
 function Column({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="mb-3 text-sm font-semibold text-slate-900">{title}</div>
+    <Panel title={title}>
       <div className="space-y-3">{children}</div>
-    </div>
+    </Panel>
   );
 }
 
@@ -106,16 +105,15 @@ function Select({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="block">
-      <span className="text-xs font-medium text-slate-700">{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className={INPUT_CLASS}>
+    <Field label={label}>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className={FIELD}>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
         ))}
       </select>
-    </label>
+    </Field>
   );
 }
 function typicalWeather(result: Result | null, key: keyof WeatherInputs): string {
@@ -175,20 +173,8 @@ export default function FireRiskClassifier() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white">
-            <Flame size={18} />
-          </div>
-          <div>
-            <div className="text-xl font-bold text-slate-900">Fire Risk Classifier</div>
-            <div className="text-xs text-slate-500">
-             Different models trained on thousands of Alaskan Fires
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+      <Panel accent title="Fire Risk Classifier" subtitle="Different models trained on thousands of Alaskan Fires">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
           <Select
             label="Model"
             value={model}
@@ -198,25 +184,21 @@ export default function FireRiskClassifier() {
 
           <div className="min-w-0">
             {!inputs ? (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-                Fill in every field to see a prediction.
-              </div>
+              <Placeholder height="py-4">Fill in every field to see a prediction.</Placeholder>
             ) : error ? (
-              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                {error}
-              </div>
+              <Notice tone="error">{error}</Notice>
             ) : result ? (
               <div className="flex flex-wrap items-center gap-4">
                 <div
-                  className={`rounded-xl border px-4 py-3 ${
+                  className={`border px-4 py-3 ${
                     CATEGORY_STYLE[result.category] ?? "border-slate-200 bg-slate-50 text-slate-700"
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-2xl font-bold">
+                  <div className="flex items-center gap-2 font-mono text-2xl font-semibold uppercase tracking-wide">
                     {result.category}
                     {loading && <RefreshCw size={14} className="animate-spin opacity-60" />}
                   </div>
-                  <div className="text-xs opacity-75">
+                  <div className="font-mono text-xs opacity-80">
                     confidence {(result.confidence * 100).toFixed(0)}%
                   </div>
                 </div>
@@ -226,10 +208,10 @@ export default function FireRiskClassifier() {
                     .map(([label, p]) => (
                       <div key={label} className="flex items-center gap-3">
                         <span className="w-16 shrink-0 text-xs text-slate-600">{label}</span>
-                        <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
-                          <div className="h-full rounded-full bg-orange-400" style={{ width: `${p * 100}%` }} />
+                        <div className="h-2 flex-1 overflow-hidden bg-slate-100">
+                          <div className="h-full bg-navy" style={{ width: `${p * 100}%` }} />
                         </div>
-                        <span className="w-10 shrink-0 text-right text-xs tabular-nums text-slate-500">
+                        <span className="w-10 shrink-0 text-right font-mono text-xs tabular-nums text-slate-500">
                           {(p * 100).toFixed(0)}%
                         </span>
                       </div>
@@ -237,35 +219,37 @@ export default function FireRiskClassifier() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-                <RefreshCw size={14} className="animate-spin" /> Predicting...
-              </div>
+              <Placeholder height="py-4">
+                <span className="inline-flex items-center gap-2">
+                  <RefreshCw size={14} className="animate-spin" /> Predicting...
+                </span>
+              </Placeholder>
             )}
           </div>
         </div>
-      </div>
+      </Panel>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Column title="Derived inputs">
           {(Object.keys(SCORE_LABELS) as ScoreName[]).map((name) => (
-            <div key={name} className="flex items-baseline justify-between rounded-xl bg-slate-50 px-3 py-2">
+            <div key={name} className="flex items-baseline justify-between gap-3 border-b border-slate-200 px-1 py-2">
               <span className="text-xs text-slate-600">
                 {SCORE_LABELS[name]}
                 {name === "SPREAD_RATE_SCORE" && <span className="text-slate-500"> (typical for month)</span>}
               </span>
-              <span className="text-sm tabular-nums text-slate-900">
+              <span className="shrink-0 font-mono text-sm font-semibold tabular-nums text-navy-deep">
                 {scores?.[name] ?? "-"}
-                <span className="text-slate-500"> / {SCORE_LIMITS[name]}</span>
+                <span className="font-normal text-slate-500"> / {SCORE_LIMITS[name]}</span>
               </span>
             </div>
           ))}
-          <div className="flex items-baseline justify-between rounded-xl border border-orange-200 bg-orange-50 px-3 py-2">
-            <span className="text-xs font-semibold text-orange-800">Total</span>
-            <span className="text-sm font-semibold tabular-nums text-orange-900">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-l-4 border-navy bg-navy-soft px-3 py-2">
+            <span className="text-xs font-semibold text-navy-deep">Total</span>
+            <span className="font-mono text-sm font-semibold tabular-nums text-navy-deep">
               {total ?? "-"}
-              <span className="font-normal text-orange-700"> / 100</span>
+              <span className="font-normal text-navy"> / 100</span>
               {total !== null && (
-                <span className="ml-2 text-xs font-normal text-orange-700">{riskBand(total)} band</span>
+                <span className="ml-2 text-xs font-normal text-navy">{riskBand(total)} band</span>
               )}
             </span>
           </div>
@@ -273,18 +257,16 @@ export default function FireRiskClassifier() {
 
         <Column title="Weather data inputs">
           {WEATHER_FIELDS.map((f) => (
-            <label key={f.key} className="block">
-              <span className="text-xs font-medium text-slate-700">{f.label}</span>
+            <Field key={f.key} label={f.label} hint={f.unit}>
               <input
                 type="number"
                 step={f.step}
                 value={form[f.key]}
                 placeholder={typicalWeather(result, f.key)}
                 onChange={(e) => set(f.key)(e.target.value)}
-                className={INPUT_CLASS}
+                className={FIELD}
               />
-              <span className="text-[11px] text-slate-500">{f.unit}</span>
-            </label>
+            </Field>
           ))}
         </Column>
 
