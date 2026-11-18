@@ -9,6 +9,7 @@ from tools.fire_danger import forecast_for, map_for
 from tools import burn_recovery
 from tools import forest_trends
 from tools import parcel_risk
+from tools import lightning
 from typing import Optional
 
 mcp = FastMCP(
@@ -262,6 +263,18 @@ async def parcel_vegetation_at(lat: float, lon: float) -> dict:
 def parcel_fire_risk(pan: int, include_geometry: bool = False) -> dict:
     """Fire risk score (0-100, from vegetation) for a Fairbanks North Star Borough tax parcel by PAN."""
     return parcel_risk.parcel_fire_risk(pan, include_geometry)
+
+
+@mcp.tool()
+async def lightning_embedding_layer(years: list[int]) -> dict:
+    """Map tile URL for the mean Google satellite embedding over the selected years (2017-2024)."""
+    return await lightning.embedding_layer(years)
+
+
+@mcp.tool()
+def lightning_strike_counts(start_date: str, end_date: str) -> dict:
+    """Alaska lightning strikes per month between two dates (YYYY-MM-DD). Records cover 1986-2012."""
+    return lightning.strike_counts(start_date, end_date)
 
 
 if __name__ == "__main__":

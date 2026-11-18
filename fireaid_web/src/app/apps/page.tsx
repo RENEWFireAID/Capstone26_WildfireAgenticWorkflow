@@ -7,7 +7,8 @@ import fireHistoryPreview from "./previews/fire-history.jpg";
 import fireRiskPreview from "./previews/fire-risk.jpg";
 import forestTrendsPreview from "./previews/forest-trends.jpg";
 import parcelRiskPreview from "./previews/parcel-risk.jpg";
-import { ArrowRight, BookOpen, FileText, Flame, MapPinned, Satellite, Sprout, TriangleAlert } from "lucide-react";
+import lightningPreview from "./previews/lightning.jpg";
+import { ArrowRight, BookOpen, FileText, Flame, MapPinned, Satellite, Sprout, TriangleAlert, Zap } from "lucide-react";
 
 const APPS = [
   {
@@ -61,6 +62,16 @@ const APPS = [
     role: "Undergraduate Researchers · UAF Wildlife Biology and Conservation, UAF Computer Science",
   },
   {
+    label: "Lightning and Fire History",
+    kind: "Historical records",
+    desc: "See where lightning struck Alaska over any span of dates, alongside the fires discovered on the same days.",
+    data: "AICC lightning strikes and fire history points · 1.9 million strikes, 1986–2012 · Google Earth Engine",
+    icon: Zap,
+    href: "/lightning",
+    developer: "Bryan Burton",
+    role: "Undergraduate Researcher · UAF Computer Science",
+  },
+  {
     label: "Publication",
     kind: "Research literature",
     desc: "Find research by meaning rather than keywords across a library of fire, climate and ecology abstracts.",
@@ -90,6 +101,7 @@ const PREVIEWS: Record<string, StaticImageData> = {
   "Forest Trends": forestTrendsPreview,
   "Burn Severity Recovery": burnSeverityPreview,
   "Parcel Fire Risk": parcelRiskPreview,
+  "Lightning and Fire History": lightningPreview,
 };
 
 // Reference tools sit apart from the apps that map and model fire data.
