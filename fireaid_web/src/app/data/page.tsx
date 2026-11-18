@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, CloudSun, FileText, Flame, LandPlot, Snowflake, ThermometerSun, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, BookOpen, CloudLightning, CloudSun, FileText, Flame, LandPlot, Snowflake, ThermometerSun, type LucideIcon } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 
@@ -60,6 +60,14 @@ const OTHER_DATA: Dataset[] = [
     detail: "External · Fairbanks North Star Borough",
     icon: LandPlot,
     href: "https://gis-data-fnsb.hub.arcgis.com/datasets/4af1635b48c1490784c5f9cb1e0a8a49_0/explore",
+    external: true,
+  },
+  {
+    label: "Lightning strikes",
+    desc: "Every lightning strike recorded in Alaska from 1986 to 2012, used by Lightning and Fire History.",
+    detail: "External · Alaska Interagency Coordination Center",
+    icon: CloudLightning,
+    href: "https://fire.ak.blm.gov/predsvcs/maps.php",
     external: true,
   },
   {
