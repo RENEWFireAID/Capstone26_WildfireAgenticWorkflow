@@ -7,9 +7,9 @@ export const MODELS = {
   // Fire History "Ask AI about this data" (/mcp-tools).
   fireHistory: process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4-5",
   // Alaska Fire Risk chat (/fire-risk).
-  fireRisk: process.env.FIRE_CHAT_MODEL || "anthropic/claude-sonnet-5.5",
+  fireRisk: process.env.FIRE_CHAT_MODEL || "anthropic/claude-sonnet-4.5",
   // Parcel Fire Risk chat (/parcel-risk).
-  parcelRisk: process.env.PARCEL_CHAT_MODEL || "anthropic/claude-haiku-5.5",
+  parcelRisk: process.env.PARCEL_CHAT_MODEL || "anthropic/claude-sonnet-4.5",
 };
 
 export type ModelFeature = "agent" | "fireHistory" | "fireRisk" | "parcelRisk";
