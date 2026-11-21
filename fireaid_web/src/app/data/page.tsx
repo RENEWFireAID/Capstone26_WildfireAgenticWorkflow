@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, CloudLightning, CloudSun, FileText, Flame, LandPlot, Snowflake, ThermometerSun, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, BookOpen, CloudLightning, CloudSun, FileText, Flame, FlameKindling, LandPlot, Mountain, Snowflake, ThermometerSun, type LucideIcon } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
 import { CONTOURS, PEAKS } from "@/components/layout/uafBackdrops";
 
@@ -72,10 +72,26 @@ const OTHER_DATA: Dataset[] = [
   },
   {
     label: "Fire weather",
-    desc: "Daily weather and Fire Weather Index values from stations across Alaska, including 17 around Fairbanks.",
+    desc: "Daily weather and Fire Weather Index values from stations across Alaska, including the 13 around Fairbanks used by Parcel Fire Risk.",
     detail: "External · Alaska Fire & Fuels, MesoWest",
     icon: ThermometerSun,
     href: "https://akff.mesowest.org/",
+    external: true,
+  },
+  {
+    label: "Elevation",
+    desc: "10 m elevation for the United States, used for the slope part of Parcel Fire Risk.",
+    detail: "External · USGS 3D Elevation Program",
+    icon: Mountain,
+    href: "https://www.usgs.gov/3d-elevation-program",
+    external: true,
+  },
+  {
+    label: "Burned areas",
+    desc: "Perimeters of large fires since 1984, shown on the Parcel Fire Risk map from 2000 on.",
+    detail: "External · Monitoring Trends in Burn Severity",
+    icon: FlameKindling,
+    href: "https://www.mtbs.gov/",
     external: true,
   },
 ];

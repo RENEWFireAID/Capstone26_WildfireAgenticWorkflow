@@ -245,24 +245,32 @@ def burn_recovery_diagnostic(figure: str) -> dict:
 
 
 @mcp.tool()
-async def parcel_risk_layers() -> dict:
-    """Map tile URLs and legends for the Fairbanks North Star Borough parcel fire risk map."""
-    return await parcel_risk.get_layers()
+async def parcel_risk_layers(date: Optional[str] = None) -> dict:
+    """Fairbanks North Star Borough parcel fire risk map for a date (YYYY-MM-DD; default the latest).
 
-
-@mcp.tool()
-async def parcel_vegetation_at(lat: float, lon: float) -> dict:
-    """Vegetation type, fire risk tier (1 Very High to 4 Low) and parcel scores at a point.
-
-    Fairbanks North Star Borough only. Parcel risk_score is 0-100, from vegetation.
+    Tile URLs, station FWI and sources, and the borough's median and 90th percentile risk.
     """
-    return await parcel_risk.vegetation_at(lat, lon)
+    return await parcel_risk.get_layers(date)
 
 
 @mcp.tool()
-def parcel_fire_risk(pan: int, include_geometry: bool = False) -> dict:
-    """Fire risk score (0-100, from vegetation) for a Fairbanks North Star Borough tax parcel by PAN."""
-    return parcel_risk.parcel_fire_risk(pan, include_geometry)
+async def parcel_vegetation_at(lat: float, lon: float, date: Optional[str] = None, include_geometry: bool = False) -> dict:
+    """Daily fire risk (0-100) of the Fairbanks North Star Borough tax parcel at a point.
+
+    date: YYYY-MM-DD, Feb 1-Oct 31 only; default the latest date with station data.
+    Returns the risk, its band, the fuel, exposure, slope and FWI parts, the fire protection level and FWI station.
+    """
+    return await parcel_risk.parcel_at(lat, lon, date, include_geometry)
+
+
+@mcp.tool()
+async def parcel_fire_risk(pan: int | str, date: Optional[str] = None, include_geometry: bool = False) -> dict:
+    """Daily fire risk (0-100) of a Fairbanks North Star Borough tax parcel by PAN (parcel number).
+
+    date: YYYY-MM-DD, Feb 1-Oct 31 only; default the latest date with station data.
+    Returns the risk, its band, the fuel, exposure, slope and FWI parts, the fire protection level and FWI station.
+    """
+    return await parcel_risk.parcel_by_pan(pan, date, include_geometry)
 
 
 @mcp.tool()
