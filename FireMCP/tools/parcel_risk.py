@@ -353,7 +353,6 @@ def _score(hit: Optional[Dict[str, Any]], day: str, pan_default: Any, include_ge
         return {"ok": True, "date": day, "pan": None}
     m, props = _model(), hit["properties"]
     geom = ee.Geometry(hit["geometry"])
-    # Only the PAN and use leave this function; the asset also holds owner names and addresses.
     out = {"ok": True, "date": day, "pan": props.get("PAN", pan_default),
            "primary_use": props.get("PRIMARY_US", props.get("USE_CLASS", props.get("CLASS", props.get("LAND_USE", "Not Specified")))),
            "score": None}
@@ -400,23 +399,25 @@ def _score(hit: Optional[Dict[str, Any]], day: str, pan_default: Any, include_ge
     return out
 
 
+def _first_parcel(fc: ee.FeatureCollection) -> Optional[Dict[str, Any]]:
+    """The first match with only PAN and use; the asset also holds owner names and addresses."""
+    try:
+        return ee.Feature(fc.first()).select(["PAN", "PRIMARY_US", "USE_CLASS", "CLASS", "LAND_USE"]).getInfo()
+    except Exception:
+        return None
+
+
 def _parcel_at(lat: float, lon: float, day: str, include_geometry: bool) -> Dict[str, Any]:
     parcels = _model()["parcels"]  # initializes Earth Engine before any ee object is built
     pt = ee.Geometry.Point([lon, lat])
-    try:
-        hit = parcels.filter(ee.Filter.contains(leftField=".geo", rightValue=pt)).first().getInfo()
-    except Exception:
-        hit = None
+    hit = _first_parcel(parcels.filter(ee.Filter.contains(leftField=".geo", rightValue=pt)))
     return _score(hit, day, "Unknown", include_geometry)
 
 
 def _parcel_by_pan(raw: str, day: str, include_geometry: bool) -> Dict[str, Any]:
     parcels = _model()["parcels"]  # initializes Earth Engine before any ee object is built
     f = ee.Filter.Or(ee.Filter.eq("PAN", raw), ee.Filter.eq("PAN", raw.zfill(7)), ee.Filter.eq("PAN", int(raw)))
-    try:
-        hit = parcels.filter(f).first().getInfo()
-    except Exception:
-        hit = None
+    hit = _first_parcel(parcels.filter(f))
     return _score(hit, day, int(raw), include_geometry)
 
 
