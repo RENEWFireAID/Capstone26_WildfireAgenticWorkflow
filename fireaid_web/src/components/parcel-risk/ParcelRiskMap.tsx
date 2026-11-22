@@ -1,79 +1,69 @@
 "use client";
 
-import { useEffect, useRef, type ComponentProps, type ComponentRef } from "react";
-import { CircleMarker, GeoJSON, LayersControl, MapContainer, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
+import { useEffect, type ComponentProps } from "react";
+import { GeoJSON, LayersControl, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 export type ParcelGeometry = ComponentProps<typeof GeoJSON>["data"];
 
 export type MapPoint = { latitude: number; longitude: number };
-export type RiskLayer = { name: string; shown: boolean; url: string };
+export type RiskLayer = { name: string; shown: boolean; url: string; opacity?: number };
 export type LegendEntry = { name: string; color: string };
-
-const FNSB_BOUNDS: [[number, number], [number, number]] = [[64.0, -149.2], [65.5, -143.5]];
+export type MapView = { center: [number, number]; zoom: number };
 
 function ClickToPick({ onPick }: { onPick: (point: MapPoint) => void }) {
   useMapEvents({
     click(e) {
-      onPick({ latitude: Number(e.latlng.lat.toFixed(5)), longitude: Number(e.latlng.lng.toFixed(5)) });
+      onPick({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     },
   });
   return null;
 }
 
-function ParcelOutline({ data }: { data: ParcelGeometry }) {
+function SetView({ view }: { view: MapView }) {
   const map = useMap();
-  const ref = useRef<ComponentRef<typeof GeoJSON>>(null);
   useEffect(() => {
-    const bounds = ref.current?.getBounds();
-    if (bounds?.isValid()) map.fitBounds(bounds, { maxZoom: 16, padding: [40, 40] });
-  }, [data, map]);
-  return <GeoJSON ref={ref} data={data} style={{ color: "#38bdf8", weight: 3, fillOpacity: 0.15 }} />;
+    map.setView(view.center, view.zoom);
+  }, [view, map]);
+  return null;
 }
 
 export default function ParcelRiskMap({
   layers,
   legend,
-  selected,
+  view,
   parcel,
   onPick,
 }: {
   layers: RiskLayer[];
   legend: LegendEntry[];
-  selected: MapPoint | null;
+  view: MapView;
   parcel: ParcelGeometry | null;
   onPick: (point: MapPoint) => void;
 }) {
   return (
     <div className="relative h-full w-full">
-      <MapContainer bounds={FNSB_BOUNDS} minZoom={7} scrollWheelZoom={false} className="h-full w-full" attributionControl>
+      <MapContainer center={view.center} zoom={view.zoom} scrollWheelZoom={false} className="h-full w-full" attributionControl>
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution="Tiles &copy; Esri"
           maxZoom={19}
         />
         <LayersControl position="topright">
-          {layers.map((layer) => (
-            <LayersControl.Overlay key={layer.name} checked={layer.shown} name={layer.name}>
-              <TileLayer url={layer.url} attribution="Vegetation &amp; parcels: Google Earth Engine" maxZoom={19} />
+          {layers.map((layer, i) => (
+            <LayersControl.Overlay key={layer.url} checked={layer.shown} name={layer.name}>
+              {/* zIndex keeps the notebook's stacking when a day's layers are swapped in. */}
+              <TileLayer url={layer.url} opacity={layer.opacity ?? 1} zIndex={i + 2} attribution="Google Earth Engine" maxZoom={19} />
             </LayersControl.Overlay>
           ))}
         </LayersControl>
-        {parcel && <ParcelOutline key={JSON.stringify(parcel)} data={parcel} />}
-        {selected && (
-          <CircleMarker
-            center={[selected.latitude, selected.longitude]}
-            radius={7}
-            pathOptions={{ color: "#0f172a", weight: 2, fillColor: "#ffffff", fillOpacity: 1 }}
-          >
-            <Tooltip>Selected spot</Tooltip>
-          </CircleMarker>
-        )}
+        {parcel && <GeoJSON key={JSON.stringify(parcel)} data={parcel} style={{ color: "#00FFFF", weight: 3, fill: false }} />}
+        <SetView view={view} />
         <ClickToPick onPick={onPick} />
       </MapContainer>
 
       {legend.length > 0 && (
-        <div className="absolute bottom-6 right-3 z-[1000] max-w-[210px] rounded-md bg-white/90 px-2 py-1.5 text-[10px] leading-tight shadow">
-          <div className="mb-1 font-semibold text-slate-900">Fire Risk Classes</div>
+        <div className="absolute bottom-6 right-3 z-[1000] rounded-md bg-white/90 px-2 py-1.5 text-[10px] leading-tight shadow">
+          <div className="mb-1 font-semibold text-slate-900">Fire risk</div>
           <ul className="space-y-0.5">
             {legend.map((entry) => (
               <li key={entry.name} className="flex items-center gap-1.5 text-slate-700">

@@ -54,8 +54,8 @@ const APPS = [
   {
     label: "Parcel Fire Risk",
     kind: "Property risk",
-    desc: "See the vegetation fire risk of any property in the Fairbanks North Star Borough: click the map or look up a parcel number for its 0-100 score.",
-    data: "FNSB vegetation map and tax parcels · 63,884 parcel records · Google Earth Engine",
+    desc: "See the daily fire hazard of any property in the Fairbanks North Star Borough: pick a date, then click the map or search a parcel number or address for its 0-100 score.",
+    data: "FNSB vegetation and tax parcels · 3DEP slope · 13 AKFF weather stations · Google Earth Engine",
     icon: MapPinned,
     href: "/parcel-risk",
     developer: "Emma Heil and Darshan Nautiyal",
