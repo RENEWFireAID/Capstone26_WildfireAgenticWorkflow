@@ -2,6 +2,7 @@ import { OpenAI } from "openai";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ResponseInput, ResponseFunctionToolCall, Tool } from "openai/resources/responses/responses.mjs";
 import { query_tools, make_tool_calls } from "./tools/tool_management";
+import { appTools } from "@/lib/appTools";
 import type { ChartSpec } from "@/lib/chartBuilder";
 import { MODELS } from "@/lib/models";
 import type { AnswerSource } from "@/lib/answerSources";
@@ -12,10 +13,20 @@ const ANSWER_INSTRUCTIONS = `Answer the user's latest question using the tool re
 - Quote figures exactly as the tools returned them; never estimate or invent numbers.
 - Research papers in the tool results are numbered like [1]. Cite them inline with those numbers, e.g. "Burn severity rose after 2004 [2]." Do not write a separate sources or references list.
 - If you have received information from the rag tool, do not call the rag tool again.
+- Tool results from an app (Forest Trends, Burn Severity Recovery, Alaska Fire Risk, Parcel Fire Risk, Lightning) are that app's data. Say which app the figures come from, and never show links or JSON.
 - If the tool results do not answer the question, say so plainly instead of filling the gap.
 - If any part of your answer comes from general knowledge rather than the tool results, say which part.`;
 
 type Message = { role: "user" | "ai"; content: string; time: string };
+
+const SYSTEM_PROMPT = `You are FireAID's wildfire intelligence assistant for Alaska. Address the user's most recent query, using the rest of the conversation as context. When answering questions related to wildfires, primarily use the provided wildfire data tools to provide an answer, and cite your tool usage.
+Besides the fire records, research library and glossary, you can look up the data behind FireAID's apps:
+- Forest Trends: Landsat vegetation (NDVI, NBR, NDMI) and climate at a point since 2000, which mapped fires burned a point, and greening or browning across an area.
+- Burn Severity Recovery: burn severity and greenness recovery of the 2019 Shovel Creek, Swan Lake and Nugget Creek fires.
+- Alaska Fire Risk: 5-day fire danger forecasts for Alaska places, and a model that rates fire risk.
+- Parcel Fire Risk: daily fire risk of tax parcels in the Fairbanks North Star Borough.
+- Lightning: Alaska lightning strikes per month, 1986-2012.
+For a place name, use its approximate latitude and longitude and say which point you used. Longitudes west of Greenwich are negative: 148.25 W is -148.25, and all of mainland Alaska is between about -130 and -169.`;
 
 export default async function handler(
     req: NextApiRequest,
@@ -48,7 +59,7 @@ export default async function handler(
 
     // Add initial system prompt to conversation
     const input = [
-        { role: "system", content: "You are a wildfire intelligence assistant. Address the user's most recent query, using the rest of the conversation as context. When answering questions related to wildfires, primarily use the provided wildfire data tools to provide an answer, and cite your tool usage." },
+        { role: "system", content: SYSTEM_PROMPT },
         ...historyInput
     ] as unknown as ResponseInput;
 
@@ -57,7 +68,7 @@ export default async function handler(
     console.log(input);
     console.log();
   
-    const all_tools = [...query_tools];
+    const all_tools = [...query_tools, ...(await appTools())];
     var query_count = 1;
 
     // Charts are structured, so they travel to the client separately from the

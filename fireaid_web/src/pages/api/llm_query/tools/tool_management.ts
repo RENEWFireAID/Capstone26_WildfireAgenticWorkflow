@@ -7,6 +7,7 @@ import { getWildfireTerm } from "./terminology_tool/handle_get_wildfire_term";
 import { query_fire_points } from "./historic_wildfires_tool/handle_historic_fires";
 import { retrieveRagChunks } from "./rag_tool/handle_rag_search";
 import { generateChart } from "./chart_tool/handle_generate_chart";
+import { APP_TOOLS, runAppTool } from "@/lib/appTools";
 import type { ChartSpec } from "@/lib/chartBuilder";
 import { shortAuthors, type AnswerSource } from "@/lib/answerSources";
 
@@ -199,6 +200,13 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
                 call_id: item.call_id,
                 output: result.output
             });
+        }
+
+        if (item.name in APP_TOOLS) {
+            const { output, source } = await runAppTool(item.name, item.arguments);
+            sources.push(source);
+            tool_output.push(item);
+            tool_output.push({ type: "function_call_output", call_id: item.call_id, output });
         }
 
         if (item.name == "retrieve_rag_context") {
