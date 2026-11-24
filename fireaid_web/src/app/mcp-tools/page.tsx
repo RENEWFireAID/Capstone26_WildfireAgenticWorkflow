@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { AlertTriangle, Check as CheckIcon, Download, Loader2, RefreshCw, Square, Trash2 } from "lucide-react";
-import { AppPage, Button, FIELD, Notice, Panel, Placeholder, Segmented, Stat } from "@/components/ui/app";
+import { AppPage, Button, FIELD, Notice, Panel, Placeholder, Segmented, Stat, AiDisclaimer } from "@/components/ui/app";
 import FiresByYearChart from "@/components/mcp/FiresByYearChart";
 import FireDashboard from "@/components/mcp/FireDashboard";
 import ModelBadge from "@/components/ui/ModelBadge";
@@ -284,6 +284,7 @@ export default function McpToolsPage() {
                 disabled={llmLoading || !llmInput.trim()}
               >Send</Button>
             </div>
+            <AiDisclaimer className="mt-2" />
           </Panel>
 
 

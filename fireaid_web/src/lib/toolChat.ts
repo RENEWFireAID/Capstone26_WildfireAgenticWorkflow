@@ -18,11 +18,22 @@ const MAX_REPLY_TOKENS = 1500;
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
+// A tool that runs inside the web app instead of FireMCP, e.g. a literature or glossary search.
+export type LocalTool = {
+  name: string;
+  description: string;
+  parameters: { type: "object"; properties: Record<string, unknown>; required?: string[] };
+  run: (args: Record<string, unknown>) => Promise<unknown>;
+};
+
 export type ToolChatOptions = {
   name: string;
   systemPrompt: () => string;
-  // FireMCP tools the model may call. Omit to allow every tool.
+  // FireMCP tools the model may call. Omit to allow every tool; [] for none.
   allowedTools?: readonly string[];
+  localTools?: readonly LocalTool[];
+  // For FireMCP tools slower than the client's 60 s default, e.g. Earth Engine queries.
+  toolTimeoutMs?: number;
   // OpenRouter model id. Omit to use FIRE_CHAT_MODEL.
   model?: string;
   // Tool parameters the model shouldn't see or set, e.g. ones only the page uses.
@@ -49,14 +60,23 @@ function parseMessages(body: unknown): ChatMessage[] | null {
   return messages.at(-1)?.role === "user" ? messages : null;
 }
 
-async function runTool(call: ChatCompletionMessageToolCall, allowed: Set<string>, hidden: readonly string[]): Promise<string> {
+async function runTool(
+  call: ChatCompletionMessageToolCall,
+  allowed: Set<string>,
+  local: readonly LocalTool[],
+  hidden: readonly string[],
+  timeoutMs?: number,
+): Promise<string> {
   if (call.type !== "function") return JSON.stringify({ error: "Unsupported tool call" });
+  const localTool = local.find((t) => t.name === call.function.name);
   // The model only sees allowed tools, but it can still name another one.
-  if (!allowed.has(call.function.name)) return JSON.stringify({ error: `Unknown tool ${call.function.name}` });
+  if (!localTool && !allowed.has(call.function.name)) return JSON.stringify({ error: `Unknown tool ${call.function.name}` });
   try {
     const args = call.function.arguments ? JSON.parse(call.function.arguments) : {};
     for (const p of hidden) delete args[p];
-    const result = await callFireTool(call.function.name, args);
+    const result = localTool
+      ? await localTool.run(args)
+      : await callFireTool(call.function.name, args, timeoutMs ? { timeoutMs } : undefined);
     const text = typeof result === "string" ? result : JSON.stringify(result);
     return text.length > MAX_TOOL_RESULT_CHARS ? `${text.slice(0, MAX_TOOL_RESULT_CHARS)}...[truncated]` : text;
   } catch (e) {
@@ -80,9 +100,11 @@ export async function handleToolChat(req: Request, options: ToolChatOptions) {
 
   try {
     const openai = new OpenAI({ baseURL: "https://openrouter.ai/api/v1", apiKey: process.env.OPENROUTER_API_KEY });
-    const schemas = (await listFireToolSchemas()).filter(
+    // Skip FireMCP entirely when a chat only uses local tools.
+    const schemas = options.allowedTools?.length === 0 ? [] : (await listFireToolSchemas()).filter(
       (t) => !options.allowedTools || options.allowedTools.includes(t.name),
     );
+    const local = options.localTools ?? [];
     const allowed = new Set(schemas.map((t) => t.name));
     const hidden = options.hiddenParams ?? [];
     const tools: ChatCompletionTool[] = schemas.map((t) => {
@@ -94,6 +116,9 @@ export async function handleToolChat(req: Request, options: ToolChatOptions) {
         function: { name: t.name, description: t.description, parameters: { ...t.inputSchema, properties } },
       };
     });
+    for (const t of local) {
+      tools.push({ type: "function", function: { name: t.name, description: t.description, parameters: t.parameters } });
+    }
     const convo: ChatCompletionMessageParam[] = [{ role: "system", content: options.systemPrompt() }, ...messages];
 
     // The last round forbids tool calls so the model has to answer with what it has.
@@ -115,7 +140,7 @@ export async function handleToolChat(req: Request, options: ToolChatOptions) {
 
       convo.push({ role: "assistant", content: reply.content, tool_calls: calls });
       for (const call of calls) {
-        convo.push({ role: "tool", tool_call_id: call.id, content: await runTool(call, allowed, hidden) });
+        convo.push({ role: "tool", tool_call_id: call.id, content: await runTool(call, allowed, local, hidden, options.toolTimeoutMs) });
       }
     }
     throw new Error("Model kept calling tools");

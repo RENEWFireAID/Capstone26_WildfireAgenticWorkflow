@@ -155,6 +155,15 @@ export function Notice({ tone = "info", children, className = "" }: { tone?: key
   );
 }
 
+/** The one-line caution shown under every AI chat box. */
+export function AiDisclaimer({ className = "" }: { className?: string }) {
+  return (
+    <p className={`text-[11px] leading-snug text-slate-500 ${className}`}>
+      AI answers can contain mistakes. Check important numbers against the data.
+    </p>
+  );
+}
+
 /** An empty or waiting state inside a panel. */
 export function Placeholder({ children, height = "py-10" }: { children: ReactNode; height?: string }) {
   return (

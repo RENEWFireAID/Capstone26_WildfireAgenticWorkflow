@@ -5,9 +5,16 @@ import { AppPage, Panel, SHADOW, Segmented } from "@/components/ui/app";
 import { FIRES, pct, useBurnRecovery, type FireName, type ModelKey, type Overview } from "@/components/burn-recovery/data";
 import { GreennessTab, ImageryTab, ModelsTab, ValidationTab } from "@/components/burn-recovery/tabs";
 import { LoadError, Loading, Metrics, Note } from "@/components/burn-recovery/ui";
+import FireRiskChat from "@/components/fire-risk/FireRiskChat";
 
 const TABS = ["Imagery", "Greenness", "Models", "Validation"] as const;
 type Tab = (typeof TABS)[number];
+
+const CHAT_SUGGESTIONS = [
+  "How fast did the most severely burned areas of Swan Lake green up?",
+  "How well do the models predict recovery on Shovel Creek?",
+  "Chart mean NDVI by severity group for Swan Lake.",
+];
 
 export default function BurnRecoveryPage() {
   const [fire, setFire] = useState<FireName>("Shovel Creek");
@@ -78,6 +85,15 @@ export default function BurnRecoveryPage() {
           </div>
         </section>
       )}
+
+      <FireRiskChat
+        endpoint="/api/burn-recovery/chat"
+        title="Ask about burn severity and recovery"
+        subtitle="The study's saved results for Shovel Creek, Swan Lake and Nugget Creek"
+        suggestions={CHAT_SUGGESTIONS}
+        chartSource="the Burn Severity Recovery study (M. Saffiullah, UAA)"
+        modelFeature="fireHistory"
+      />
 
       {!overview && !error && (
         <Note>The first visit after a restart takes a few seconds while FireMCP checks every saved file against its fingerprint.</Note>

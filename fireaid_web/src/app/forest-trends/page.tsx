@@ -6,6 +6,7 @@ import { Download, Loader2, MousePointerClick, Pentagon, Square, Trash2 } from "
 
 import { AppPage, Check, FIELD, Field, SHADOW, Stat, buttonClass } from "@/components/ui/app";
 import PointPanel from "@/components/forest-trends/PointPanel";
+import FireRiskChat from "@/components/fire-risk/FireRiskChat";
 import type { DrawMode, MapLayer } from "@/components/forest-trends/TrendMap";
 import {
   BASEMAPS, INDICES, MAX_AREA_KM2, MAX_DOWNLOAD_AREA_KM2, REDUCERS, SLOPE_PALETTE, TAU_PALETTE,
@@ -19,6 +20,12 @@ const TrendMap = dynamic(() => import("@/components/forest-trends/TrendMap"), {
 });
 
 const THIS_YEAR = new Date().getFullYear();
+
+const CHAT_SUGGESTIONS = [
+  "Did 64.97° N, 148.25° W burn, and how has NBR recovered since?",
+  "Is the forest near Fairbanks greening or browning since 2000?",
+  "Chart summer NDVI at 64.7° N, 148.1° W from 2000 to 2024.",
+];
 
 
 
@@ -343,6 +350,15 @@ export default function ForestTrendsPage() {
               Click a point on the map to see its NDVI, NBR and NDMI each summer, the fires that burned there, and how the index tracks climate.
             </p>
           )}
+
+          <FireRiskChat
+            endpoint="/api/forest-trends/chat"
+            title="Ask about forest trends"
+            subtitle="Landsat vegetation, climate and fire history at any point in Alaska. Lookups can take up to a minute."
+            suggestions={CHAT_SUGGESTIONS}
+            chartSource="Landsat and TerraClimate via Google Earth Engine"
+            modelFeature="fireHistory"
+          />
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <section className={`bg-white p-6 ${SHADOW}`}>
