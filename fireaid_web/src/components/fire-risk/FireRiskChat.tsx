@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 import { Send } from "lucide-react";
-import { FIELD, Panel, buttonClass } from "@/components/ui/app";
+import { AiDisclaimer, FIELD, Panel, buttonClass } from "@/components/ui/app";
 import ModelBadge from "@/components/ui/ModelBadge";
 import ChatChart, { type ChatChartSpec } from "@/components/chat/ChatChart";
 import type { ModelFeature } from "@/lib/models";
@@ -150,7 +150,7 @@ export default function FireRiskChat({
         )}
       </div>
 
-      <form onSubmit={send} className="flex gap-2 border-t border-slate-200 px-5 py-4">
+      <form onSubmit={send} className="flex gap-2 border-t border-slate-200 px-5 pb-2 pt-4">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -166,6 +166,7 @@ export default function FireRiskChat({
           <Send size={14} /> Send
         </button>
       </form>
+      <AiDisclaimer className="px-5 pb-3" />
     </Panel>
   );
 }

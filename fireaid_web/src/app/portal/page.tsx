@@ -292,7 +292,7 @@ export default function PortalPage() {
                     </div>
                   </div>
                   <div className="mt-2 text-[10px] text-slate-400 text-center">
-                    FireAID Assistant may make mistakes. For research purposes only.
+                    AI answers can contain mistakes. Check important numbers against the data. For research purposes only.
                   </div>
                 </div>
               </div>

@@ -4,6 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { AppPage, FIELD, Panel, Placeholder, SHADOW, buttonClass } from "@/components/ui/app";
 import { FileText, Search, Loader2, ExternalLink } from "lucide-react";
+import FireRiskChat from "@/components/fire-risk/FireRiskChat";
+
+const CHAT_SUGGESTIONS = [
+  "How does wildfire smoke affect respiratory health?",
+  "What do studies say about boreal forest recovery after fire in Alaska?",
+  "How does climate change affect fire season length?",
+];
 
 function parseAuthors(authorString: string): string {
     if (!authorString) return "Unknown Authors";
@@ -92,6 +99,14 @@ export default function PublicationPage() {
                     </button>
                 </div>
             </Panel>
+
+            <FireRiskChat
+                endpoint="/api/publication/chat"
+                title="Ask the literature"
+                subtitle="Answers drawn from the paper abstracts, naming the papers used"
+                suggestions={CHAT_SUGGESTIONS}
+                modelFeature="fireHistory"
+            />
 
             {/* Results Area */}
             {loading && (

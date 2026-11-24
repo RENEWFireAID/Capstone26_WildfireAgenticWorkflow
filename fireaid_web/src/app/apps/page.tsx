@@ -83,7 +83,7 @@ const APPS = [
   },
   {
     label: "Terminology",
-    kind: "Reference",
+    kind: "Glossary",
     desc: "Look up the wildfire terms used across the apps, from fuel types to fire behavior.",
     data: "FireAID wildfire glossary",
     icon: BookOpen,
@@ -104,11 +104,11 @@ const PREVIEWS: Record<string, StaticImageData> = {
   "Lightning and Fire History": lightningPreview,
 };
 
-// Reference tools sit apart from the apps that map and model fire data.
-const REFERENCE = new Set(["Publication", "Terminology"]);
+// Knowledge base tools sit apart from the apps that map and model fire data.
+const KNOWLEDGE = new Set(["Publication", "Terminology"]);
 const SECTIONS = [
-  { title: "Fire and vegetation", note: "Map, forecast and model Alaska fire and its aftermath.", apps: APPS.filter((a) => !REFERENCE.has(a.label)), onBlue: false, backdrop: { backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS } },
-  { title: "Reference", note: "Look up the research and the terms behind the apps.", apps: APPS.filter((a) => REFERENCE.has(a.label)), onBlue: true, backdrop: { backgroundColor: "var(--color-navy)", backgroundImage: PEAKS } },
+  { title: "Analysis Tools", note: "Map, forecast and model Alaska fire and its aftermath.", apps: APPS.filter((a) => !KNOWLEDGE.has(a.label)), onBlue: false, backdrop: { backgroundColor: "var(--color-navy-deep)", backgroundImage: CONTOURS } },
+  { title: "Knowledge Base", note: "Look up the research and the terms behind the apps.", apps: APPS.filter((a) => KNOWLEDGE.has(a.label)), onBlue: true, backdrop: { backgroundColor: "var(--color-navy)", backgroundImage: PEAKS } },
 ];
 
 // onBlue: the card sits on the UAF Blue section, so its icon panel goes navy to stay distinct.

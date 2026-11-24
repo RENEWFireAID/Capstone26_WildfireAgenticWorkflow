@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { AppPage, FIELD, Notice, Panel, Placeholder, SHADOW } from "@/components/ui/app";
 import { Book, Search, ChevronRight, X } from "lucide-react";
+import FireRiskChat from "@/components/fire-risk/FireRiskChat";
+
+const CHAT_SUGGESTIONS = [
+  "What is a crown fire?",
+  "What's the difference between a backfire and a burnout?",
+  "Explain fuel moisture in simple terms.",
+];
 
 type Term = { term: string; def: string };
 
@@ -37,7 +44,7 @@ export default function LibraryPage() {
 
   return (
     <AppPage
-      eyebrow="Apps · Reference"
+      eyebrow="Apps · Glossary"
       title="Wildfire Terminology Library"
       description="Look up the wildfire terms used across the apps, from fuel types to fire behavior."
       meta={["FireAID wildfire glossary", "Terms from the USDA Forest Service", `${terms.length} terms`]}
@@ -126,6 +133,14 @@ export default function LibraryPage() {
           </section>
         </div>
       )}
+
+      <FireRiskChat
+        endpoint="/api/terms/chat"
+        title="Ask about wildfire terms"
+        subtitle="Definitions from the glossary, explained in plain language"
+        suggestions={CHAT_SUGGESTIONS}
+        modelFeature="fireHistory"
+      />
     </AppPage>
   );
 }
