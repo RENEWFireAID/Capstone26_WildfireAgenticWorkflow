@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertTriangle, BarChart3, BookOpen, Database, FileText } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, ArrowRight, BarChart3, BookOpen, Database, FileText, LayoutGrid } from "lucide-react";
 import type { AnswerSource, FireRecordsSource } from "@/lib/answerSources";
 
 function describeFilters(f: FireRecordsSource["filters"]) {
@@ -8,8 +9,8 @@ function describeFilters(f: FireRecordsSource["filters"]) {
     f.yearStart && f.yearEnd
       ? f.yearStart === f.yearEnd ? `${f.yearStart}` : `${f.yearStart}–${f.yearEnd}`
       : f.yearStart ? `${f.yearStart} onward` : f.yearEnd ? `up to ${f.yearEnd}` : "all years";
-  const prescribed = f.prescribed === "Y" ? "prescribed fires only" : "excluding prescribed fires";
-  return `${years}, ${prescribed}`;
+  const prescribed = f.prescribed === "Y" ? "prescribed fires only" : f.prescribed === "N" ? "excluding prescribed fires" : "";
+  return [f.name ? `named “${f.name}”` : "", years, prescribed].filter(Boolean).join(", ");
 }
 
 function Row({ icon: Icon, label, detail, children }: {
@@ -111,6 +112,16 @@ export default function AnswerSources({ sources }: { sources?: AnswerSource[] })
                   ))}
                 </ol>
               </li>
+            );
+          }
+          if (s.kind === "app") {
+            return (
+              <Row key={i} icon={LayoutGrid} label={`${s.app} app`}
+                detail={s.ok ? s.lookup || s.tool : `${s.lookup || s.tool} · lookup failed`}>
+                <Link href={s.href} className="inline-flex items-center gap-1 font-semibold text-navy hover:underline">
+                  Open {s.app} <ArrowRight size={12} aria-hidden="true" />
+                </Link>
+              </Row>
             );
           }
           if (s.kind === "term") {

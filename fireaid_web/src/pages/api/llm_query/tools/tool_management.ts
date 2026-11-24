@@ -7,6 +7,7 @@ import { getWildfireTerm } from "./terminology_tool/handle_get_wildfire_term";
 import { query_fire_points } from "./historic_wildfires_tool/handle_historic_fires";
 import { retrieveRagChunks } from "./rag_tool/handle_rag_search";
 import { generateChart } from "./chart_tool/handle_generate_chart";
+import { APP_TOOLS, runAppTool } from "@/lib/appTools";
 import type { ChartSpec } from "@/lib/chartBuilder";
 import { shortAuthors, type AnswerSource } from "@/lib/answerSources";
 
@@ -59,7 +60,7 @@ const historicWildfireQuery =
     {
         type: "function",
         name: "query_fire_points",
-        description: "Get detailed information on fires over a range of time in Alaska. Limit represents the maximum number of fires that information will be returned for",
+        description: "Get detailed information on fires over a range of time in Alaska, largest first. To look up a particular fire, pass its name. Limit represents the maximum number of fires that information will be returned for",
         parameters: {
             type: "object",
             properties: {
@@ -79,8 +80,12 @@ const historicWildfireQuery =
                     type: [ "integer", "null" ],
                     description: "Limits the number of fires returned."
                 },
+                name: {
+                    type: [ "string", "null" ],
+                    description: "Part of a fire's name, e.g. 'Swan Lake'. Matches any fire whose name contains it, ignoring case."
+                },
             },
-            required: [ "year_start", "year_end", "prescribed", "limit" ],
+            required: [ "year_start", "year_end", "prescribed", "limit", "name" ],
         },
     };
 
@@ -160,15 +165,16 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
 
         if(item.name == "query_fire_points") {
             const args = JSON.parse(item.arguments);
-            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
+            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"], args["name"]);
             sources.push({
                 kind: "fire_records",
                 filters: {
                     yearStart: args["year_start"] ?? null,
                     yearEnd: args["year_end"] ?? null,
                     // query_fire_points falls back to non-prescribed fires when none is given.
-                    prescribed: args["prescribed"] ?? "N",
+                    prescribed: args["prescribed"] ?? (args["name"] ? "any" : "N"),
                     limit: args["limit"] ?? null,
+                    name: args["name"] ?? null,
                 },
                 total: data.total,
                 preview: data.results.slice(0, 5).map((r: any) => ({
@@ -199,6 +205,13 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
                 call_id: item.call_id,
                 output: result.output
             });
+        }
+
+        if (item.name in APP_TOOLS) {
+            const { output, source } = await runAppTool(item.name, item.arguments);
+            sources.push(source);
+            tool_output.push(item);
+            tool_output.push({ type: "function_call_output", call_id: item.call_id, output });
         }
 
         if (item.name == "retrieve_rag_context") {

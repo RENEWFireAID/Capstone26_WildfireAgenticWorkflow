@@ -4,7 +4,7 @@
 
 export type FireRecordsSource = {
   kind: "fire_records";
-  filters: { yearStart: number | null; yearEnd: number | null; prescribed: string; limit: number | null };
+  filters: { yearStart: number | null; yearEnd: number | null; prescribed: string; limit: number | null; name?: string | null };
   total: number;
   preview: { name: string; year: string; acres: string; cause: string }[];
 };
@@ -20,7 +20,10 @@ export type TermSource = { kind: "term"; term: string; definition: string | null
 
 export type ChartSource = { kind: "chart"; request: string; title: string | null; points: number };
 
-export type AnswerSource = FireRecordsSource | PapersSource | TermSource | ChartSource;
+// A lookup in one of the apps' data, through FireMCP.
+export type AppSource = { kind: "app"; app: string; href: string; tool: string; lookup: string; ok: boolean };
+
+export type AnswerSource = FireRecordsSource | PapersSource | TermSource | ChartSource | AppSource;
 
 /** "[{'first': 'Evan', 'last': 'Larson'}, ...]" as stored in the literature CSV -> "Larson et al." */
 export function shortAuthors(raw: unknown): string {

@@ -13,6 +13,7 @@ import {
   BookOpen,
   FileText,
   Flame,
+  LayoutGrid,
   MessageSquare,
 } from "lucide-react";
 import FireAIDSidebar from "@/components/layout/FireAIDSidebar";
@@ -31,6 +32,8 @@ const SUGGESTED = [
   "Chart acres burned per year since 2000",
   "What does research say about fire and permafrost thaw?",
   "What is a prescribed burn?",
+  "What was the fire danger in Fairbanks on June 15, 2022?",
+  "How did the 2019 Swan Lake fire recover?",
 ];
 
 // What the assistant's tools can reach, so people know what to ask.
@@ -39,6 +42,7 @@ const SOURCES = [
   { icon: FileText,  label: "Research library",    detail: "101,856 paper abstracts" },
   { icon: BookOpen,  label: "Wildfire glossary",   detail: "Terms and definitions" },
   { icon: BarChart3, label: "Charts",              detail: "Drawn from the fire records" },
+  { icon: LayoutGrid, label: "App data",           detail: "Forest, burn, risk, parcel and lightning" },
 ];
 
 // uaf.edu's square white card and its gold condensed button.
@@ -190,7 +194,7 @@ export default function PortalPage() {
                 <div className="mx-auto w-full max-w-5xl">
                   <h2 className="text-3xl font-bold text-white">What it can look up</h2>
                   <p className="mt-1 text-sm text-slate-200">The assistant answers from these sources and names the one it used.</p>
-                  <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                  <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
                     {SOURCES.map(({ icon: Icon, label, detail }) => (
                       <li key={label} className="flex flex-col items-center text-center text-white">
                         <Icon size={52} strokeWidth={1.25} aria-hidden="true" />
