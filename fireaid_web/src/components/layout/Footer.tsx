@@ -112,9 +112,7 @@ export default function Footer() {
           <p className="mt-2 text-sm">#NanookNation</p>
 
           <p className="mx-auto mt-6 max-w-4xl text-xs leading-relaxed text-white/85">
-            FireAID is funded in part by DOE RENEW #DE-SC0025715; NSF MRI #2320196; NSF EPSCoR RII Track-4 #2327456; USGS NIWR
-            G00014344; the UAF Arctic Fellow Grant (UAF Center of ICE / Office of Naval Research); AIM-AHEAD PAIR (NIH Agreement No.
-            1OT2OD032581); and Google Summer of Code 2024, 2025 and 2026. It also uses high-performance computing and storage operated
+            FireAID is funded in part by DOE RENEW #DE-SC0025715; NSF MRI #2320196. It also uses high-performance computing and storage operated
             by the Research Computing Systems Group at the UAF Geophysical Institute. Views and conclusions are the authors&apos; own and
             do not represent the official policies of the funding agencies.
           </p>
