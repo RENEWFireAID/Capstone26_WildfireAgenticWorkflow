@@ -148,7 +148,7 @@ export default function TeamPage() {
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">FireAID</p>
           <h1 className="mt-1 text-4xl font-bold leading-tight text-navy-deep">Team</h1>
           <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
-            FireAID is built at the UAF Data/AI Lab with Argonne National Laboratory, funded by the U.S. Department of Energy.
+            FireAID is built at the UAF Data/AI Lab with Argonne National Laboratory, funded in part by the U.S. Department of Energy and the National Science Foundation.
             Students design and build the apps; investigators guide the research.
           </p>
         </header>
