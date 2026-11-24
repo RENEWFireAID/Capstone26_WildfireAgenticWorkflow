@@ -60,7 +60,7 @@ const historicWildfireQuery =
     {
         type: "function",
         name: "query_fire_points",
-        description: "Get detailed information on fires over a range of time in Alaska. Limit represents the maximum number of fires that information will be returned for",
+        description: "Get detailed information on fires over a range of time in Alaska, largest first. To look up a particular fire, pass its name. Limit represents the maximum number of fires that information will be returned for",
         parameters: {
             type: "object",
             properties: {
@@ -80,8 +80,12 @@ const historicWildfireQuery =
                     type: [ "integer", "null" ],
                     description: "Limits the number of fires returned."
                 },
+                name: {
+                    type: [ "string", "null" ],
+                    description: "Part of a fire's name, e.g. 'Swan Lake'. Matches any fire whose name contains it, ignoring case."
+                },
             },
-            required: [ "year_start", "year_end", "prescribed", "limit" ],
+            required: [ "year_start", "year_end", "prescribed", "limit", "name" ],
         },
     };
 
@@ -161,15 +165,16 @@ export async function make_tool_calls(tool_call_list: ResponseFunctionToolCall[]
 
         if(item.name == "query_fire_points") {
             const args = JSON.parse(item.arguments);
-            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"]);
+            const data = await query_fire_points(args["year_start"], args["year_end"], args["prescribed"], args["limit"], args["name"]);
             sources.push({
                 kind: "fire_records",
                 filters: {
                     yearStart: args["year_start"] ?? null,
                     yearEnd: args["year_end"] ?? null,
                     // query_fire_points falls back to non-prescribed fires when none is given.
-                    prescribed: args["prescribed"] ?? "N",
+                    prescribed: args["prescribed"] ?? (args["name"] ? "any" : "N"),
                     limit: args["limit"] ?? null,
+                    name: args["name"] ?? null,
                 },
                 total: data.total,
                 preview: data.results.slice(0, 5).map((r: any) => ({

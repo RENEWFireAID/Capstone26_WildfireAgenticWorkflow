@@ -11,9 +11,10 @@ import type { AnswerSource } from "@/lib/answerSources";
 // cites papers by number and leaves the reference list to the interface.
 const ANSWER_INSTRUCTIONS = `Answer the user's latest question using the tool results above.
 - Quote figures exactly as the tools returned them; never estimate or invent numbers.
+- Every figure must appear in a tool result. If a fire or value you need is not in the results, say it was not found or look it up again (e.g. by fire name). Never fill it in from memory, and never credit a source for a number it did not return.
 - Research papers in the tool results are numbered like [1]. Cite them inline with those numbers, e.g. "Burn severity rose after 2004 [2]." Do not write a separate sources or references list.
 - If you have received information from the rag tool, do not call the rag tool again.
-- Tool results from an app (Forest Trends, Burn Severity Recovery, Alaska Fire Risk, Parcel Fire Risk, Lightning) are that app's data. Say which app the figures come from, and never show links or JSON.
+- Tool results from an app (Forest Trends, Burn Severity Recovery, Alaska Fire Risk, Parcel Fire Risk, Lightning) are that app's data. Name the app in a sentence, e.g. "According to the Burn Severity Recovery app, ...", not in brackets. Follow any Note at the start of a tool result. Never show links or JSON.
 - If the tool results do not answer the question, say so plainly instead of filling the gap.
 - If any part of your answer comes from general knowledge rather than the tool results, say which part.`;
 

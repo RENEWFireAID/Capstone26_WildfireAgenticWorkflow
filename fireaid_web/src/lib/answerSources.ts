@@ -4,7 +4,7 @@
 
 export type FireRecordsSource = {
   kind: "fire_records";
-  filters: { yearStart: number | null; yearEnd: number | null; prescribed: string; limit: number | null };
+  filters: { yearStart: number | null; yearEnd: number | null; prescribed: string; limit: number | null; name?: string | null };
   total: number;
   preview: { name: string; year: string; acres: string; cause: string }[];
 };

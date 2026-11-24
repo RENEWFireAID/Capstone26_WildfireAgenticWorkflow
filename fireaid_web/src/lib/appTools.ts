@@ -33,7 +33,7 @@ export const APP_TOOLS: Record<string, AppTool> = {
   burn_recovery_overview: {
     app: "Burn Severity Recovery",
     href: "/burn-recovery",
-    note: "Locations were sampled up to 333 per severity group, so sample counts are not burned area; never compare fires' extent from them.",
+    note: "This study has no burned-area figures. sampled_locations and the per-group sample counts come from the sampling design (up to 333 per severity group), not from fire size, so never use them to compare how large or how severe the fires were. For burned area, use the Alaska fire records (acres).",
   },
   predict_fire_risk: { app: "Alaska Fire Risk", href: "/fire-risk" },
   fire_danger_forecast: { app: "Alaska Fire Risk", href: "/fire-risk" },
@@ -119,7 +119,8 @@ export async function runAppTool(name: string, rawArgs: string): Promise<{ outpu
   try {
     const result = await callFireTool(name, args, meta.timeoutMs ? { timeoutMs: meta.timeoutMs } : undefined);
     const failed = result && typeof result === "object" && (result.ok === false || "error" in result);
-    let text = JSON.stringify(stripMedia(result));
+    // The caveat travels with the data: the answering model reads results more closely than tool descriptions.
+    let text = (meta.note ? `Note: ${meta.note}\n` : "") + JSON.stringify(stripMedia(result));
     if (text.length > MAX_RESULT_CHARS) text = `${text.slice(0, MAX_RESULT_CHARS)}...[truncated]`;
     return { output: text, source: { ...base, ok: !failed } };
   } catch (e) {

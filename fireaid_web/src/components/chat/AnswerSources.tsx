@@ -9,8 +9,8 @@ function describeFilters(f: FireRecordsSource["filters"]) {
     f.yearStart && f.yearEnd
       ? f.yearStart === f.yearEnd ? `${f.yearStart}` : `${f.yearStart}–${f.yearEnd}`
       : f.yearStart ? `${f.yearStart} onward` : f.yearEnd ? `up to ${f.yearEnd}` : "all years";
-  const prescribed = f.prescribed === "Y" ? "prescribed fires only" : "excluding prescribed fires";
-  return `${years}, ${prescribed}`;
+  const prescribed = f.prescribed === "Y" ? "prescribed fires only" : f.prescribed === "N" ? "excluding prescribed fires" : "";
+  return [f.name ? `named “${f.name}”` : "", years, prescribed].filter(Boolean).join(", ");
 }
 
 function Row({ icon: Icon, label, detail, children }: {
